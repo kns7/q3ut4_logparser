@@ -5,11 +5,12 @@ use Propel\Runtime\Propel;
 use Slim\Slim;
 
 require("../vendor/autoload.php");
+require("../app/config/config.php");
 
 // MySQL Configuration / Connection
 $serviceContainer = Propel::getServiceContainer();
 $serviceContainer->checkVersion('2.0.0-dev');
-$serviceContainer->setAdapterClass('vmail', 'mysql');
+$serviceContainer->setAdapterClass('default', 'mysql');
 $manager = new ConnectionManagerSingle();
 $manager->setConfiguration(array (
     'classname' => 'Propel\\Runtime\\Connection\\DebugPDO',
@@ -22,4 +23,29 @@ $manager->setConfiguration(array (
             'ATTR_TIMEOUT' => 30,
         )
 ));
-$manager->setName('vmail');
+$manager->setName('default');
+$serviceContainer->setConnectionManager('default', $manager);
+$serviceContainer->setDefaultDatasource('default');
+
+$app = new Slim([
+    'template.path' => 'templates/',
+    'mode' => $config["SITE_MODE"]
+]);
+
+// Only invoked if mode is "production"
+$app->configureMode('production', function () use ($app) {
+    $app->config(array(
+        'log.enable' => true,
+        'debug' => false
+    ));
+});
+
+// Only invoked if mode is "development"
+$app->configureMode('development', function () use ($app) {
+    $app->config(array(
+        'log.enable' => false,
+        'debug' => true
+    ));
+});
+
+
