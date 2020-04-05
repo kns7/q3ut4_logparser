@@ -48,4 +48,17 @@ $app->configureMode('development', function () use ($app) {
     ));
 });
 
+// Controllers declaration
+$app->container->singleton('Ctrl',function() use ($app){
+    return (object)[
+        'Players' => new PlayersController($app),
+        'Frags' => new FragsController($app)
+    ];
+});
 
+// Routes
+$app->get('/',function() use ($app){
+    $app->render('home.php',compact('app'));
+})->name("root");
+
+$app->run();
