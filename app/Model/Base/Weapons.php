@@ -86,6 +86,20 @@ abstract class Weapons implements ActiveRecordInterface
     protected $name;
 
     /**
+     * The value for the type field.
+     *
+     * @var        string
+     */
+    protected $type;
+
+    /**
+     * The value for the url field.
+     *
+     * @var        string
+     */
+    protected $url;
+
+    /**
      * @var        ObjectCollection|ChildFrags[] Collection to store aggregation of ChildFrags objects.
      */
     protected $collFragWeapons;
@@ -361,6 +375,26 @@ abstract class Weapons implements ActiveRecordInterface
     }
 
     /**
+     * Get the [type] column value.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get the [url] column value.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -421,6 +455,46 @@ abstract class Weapons implements ActiveRecordInterface
     } // setName()
 
     /**
+     * Set the value of [type] column.
+     *
+     * @param string $v new value
+     * @return $this|\Weapons The current object (for fluent API support)
+     */
+    public function setType($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->type !== $v) {
+            $this->type = $v;
+            $this->modifiedColumns[WeaponsTableMap::COL_TYPE] = true;
+        }
+
+        return $this;
+    } // setType()
+
+    /**
+     * Set the value of [url] column.
+     *
+     * @param string $v new value
+     * @return $this|\Weapons The current object (for fluent API support)
+     */
+    public function setUrl($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->url !== $v) {
+            $this->url = $v;
+            $this->modifiedColumns[WeaponsTableMap::COL_URL] = true;
+        }
+
+        return $this;
+    } // setUrl()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -464,6 +538,12 @@ abstract class Weapons implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WeaponsTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WeaponsTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->type = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WeaponsTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->url = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -472,7 +552,7 @@ abstract class Weapons implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = WeaponsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = WeaponsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Weapons'), 0, $e);
@@ -701,6 +781,12 @@ abstract class Weapons implements ActiveRecordInterface
         if ($this->isColumnModified(WeaponsTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'name';
         }
+        if ($this->isColumnModified(WeaponsTableMap::COL_TYPE)) {
+            $modifiedColumns[':p' . $index++]  = 'type';
+        }
+        if ($this->isColumnModified(WeaponsTableMap::COL_URL)) {
+            $modifiedColumns[':p' . $index++]  = 'url';
+        }
 
         $sql = sprintf(
             'INSERT INTO weapons (%s) VALUES (%s)',
@@ -720,6 +806,12 @@ abstract class Weapons implements ActiveRecordInterface
                         break;
                     case 'name':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case 'type':
+                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                        break;
+                    case 'url':
+                        $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -792,6 +884,12 @@ abstract class Weapons implements ActiveRecordInterface
             case 2:
                 return $this->getName();
                 break;
+            case 3:
+                return $this->getType();
+                break;
+            case 4:
+                return $this->getUrl();
+                break;
             default:
                 return null;
                 break;
@@ -825,6 +923,8 @@ abstract class Weapons implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getCode(),
             $keys[2] => $this->getName(),
+            $keys[3] => $this->getType(),
+            $keys[4] => $this->getUrl(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -890,6 +990,12 @@ abstract class Weapons implements ActiveRecordInterface
             case 2:
                 $this->setName($value);
                 break;
+            case 3:
+                $this->setType($value);
+                break;
+            case 4:
+                $this->setUrl($value);
+                break;
         } // switch()
 
         return $this;
@@ -924,6 +1030,12 @@ abstract class Weapons implements ActiveRecordInterface
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setName($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setType($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setUrl($arr[$keys[4]]);
         }
     }
 
@@ -974,6 +1086,12 @@ abstract class Weapons implements ActiveRecordInterface
         }
         if ($this->isColumnModified(WeaponsTableMap::COL_NAME)) {
             $criteria->add(WeaponsTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(WeaponsTableMap::COL_TYPE)) {
+            $criteria->add(WeaponsTableMap::COL_TYPE, $this->type);
+        }
+        if ($this->isColumnModified(WeaponsTableMap::COL_URL)) {
+            $criteria->add(WeaponsTableMap::COL_URL, $this->url);
         }
 
         return $criteria;
@@ -1063,6 +1181,8 @@ abstract class Weapons implements ActiveRecordInterface
     {
         $copyObj->setCode($this->getCode());
         $copyObj->setName($this->getName());
+        $copyObj->setType($this->getType());
+        $copyObj->setUrl($this->getUrl());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1407,6 +1527,8 @@ abstract class Weapons implements ActiveRecordInterface
         $this->id = null;
         $this->code = null;
         $this->name = null;
+        $this->type = null;
+        $this->url = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

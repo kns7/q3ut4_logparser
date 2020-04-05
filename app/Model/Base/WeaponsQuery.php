@@ -23,10 +23,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWeaponsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildWeaponsQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method     ChildWeaponsQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildWeaponsQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method     ChildWeaponsQuery orderByUrl($order = Criteria::ASC) Order by the url column
  *
  * @method     ChildWeaponsQuery groupById() Group by the id column
  * @method     ChildWeaponsQuery groupByCode() Group by the code column
  * @method     ChildWeaponsQuery groupByName() Group by the name column
+ * @method     ChildWeaponsQuery groupByType() Group by the type column
+ * @method     ChildWeaponsQuery groupByUrl() Group by the url column
  *
  * @method     ChildWeaponsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildWeaponsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,7 +57,9 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildWeapons findOneById(int $id) Return the first ChildWeapons filtered by the id column
  * @method     ChildWeapons findOneByCode(string $code) Return the first ChildWeapons filtered by the code column
- * @method     ChildWeapons findOneByName(string $name) Return the first ChildWeapons filtered by the name column *
+ * @method     ChildWeapons findOneByName(string $name) Return the first ChildWeapons filtered by the name column
+ * @method     ChildWeapons findOneByType(string $type) Return the first ChildWeapons filtered by the type column
+ * @method     ChildWeapons findOneByUrl(string $url) Return the first ChildWeapons filtered by the url column *
 
  * @method     ChildWeapons requirePk($key, ConnectionInterface $con = null) Return the ChildWeapons by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWeapons requireOne(ConnectionInterface $con = null) Return the first ChildWeapons matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -61,11 +67,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWeapons requireOneById(int $id) Return the first ChildWeapons filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWeapons requireOneByCode(string $code) Return the first ChildWeapons filtered by the code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWeapons requireOneByName(string $name) Return the first ChildWeapons filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWeapons requireOneByType(string $type) Return the first ChildWeapons filtered by the type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWeapons requireOneByUrl(string $url) Return the first ChildWeapons filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildWeapons[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildWeapons objects based on current ModelCriteria
  * @method     ChildWeapons[]|ObjectCollection findById(int $id) Return ChildWeapons objects filtered by the id column
  * @method     ChildWeapons[]|ObjectCollection findByCode(string $code) Return ChildWeapons objects filtered by the code column
  * @method     ChildWeapons[]|ObjectCollection findByName(string $name) Return ChildWeapons objects filtered by the name column
+ * @method     ChildWeapons[]|ObjectCollection findByType(string $type) Return ChildWeapons objects filtered by the type column
+ * @method     ChildWeapons[]|ObjectCollection findByUrl(string $url) Return ChildWeapons objects filtered by the url column
  * @method     ChildWeapons[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -164,7 +174,7 @@ abstract class WeaponsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, code, name FROM weapons WHERE id = :p0';
+        $sql = 'SELECT id, code, name, type, url FROM weapons WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -343,6 +353,56 @@ abstract class WeaponsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(WeaponsTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the type column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByType('fooValue');   // WHERE type = 'fooValue'
+     * $query->filterByType('%fooValue%', Criteria::LIKE); // WHERE type LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $type The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildWeaponsQuery The current query, for fluid interface
+     */
+    public function filterByType($type = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($type)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(WeaponsTableMap::COL_TYPE, $type, $comparison);
+    }
+
+    /**
+     * Filter the query on the url column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUrl('fooValue');   // WHERE url = 'fooValue'
+     * $query->filterByUrl('%fooValue%', Criteria::LIKE); // WHERE url LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $url The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildWeaponsQuery The current query, for fluid interface
+     */
+    public function filterByUrl($url = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($url)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(WeaponsTableMap::COL_URL, $url, $comparison);
     }
 
     /**

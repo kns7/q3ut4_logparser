@@ -59,7 +59,7 @@ class WeaponsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class WeaponsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the id field
@@ -87,6 +87,16 @@ class WeaponsTableMap extends TableMap
     const COL_NAME = 'weapons.name';
 
     /**
+     * the column name for the type field
+     */
+    const COL_TYPE = 'weapons.type';
+
+    /**
+     * the column name for the url field
+     */
+    const COL_URL = 'weapons.url';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -98,11 +108,11 @@ class WeaponsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Code', 'Name', ),
-        self::TYPE_CAMELNAME     => array('id', 'code', 'name', ),
-        self::TYPE_COLNAME       => array(WeaponsTableMap::COL_ID, WeaponsTableMap::COL_CODE, WeaponsTableMap::COL_NAME, ),
-        self::TYPE_FIELDNAME     => array('id', 'code', 'name', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'Code', 'Name', 'Type', 'Url', ),
+        self::TYPE_CAMELNAME     => array('id', 'code', 'name', 'type', 'url', ),
+        self::TYPE_COLNAME       => array(WeaponsTableMap::COL_ID, WeaponsTableMap::COL_CODE, WeaponsTableMap::COL_NAME, WeaponsTableMap::COL_TYPE, WeaponsTableMap::COL_URL, ),
+        self::TYPE_FIELDNAME     => array('id', 'code', 'name', 'type', 'url', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -112,11 +122,11 @@ class WeaponsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, 'Name' => 2, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'code' => 1, 'name' => 2, ),
-        self::TYPE_COLNAME       => array(WeaponsTableMap::COL_ID => 0, WeaponsTableMap::COL_CODE => 1, WeaponsTableMap::COL_NAME => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, 'name' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, 'Name' => 2, 'Type' => 3, 'Url' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'code' => 1, 'name' => 2, 'type' => 3, 'url' => 4, ),
+        self::TYPE_COLNAME       => array(WeaponsTableMap::COL_ID => 0, WeaponsTableMap::COL_CODE => 1, WeaponsTableMap::COL_NAME => 2, WeaponsTableMap::COL_TYPE => 3, WeaponsTableMap::COL_URL => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, 'name' => 2, 'type' => 3, 'url' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -139,6 +149,8 @@ class WeaponsTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('code', 'Code', 'VARCHAR', true, 255, null);
         $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
+        $this->addColumn('type', 'Type', 'VARCHAR', false, 255, null);
+        $this->addColumn('url', 'Url', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -299,10 +311,14 @@ class WeaponsTableMap extends TableMap
             $criteria->addSelectColumn(WeaponsTableMap::COL_ID);
             $criteria->addSelectColumn(WeaponsTableMap::COL_CODE);
             $criteria->addSelectColumn(WeaponsTableMap::COL_NAME);
+            $criteria->addSelectColumn(WeaponsTableMap::COL_TYPE);
+            $criteria->addSelectColumn(WeaponsTableMap::COL_URL);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.code');
             $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.url');
         }
     }
 
