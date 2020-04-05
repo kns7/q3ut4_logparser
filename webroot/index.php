@@ -1,5 +1,6 @@
 <?php
 
+use App\Controller\PlayersController;
 use Propel\Runtime\Connection\ConnectionManagerSingle;
 use Propel\Runtime\Propel;
 use Slim\Slim;
@@ -51,8 +52,9 @@ $app->configureMode('development', function () use ($app) {
 // Controllers declaration
 $app->container->singleton('Ctrl',function() use ($app){
     return (object)[
+        'Logs' => new LogsController($app),
         'Players' => new PlayersController($app),
-        'Frags' => new FragsController($app)
+        'Weapons' => new WeaponsController($app)
     ];
 });
 
