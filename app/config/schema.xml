@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+
+  <table name="flags" idMethod="native" phpName="Flags">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
+    <column name="event" phpName="Event" type="VARCHAR" size="255"/>
+
+    <foreign-key foreignTable="players" phpName="Players" refPhpName="Flag">
+      <reference local="player_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+
+  <table name="frags" idMethod="native" phpName="Frags">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="fragger_id" phpName="FraggerId" type="INTEGER" required="true"/>
+    <column name="fragged_id" phpName="FraggedId" type="INTEGER" required="true"/>
+    <column name="weapon_id" phpName="WeaponId" type="INTEGER" required="true"/>
+
+    <foreign-key foreignTable="players" phpName="Fragger" refPhpName="FraggerPlayer">
+      <reference local="fragger_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="Fragged" refPhpName="FraggedPlayer">
+      <reference local="fragged_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="weapons" phpName="Weapons" refPhpName="FragWeapon">
+      <reference local="weapon_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+
+  <table name="games" idMethod="native" phpName="Games">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
+    <column name="start" phpName="Start" type="INTEGER" required="true"/>
+    <column name="stop" phpName="Stop" type="INTEGER" required="true"/>
+
+    <foreign-key foreignTable="players" phpName="Players" refPhpName="Game">
+      <reference local="player_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+
+  <table name="players" idMethod="native" phpName="Players">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+
+  <table name="rounds" idMethod="native" phpName="Rounds">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="winner" phpName="Winner" type="VARCHAR" size="255" required="true"/>
+    <column name="red_score" phpName="RedScore" type="INTEGER" required="true"/>
+    <column name="blue_score" phpName="BlueScore" type="INTEGER" required="true"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+
+  <table name="scores" idMethod="native" phpName="Scores">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
+    <column name="score" phpName="Score" type="INTEGER" required="true"/>
+
+    <foreign-key foreignTable="players" phpName="Players" refPhpName="Score">
+      <reference local="player_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+
+  <table name="teams" idMethod="native" phpName="Teams">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="round_id" phpName="RoundId" type="INTEGER" required="true"/>
+    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
+    <column name="team" phpName="Team" type="VARCHAR" size="255" required="true"/>
+
+    <foreign-key foreignTable="players" phpName="Players" refPhpName="Team">
+      <reference local="player_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="rounds" phpName="Rounds" refPhpName="Team">
+      <reference local="round_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+
+  <table name="weapons" idMethod="native" phpName="Weapons">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="code" phpName="Code" type="VARCHAR" size="255" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+</database>

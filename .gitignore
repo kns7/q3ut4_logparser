@@ -1,2 +1,3 @@
 *.code-workspace
 /app/config/config.php
+propel.yml
