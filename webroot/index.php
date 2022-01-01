@@ -52,12 +52,17 @@ $app->configureMode('development', function () use ($app) {
 // Controllers declaration
 $app->container->singleton('Ctrl',function() use ($app){
     return (object)[
+        'Bombs' => new \App\Controller\BombsController($app),
+        'Flags' => new \App\Controller\FlagsController($app),
         'Frags' => new \App\Controller\FragsController($app),
         'Games' => new \App\Controller\GamesController($app),
         'Gametypes' => new \App\Controller\GametypesController($app),
         'Hits' => new \App\Controller\HitsController($app),
         'Logs' => new LogsController($app),
         'Players' => new PlayersController($app),
+        'Rounds' => new \App\Controller\RoundsController($app),
+        'Scores' => new \App\Controller\ScoresController($app),
+        'Teams' => new \App\Controller\TeamsController($app),
         'Weapons' => new WeaponsController($app)
     ];
 });

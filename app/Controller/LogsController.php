@@ -12,13 +12,15 @@ class LogsController extends Controller {
     private $_initround = "/^ *([0-9]+):([0-9]+) InitRound: (.*)$/i";
     private $_item = "/^ *[0-9]+:[0-9]{2} Item: ([0-9]+) (?!<world>)(.*)$/i";
     private $_flag = "/^ *[0-9]+:[0-9]{2} Flag: ([0-9]+) ([0-9]+): (.*)$/i";
-    private $_bombplanted = "/^ *[0-9]+:[0-9]{2} Bomb was planted by ([0-9]+)$/i";
-    private $_bombdefused = "/^ *[0-9]+:[0-9]{2} Bomb was defused by ([0-9]+)/i";
+    private $_bomb = "/^ *[0-9]+:[0-9]{2} Bomb was (.*) by ([0-9]+)/i";
+    private $_bombexploded = "/^ *[0-9]+:[0-9]{2} Pop!/i";
     private $_teamscore = "/^ *([0-9]+):([0-9]+) red:([0-9]+)[ ]*blue:([0-9]+)$/i";
     private $_chat = "/^ *[0-9]+:[0-9]{2} (say|sayteam): [0:9]+ (?!<world>)(.*): (.*)$/i";
     private $_playersarray = [];
     private $_teams = [];
     private $_round = 0;
+    private $_bombexplosion = 0;
+    private $_triggerbomb  = false;
 
     public function parseLog($log)
     {
@@ -115,6 +117,7 @@ class LogsController extends Controller {
                 if(count($matches) > 0){
                     echo "Init Round        | ";
                     $gametype = $this->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString("g_gametype"));
+                    $this->_triggerbomb = ($gametype->getCode() == "8")? true:false;
                     $newround = $this->app->Ctrl->Rounds->add($gametype);
                     echo "Round ".$newround->getId(). " Game Type: ".$gametype->getName();
                     if($newround !== false){
@@ -125,6 +128,25 @@ class LogsController extends Controller {
                     }
                     echo "\n";
                 }
+
+                /* Bomb Actions */
+                preg_match($this->_bomb,$line,$matches);
+                if(count($matches) > 0){
+                    $action = $matches[1];
+                    if($action == "planted" || $action == "defused") {
+                        echo "Bomb Action       | ";
+                        $player = $this->getPlayerFromTempArray($matches[2]);
+                        echo $player->getName(). " $action bomb";
+                        if($this->app->Ctrl->Bombs->add($player, $action)){
+                            echo " [ADDED]";
+                        }else{
+                            echo " [ERROR]";
+                        }
+                    }
+                }
+
+                /* Flags Actions */
+
 
                 /* Check Endgame: New game, everybody quits */
                 preg_match($this->_endgame,$line,$matches);
