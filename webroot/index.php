@@ -53,6 +53,7 @@ $app->configureMode('development', function () use ($app) {
 $app->container->singleton('Ctrl',function() use ($app){
     return (object)[
         'Frags' => new \App\Controller\FragsController($app),
+        'Games' => new \App\Controller\GamesController($app),
         'Hits' => new \App\Controller\HitsController($app),
         'Logs' => new LogsController($app),
         'Players' => new PlayersController($app),
@@ -67,6 +68,7 @@ $app->get('/',function() use ($app){
 
 $app->group('/ajax',function() use($app){
     $app->get('/parselog',function() use($app){
+        $app->Ctrl->Logs->clearDBTests();
         echo "<pre>";
         $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/testlog.log");
         echo "</pre>";
@@ -86,27 +88,11 @@ if($_SERVER['SITE_MODE'] == "development"){
         echo "Opening Logfile...\n";
         $l = 1;
         $handle = fopen("../logs/testlog.log", "r");
-        $hit = "/^ *[0-9]+:[0-9]{2} Hit: [0-9]+ [0-9]+ [0-9]+ [0-9]+: (.*) hit (.*) in the (.*)$/i";
-        $frag = "/^ *[0-9]+:[0-9]{2} Kill: [0-9]+ [0-9]+ [0-9]+: (?!<world>)(.*) killed (.*) by (?!MOD_CHANGE_TEAM$|MOD_FALLING$|MOD_WATER$|MOD_LAVA$|UT_MOD_BLED$|UT_MOD_FLAG$)(.*)$/i";
-        $hits = 0;
-        $frags = 0;
+        $join = "/^ *([0-9]+):([0-9]+) ClientUserinfo: ([0-9]+) (.*)$/i";
+        $quit = "/^ *([0-9]+):([0-9]+) ClientDisconnect: ([0-9]+)$/i";
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
-                echo "Line $l \n";
-                preg_match($hit,$line,$matches);
-                if(count($matches)> 0){
-                    echo "Fragger: ".$matches[1] ."\n";
-                    echo "Fragged: ".$matches[2] ."\n";
-                    echo "Where: ".$matches[3] ."\n";
-                    $hits++;
-                }
-                preg_match($frag,$line,$matches);
-                if(count($matches)> 0){
-                    echo "Fragger: ".$matches[1]."\n";
-                    echo "Fragged: ".$matches[2]."\n";
-                    echo "Weapon: ".$matches[3]."\n";
-                    $frags++;
-                }
+                preg_match($join,$line,$matches);
                 $l++;
             }
 
@@ -114,8 +100,7 @@ if($_SERVER['SITE_MODE'] == "development"){
             fclose($handle);
             echo "--------------------------\n";
             echo "Stats:\n";
-            echo "Hits: $hits\n";
-            echo "Frags: $frags\n";
+
             echo "--------------------------\n";
             echo "Closing Logfile\n";
             echo "</pre>";

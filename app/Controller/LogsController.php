@@ -14,16 +14,36 @@ class LogsController extends Controller {
     private $_flag = "/^ *[0-9]+:[0-9]{2} Flag: ([0-9]+) ([0-9]+): (.*)$/i";
     private $_teamscore = "/^ *([0-9]+):([0-9]+) red:([0-9]+)[ ]*blue:([0-9]+)$/i";
     private $_chat = "/^ *[0-9]+:[0-9]{2} (say|sayteam): [0:9]+ (?!<world>)(.*): (.*)$/i";
+    private $_playersarray = [];
 
     public function parseLog($log)
     {
         $handle = fopen($log, "r");
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
+                /* Check Player Connection */
+                preg_match($this->_playerjoin,$line,$matches);
+                if(count($matches) > 0){
+                    $player = $this->app->Ctrl->Players->getORadd($this->getPlayerNameFromConnectionString($matches[4],"name"));
+                    if(array_search($player->getId(),$this->_playersarray) === false){
+                        /* Player not found in Temp Array, adding it and declare new Connection */
+                        echo "Player connect    | ";
+                        $this->_playersarray[$matches[3]] = $player->getId();
+                        $time = $this->countGameTime($matches);
+                        echo $player->getName(). " (".$matches[3].") connected at ".$time." seconds";
+                        if($this->app->Ctrl->Games->add($player,$time)){
+                            echo " [ADDED]";
+                        }else{
+                            echo " [ERROR]";
+                        }
+                        echo "\n";
+                    }
+                }
+
                 /* Check Frag */
                 preg_match($this->_frag,$line,$matches);
                 if(count($matches) > 0){
-                    echo "Frag found! ";
+                    echo "Frag found        | ";
                     $fragger = $this->app->Ctrl->Players->getORadd($matches[1]);
                     $fragged = $this->app->Ctrl->Players->getORadd($matches[2]);
                     $weapon = $this->app->Ctrl->Weapons->getORadd($matches[3]);
@@ -39,7 +59,7 @@ class LogsController extends Controller {
                 /* Check Hits */
                 preg_match($this->_hit,$line,$matches);
                 if(count($matches) > 0){
-                    echo "Hit found! ";
+                    echo "Hit found         | ";
                     $hitter = $this->app->Ctrl->Players->getORadd($matches[1]);
                     $hitted = $this->app->Ctrl->Players->getORadd($matches[2]);
                     $part = $this->app->Ctrl->Hits->getBodyPart($matches[3]);
@@ -51,11 +71,69 @@ class LogsController extends Controller {
                     }
                     echo "\n";
                 }
+
+                /* Check Player Changes */
+                preg_match($this->_playerchange,$line,$matches);
+                if(count($matches) > 0){
+                    echo "Player Change     | ";
+                    $player = $this->app->Ctrl->Players->getORadd($this->getPlayerNameFromConnectionString($matches[4],"n"));
+
+                    echo "\n";
+                }
+
+                /* Check Endgame: New game, everybody quits */
+                preg_match($this->_endgame,$line,$matches);
+                if(count($matches) > 0){
+                    echo "End Game          | ";
+                    $time = $this->countGameTime($matches);
+                    foreach($this->_playersarray as $p){
+                        $this->app->Ctrl->Games->stopGame($p,$time);
+                    }
+                    $this->_playersarray = [];
+                    echo "Stopped time for all Players at $time seconds";
+                    echo "\n";
+                }
+
+                /* Check Player Disconnection */
+                preg_match($this->_playerquits,$line,$matches);
+                if(count($matches) > 0){
+                    echo "Player Disconnect | ";
+                    $time = $this->countGameTime($matches);
+                    $player = $this->getPlayerFromTempArray($matches[3]);
+                    if(!is_null($player)) {
+                        echo $player->getName(). " disconnected at ".$time." seconds";
+                        if($this->app->Ctrl->Games->stopGame($player, $time) !== false){
+                            echo " [ADDED]";
+                        }else{
+                            echo " [ERROR]";
+                        }
+                    }
+                    try {
+                        unset($this->_playersarray[$matches[3]]);
+                    } catch(Exception $e){
+
+                    }
+                    echo "\n";
+                }
             }
 
             fclose($handle);
         } else {
             return false;
         }
+    }
+
+    private function getPlayerNameFromConnectionString($string,$marker){
+        $str = explode("\\",$string);
+        $key = array_search($marker, $str);
+        return $str[$key + 1];
+    }
+
+    private function getPlayerFromTempArray($id){
+        return $this->app->Ctrl->Players->get($this->_playersarray[$id]);
+    }
+
+    private function countGameTime($matches){
+        return intval($matches[1])*60 + intval($matches[2]);;
     }
 }

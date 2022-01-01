@@ -8,8 +8,11 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Controller\\Controller' => $baseDir . '/app/Controller/Controller.php',
     'App\\Controller\\FragsController' => $baseDir . '/app/Controller/FragsController.php',
+    'App\\Controller\\GamesController' => $baseDir . '/app/Controller/GamesController.php',
     'App\\Controller\\HitsController' => $baseDir . '/app/Controller/HitsController.php',
     'App\\Controller\\PlayersController' => $baseDir . '/app/Controller/PlayersController.php',
+    'App\\Controller\\RoundsController' => $baseDir . '/app/Controller/RoundsController.php',
+    'App\\Controller\\TeamsController' => $baseDir . '/app/Controller/TeamsController.php',
     'Base\\Bodyparts' => $baseDir . '/app/Model/Base/Bodyparts.php',
     'Base\\BodypartsQuery' => $baseDir . '/app/Model/Base/BodypartsQuery.php',
     'Base\\Config' => $baseDir . '/app/Model/Base/Config.php',

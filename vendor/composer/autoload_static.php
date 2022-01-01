@@ -109,8 +109,11 @@ class ComposerStaticInit28a17c4ad700c1f4b526c9866f5bae80
     public static $classMap = array (
         'App\\Controller\\Controller' => __DIR__ . '/../..' . '/app/Controller/Controller.php',
         'App\\Controller\\FragsController' => __DIR__ . '/../..' . '/app/Controller/FragsController.php',
+        'App\\Controller\\GamesController' => __DIR__ . '/../..' . '/app/Controller/GamesController.php',
         'App\\Controller\\HitsController' => __DIR__ . '/../..' . '/app/Controller/HitsController.php',
         'App\\Controller\\PlayersController' => __DIR__ . '/../..' . '/app/Controller/PlayersController.php',
+        'App\\Controller\\RoundsController' => __DIR__ . '/../..' . '/app/Controller/RoundsController.php',
+        'App\\Controller\\TeamsController' => __DIR__ . '/../..' . '/app/Controller/TeamsController.php',
         'Base\\Bodyparts' => __DIR__ . '/../..' . '/app/Model/Base/Bodyparts.php',
         'Base\\BodypartsQuery' => __DIR__ . '/../..' . '/app/Model/Base/BodypartsQuery.php',
         'Base\\Config' => __DIR__ . '/../..' . '/app/Model/Base/Config.php',
