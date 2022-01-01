@@ -110,6 +110,7 @@ class ComposerStaticInit28a17c4ad700c1f4b526c9866f5bae80
         'App\\Controller\\Controller' => __DIR__ . '/../..' . '/app/Controller/Controller.php',
         'App\\Controller\\FragsController' => __DIR__ . '/../..' . '/app/Controller/FragsController.php',
         'App\\Controller\\GamesController' => __DIR__ . '/../..' . '/app/Controller/GamesController.php',
+        'App\\Controller\\GametypesController' => __DIR__ . '/../..' . '/app/Controller/GametypesController.php',
         'App\\Controller\\HitsController' => __DIR__ . '/../..' . '/app/Controller/HitsController.php',
         'App\\Controller\\PlayersController' => __DIR__ . '/../..' . '/app/Controller/PlayersController.php',
         'App\\Controller\\RoundsController' => __DIR__ . '/../..' . '/app/Controller/RoundsController.php',

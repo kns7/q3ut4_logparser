@@ -9,6 +9,7 @@ return array(
     'App\\Controller\\Controller' => $baseDir . '/app/Controller/Controller.php',
     'App\\Controller\\FragsController' => $baseDir . '/app/Controller/FragsController.php',
     'App\\Controller\\GamesController' => $baseDir . '/app/Controller/GamesController.php',
+    'App\\Controller\\GametypesController' => $baseDir . '/app/Controller/GametypesController.php',
     'App\\Controller\\HitsController' => $baseDir . '/app/Controller/HitsController.php',
     'App\\Controller\\PlayersController' => $baseDir . '/app/Controller/PlayersController.php',
     'App\\Controller\\RoundsController' => $baseDir . '/app/Controller/RoundsController.php',

@@ -110,7 +110,19 @@ class LogsController extends Controller {
 
                 /* Init Round */
                 preg_match($this->_initround,$line,$matches);
-
+                if(count($matches) > 0){
+                    echo "Init Round        | ";
+                    $gametype = $this->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString("g_gametype"));
+                    $newround = $this->app->Ctrl->Rounds->add($gametype);
+                    echo "Round ".$newround->getId(). " Game Type: ".$gametype->getName();
+                    if($newround !== false){
+                        echo " [ADDED]";
+                        $this->_round = $newround->getId();
+                    }else{
+                        echo " [ERROR]";
+                    }
+                    echo "\n";
+                }
 
                 /* Check Endgame: New game, everybody quits */
                 preg_match($this->_endgame,$line,$matches);
