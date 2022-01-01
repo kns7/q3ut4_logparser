@@ -2,15 +2,20 @@
 
 namespace Base;
 
+use \Gametypes as ChildGametypes;
 use \GametypesQuery as ChildGametypesQuery;
+use \Rounds as ChildRounds;
+use \RoundsQuery as ChildRoundsQuery;
 use \Exception;
 use \PDO;
 use Map\GametypesTableMap;
+use Map\RoundsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -88,12 +93,24 @@ abstract class Gametypes implements ActiveRecordInterface
     protected $description;
 
     /**
+     * @var        ObjectCollection|ChildRounds[] Collection to store aggregation of ChildRounds objects.
+     */
+    protected $collRounds;
+    protected $collRoundsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildRounds[]
+     */
+    protected $roundsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Gametypes object.
@@ -556,6 +573,8 @@ abstract class Gametypes implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collRounds = null;
+
         } // if (deep)
     }
 
@@ -668,6 +687,23 @@ abstract class Gametypes implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->roundsScheduledForDeletion !== null) {
+                if (!$this->roundsScheduledForDeletion->isEmpty()) {
+                    \RoundsQuery::create()
+                        ->filterByPrimaryKeys($this->roundsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->roundsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRounds !== null) {
+                foreach ($this->collRounds as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -822,10 +858,11 @@ abstract class Gametypes implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Gametypes'][$this->hashCode()])) {
@@ -844,6 +881,23 @@ abstract class Gametypes implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collRounds) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'roundss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'roundss';
+                        break;
+                    default:
+                        $key = 'Rounds';
+                }
+
+                $result[$key] = $this->collRounds->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1069,6 +1123,20 @@ abstract class Gametypes implements ActiveRecordInterface
         $copyObj->setCode($this->getCode());
         $copyObj->setName($this->getName());
         $copyObj->setDescription($this->getDescription());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getRounds() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRound($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1095,6 +1163,248 @@ abstract class Gametypes implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Round' == $relationName) {
+            $this->initRounds();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collRounds collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addRounds()
+     */
+    public function clearRounds()
+    {
+        $this->collRounds = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collRounds collection loaded partially.
+     */
+    public function resetPartialRounds($v = true)
+    {
+        $this->collRoundsPartial = $v;
+    }
+
+    /**
+     * Initializes the collRounds collection.
+     *
+     * By default this just sets the collRounds collection to an empty array (like clearcollRounds());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRounds($overrideExisting = true)
+    {
+        if (null !== $this->collRounds && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = RoundsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRounds = new $collectionClassName;
+        $this->collRounds->setModel('\Rounds');
+    }
+
+    /**
+     * Gets an array of ChildRounds objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGametypes is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildRounds[] List of ChildRounds objects
+     * @throws PropelException
+     */
+    public function getRounds(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRoundsPartial && !$this->isNew();
+        if (null === $this->collRounds || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRounds) {
+                // return empty collection
+                $this->initRounds();
+            } else {
+                $collRounds = ChildRoundsQuery::create(null, $criteria)
+                    ->filterByGametypes($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collRoundsPartial && count($collRounds)) {
+                        $this->initRounds(false);
+
+                        foreach ($collRounds as $obj) {
+                            if (false == $this->collRounds->contains($obj)) {
+                                $this->collRounds->append($obj);
+                            }
+                        }
+
+                        $this->collRoundsPartial = true;
+                    }
+
+                    return $collRounds;
+                }
+
+                if ($partial && $this->collRounds) {
+                    foreach ($this->collRounds as $obj) {
+                        if ($obj->isNew()) {
+                            $collRounds[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRounds = $collRounds;
+                $this->collRoundsPartial = false;
+            }
+        }
+
+        return $this->collRounds;
+    }
+
+    /**
+     * Sets a collection of ChildRounds objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $rounds A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGametypes The current object (for fluent API support)
+     */
+    public function setRounds(Collection $rounds, ConnectionInterface $con = null)
+    {
+        /** @var ChildRounds[] $roundsToDelete */
+        $roundsToDelete = $this->getRounds(new Criteria(), $con)->diff($rounds);
+
+
+        $this->roundsScheduledForDeletion = $roundsToDelete;
+
+        foreach ($roundsToDelete as $roundRemoved) {
+            $roundRemoved->setGametypes(null);
+        }
+
+        $this->collRounds = null;
+        foreach ($rounds as $round) {
+            $this->addRound($round);
+        }
+
+        $this->collRounds = $rounds;
+        $this->collRoundsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Rounds objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Rounds objects.
+     * @throws PropelException
+     */
+    public function countRounds(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRoundsPartial && !$this->isNew();
+        if (null === $this->collRounds || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRounds) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getRounds());
+            }
+
+            $query = ChildRoundsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGametypes($this)
+                ->count($con);
+        }
+
+        return count($this->collRounds);
+    }
+
+    /**
+     * Method called to associate a ChildRounds object to this object
+     * through the ChildRounds foreign key attribute.
+     *
+     * @param  ChildRounds $l ChildRounds
+     * @return $this|\Gametypes The current object (for fluent API support)
+     */
+    public function addRound(ChildRounds $l)
+    {
+        if ($this->collRounds === null) {
+            $this->initRounds();
+            $this->collRoundsPartial = true;
+        }
+
+        if (!$this->collRounds->contains($l)) {
+            $this->doAddRound($l);
+
+            if ($this->roundsScheduledForDeletion and $this->roundsScheduledForDeletion->contains($l)) {
+                $this->roundsScheduledForDeletion->remove($this->roundsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildRounds $round The ChildRounds object to add.
+     */
+    protected function doAddRound(ChildRounds $round)
+    {
+        $this->collRounds[]= $round;
+        $round->setGametypes($this);
+    }
+
+    /**
+     * @param  ChildRounds $round The ChildRounds object to remove.
+     * @return $this|ChildGametypes The current object (for fluent API support)
+     */
+    public function removeRound(ChildRounds $round)
+    {
+        if ($this->getRounds()->contains($round)) {
+            $pos = $this->collRounds->search($round);
+            $this->collRounds->remove($pos);
+            if (null === $this->roundsScheduledForDeletion) {
+                $this->roundsScheduledForDeletion = clone $this->collRounds;
+                $this->roundsScheduledForDeletion->clear();
+            }
+            $this->roundsScheduledForDeletion[]= clone $round;
+            $round->setGametypes(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1126,8 +1436,14 @@ abstract class Gametypes implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collRounds) {
+                foreach ($this->collRounds as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collRounds = null;
     }
 
     /**

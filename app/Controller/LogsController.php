@@ -16,6 +16,7 @@ class LogsController extends Controller {
     private $_chat = "/^ *[0-9]+:[0-9]{2} (say|sayteam): [0:9]+ (?!<world>)(.*): (.*)$/i";
     private $_playersarray = [];
     private $_teams = [];
+    private $_round = 0;
 
     public function parseLog($log)
     {
@@ -108,6 +109,7 @@ class LogsController extends Controller {
                 }
 
                 /* Init Round */
+                preg_match($this->_initround,$line,$matches);
 
 
                 /* Check Endgame: New game, everybody quits */

@@ -128,7 +128,11 @@
     <column name="winner" phpName="Winner" type="VARCHAR" size="255" required="true"/>
     <column name="red_score" phpName="RedScore" type="INTEGER" required="true"/>
     <column name="blue_score" phpName="BlueScore" type="INTEGER" required="true"/>
+    <column name="gametype_id" phpName="GametypeId" type="INTEGER" required="true"/>
 
+    <foreign-key foreignTable="gametypes" phpName="Gametypes" refPhpName="Round">
+      <reference local="gametype_id" foreign="id"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
