@@ -81,12 +81,15 @@
 
   <table name="hits" idMethod="native" phpName="Hits">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
+    <column name="fragger_id" phpName="FraggerId" type="INTEGER" required="true"/>
+    <column name="fragged_id" phpName="FraggedId" type="INTEGER" required="true"/>
     <column name="bodypart_id" phpName="BodypartId" type="INTEGER" required="true"/>
-    <column name="counter" phpName="Counter" type="INTEGER" required="true"/>
 
-    <foreign-key foreignTable="players" phpName="Players" refPhpName="Hit">
-      <reference local="player_id" foreign="id"/>
+    <foreign-key foreignTable="players" phpName="Fragger" refPhpName="FraggerPlayer">
+      <reference local="fragger_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="Fragged" refPhpName="FraggedPlayer">
+      <reference local="fragged_id" foreign="id"/>
     </foreign-key>
     <foreign-key foreignTable="bodyparts" phpName="Bodyparts" refPhpName="Hit">
       <reference local="bodypart_id" foreign="id"/>

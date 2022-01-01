@@ -1364,10 +1364,35 @@ abstract class Bodyparts implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
      */
-    public function getHitsJoinPlayers(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getHitsJoinFragger(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildHitsQuery::create(null, $criteria);
-        $query->joinWith('Players', $joinBehavior);
+        $query->joinWith('Fragger', $joinBehavior);
+
+        return $this->getHits($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Bodyparts is new, it will return
+     * an empty collection; or if this Bodyparts has previously
+     * been saved, it will retrieve related Hits from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Bodyparts.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     */
+    public function getHitsJoinFragged(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildHitsQuery::create(null, $criteria);
+        $query->joinWith('Fragged', $joinBehavior);
 
         return $this->getHits($query, $con);
     }
