@@ -18,25 +18,15 @@ class Controller
 
     public function clearDBTests()
     {
-        $conn = Propel::getConnection();
-        $stmt = $conn->prepare("TRUNCATE TABLE frags");
-        $stmt->execute();
-        $stmt = null;
-        $stmt = $conn->prepare("TRUNCATE TABLE hits");
-        $stmt->execute();
-        $stmt = null;
-        $stmt = $conn->prepare("ALTER TABLE frags AUTO_INCREMENT = 1");
-        $stmt->execute();
-        $stmt = null;
-        $stmt = $conn->prepare("ALTER TABLE hits AUTO_INCREMENT = 1");
-        $stmt->execute();
-        $stmt = null;
-        $stmt = $conn->prepare("TRUNCATE TABLE games");
-        $stmt->execute();
-        $stmt = null;
-        $stmt = $conn->prepare("ALTER TABLE games AUTO_INCREMENT = 1");
-        $stmt->execute();
-        $stmt = null;
+        foreach(["bombs","flags","frags","games","hits","rounds","scores","teams"] as $table) {
+            $conn = Propel::getConnection();
+            $stmt = $conn->prepare("DELETE FROM $table");
+            $stmt->execute();
+            $stmt = null;
+            $stmt = $conn->prepare("ALTER TABLE $table AUTO_INCREMENT = 1");
+            $stmt->execute();
+            $stmt = null;
+        }
     }
 
 

@@ -76,7 +76,7 @@ $app->group('/ajax',function() use($app){
     $app->get('/parselog',function() use($app){
         $app->Ctrl->Logs->clearDBTests();
         echo "<pre>";
-        $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/testlog.log");
+        $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/log2.log");
         echo "</pre>";
     });
 });
@@ -88,32 +88,15 @@ if($_SERVER['SITE_MODE'] == "development"){
            print_r($app->Ctrl->Players->getORadd($player));
            echo "</pre>";
        });
+       $app->get('/newround',function() use($app){
+           $gametype = $app->Ctrl->Gametypes->getByCode(8);
+            $newround = $app->Ctrl->Rounds->add($gametype);
+            echo "<pre>";
+            print_r($newround);
+            echo '</pre>';
+       });
     });
-    $app->get('/logtest',function() use($app){
-        echo "<pre>";
-        echo "Opening Logfile...\n";
-        $l = 1;
-        $handle = fopen("../logs/testlog.log", "r");
-        $join = "/^ *([0-9]+):([0-9]+) ClientUserinfo: ([0-9]+) (.*)$/i";
-        $quit = "/^ *([0-9]+):([0-9]+) ClientDisconnect: ([0-9]+)$/i";
-        if ($handle) {
-            while (($line = fgets($handle)) !== false) {
-                preg_match($join,$line,$matches);
-                $l++;
-            }
 
-
-            fclose($handle);
-            echo "--------------------------\n";
-            echo "Stats:\n";
-
-            echo "--------------------------\n";
-            echo "Closing Logfile\n";
-            echo "</pre>";
-        } else {
-            return false;
-        }
-    });
 }
 
 $app->run();

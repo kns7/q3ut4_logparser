@@ -22,8 +22,24 @@ class RoundsController extends Controller
             ->setBlueScore(0);
         try {
             $round->save();
-            return $round;
+            $newround = \RoundsQuery::create()->orderById("DESC")->findOne();
+            return $newround;
         } catch (PropelException $e){
+            return false;
+        }
+    }
+
+    public function updateResults($roundid, $redscore, $bluescore, $winner)
+    {
+        $round = \RoundsQuery::create()->findPk($roundid);
+        $round->setBlueScore($bluescore)
+            ->setRedScore($redscore)
+            ->setWinner($winner);
+
+        try {
+            $round->save();
+            return $round;
+        } catch(PropelException $e){
             return false;
         }
     }
