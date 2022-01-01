@@ -2,8 +2,8 @@
 
 namespace Map;
 
-use \Players;
-use \PlayersQuery;
+use \Config;
+use \ConfigQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'players' table.
+ * This class defines the structure of the 'config' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class PlayersTableMap extends TableMap
+class ConfigTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class PlayersTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.PlayersTableMap';
+    const CLASS_NAME = '.Map.ConfigTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class PlayersTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'players';
+    const TABLE_NAME = 'config';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Players';
+    const OM_CLASS = '\\Config';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Players';
+    const CLASS_DEFAULT = 'Config';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 2;
 
     /**
      * The number of lazy-loaded columns
@@ -69,22 +69,17 @@ class PlayersTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 2;
 
     /**
-     * the column name for the id field
+     * the column name for the key field
      */
-    const COL_ID = 'players.id';
+    const COL_KEY = 'config.key';
 
     /**
-     * the column name for the name field
+     * the column name for the value field
      */
-    const COL_NAME = 'players.name';
-
-    /**
-     * the column name for the altname field
-     */
-    const COL_ALTNAME = 'players.altname';
+    const COL_VALUE = 'config.value';
 
     /**
      * The default string format for model objects of the related table
@@ -98,11 +93,11 @@ class PlayersTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Name', 'Altname', ),
-        self::TYPE_CAMELNAME     => array('id', 'name', 'altname', ),
-        self::TYPE_COLNAME       => array(PlayersTableMap::COL_ID, PlayersTableMap::COL_NAME, PlayersTableMap::COL_ALTNAME, ),
-        self::TYPE_FIELDNAME     => array('id', 'name', 'altname', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Key', 'Value', ),
+        self::TYPE_CAMELNAME     => array('key', 'value', ),
+        self::TYPE_COLNAME       => array(ConfigTableMap::COL_KEY, ConfigTableMap::COL_VALUE, ),
+        self::TYPE_FIELDNAME     => array('key', 'value', ),
+        self::TYPE_NUM           => array(0, 1, )
     );
 
     /**
@@ -112,11 +107,11 @@ class PlayersTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Altname' => 2, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'altname' => 2, ),
-        self::TYPE_COLNAME       => array(PlayersTableMap::COL_ID => 0, PlayersTableMap::COL_NAME => 1, PlayersTableMap::COL_ALTNAME => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'altname' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Key' => 0, 'Value' => 1, ),
+        self::TYPE_CAMELNAME     => array('key' => 0, 'value' => 1, ),
+        self::TYPE_COLNAME       => array(ConfigTableMap::COL_KEY => 0, ConfigTableMap::COL_VALUE => 1, ),
+        self::TYPE_FIELDNAME     => array('key' => 0, 'value' => 1, ),
+        self::TYPE_NUM           => array(0, 1, )
     );
 
     /**
@@ -129,16 +124,15 @@ class PlayersTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('players');
-        $this->setPhpName('Players');
+        $this->setName('config');
+        $this->setPhpName('Config');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Players');
+        $this->setClassName('\\Config');
         $this->setPackage('');
-        $this->setUseIdGenerator(true);
+        $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
-        $this->addColumn('altname', 'Altname', 'LONGVARCHAR', false, null, null);
+        $this->addPrimaryKey('key', 'Key', 'VARCHAR', true, 255, null);
+        $this->addColumn('value', 'Value', 'VARCHAR', true, 255, null);
     } // initialize()
 
     /**
@@ -146,55 +140,6 @@ class PlayersTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Flag', '\\Flags', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':player_id',
-    1 => ':id',
-  ),
-), null, null, 'Flags', false);
-        $this->addRelation('FraggerPlayer', '\\Frags', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':fragger_id',
-    1 => ':id',
-  ),
-), null, null, 'FraggerPlayers', false);
-        $this->addRelation('FraggedPlayer', '\\Frags', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':fragged_id',
-    1 => ':id',
-  ),
-), null, null, 'FraggedPlayers', false);
-        $this->addRelation('Game', '\\Games', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':player_id',
-    1 => ':id',
-  ),
-), null, null, 'Games', false);
-        $this->addRelation('Hit', '\\Hits', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':player_id',
-    1 => ':id',
-  ),
-), null, null, 'Hits', false);
-        $this->addRelation('Score', '\\Scores', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':player_id',
-    1 => ':id',
-  ),
-), null, null, 'Scores', false);
-        $this->addRelation('Team', '\\Teams', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':player_id',
-    1 => ':id',
-  ),
-), null, null, 'Teams', false);
     } // buildRelations()
 
     /**
@@ -213,11 +158,11 @@ class PlayersTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -234,10 +179,10 @@ class PlayersTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return (int) $row[
+        return (string) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('Key', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -254,7 +199,7 @@ class PlayersTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? PlayersTableMap::CLASS_DEFAULT : PlayersTableMap::OM_CLASS;
+        return $withPrefix ? ConfigTableMap::CLASS_DEFAULT : ConfigTableMap::OM_CLASS;
     }
 
     /**
@@ -268,22 +213,22 @@ class PlayersTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Players object, last column rank)
+     * @return array           (Config object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = PlayersTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = PlayersTableMap::getInstanceFromPool($key))) {
+        $key = ConfigTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = ConfigTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + PlayersTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + ConfigTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = PlayersTableMap::OM_CLASS;
-            /** @var Players $obj */
+            $cls = ConfigTableMap::OM_CLASS;
+            /** @var Config $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            PlayersTableMap::addInstanceToPool($obj, $key);
+            ConfigTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -306,18 +251,18 @@ class PlayersTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = PlayersTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = PlayersTableMap::getInstanceFromPool($key))) {
+            $key = ConfigTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = ConfigTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Players $obj */
+                /** @var Config $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                PlayersTableMap::addInstanceToPool($obj, $key);
+                ConfigTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -338,13 +283,11 @@ class PlayersTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PlayersTableMap::COL_ID);
-            $criteria->addSelectColumn(PlayersTableMap::COL_NAME);
-            $criteria->addSelectColumn(PlayersTableMap::COL_ALTNAME);
+            $criteria->addSelectColumn(ConfigTableMap::COL_KEY);
+            $criteria->addSelectColumn(ConfigTableMap::COL_VALUE);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.altname');
+            $criteria->addSelectColumn($alias . '.key');
+            $criteria->addSelectColumn($alias . '.value');
         }
     }
 
@@ -357,7 +300,7 @@ class PlayersTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(PlayersTableMap::DATABASE_NAME)->getTable(PlayersTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(ConfigTableMap::DATABASE_NAME)->getTable(ConfigTableMap::TABLE_NAME);
     }
 
     /**
@@ -365,16 +308,16 @@ class PlayersTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(PlayersTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(PlayersTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new PlayersTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(ConfigTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(ConfigTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new ConfigTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Players or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Config or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Players object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Config object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -385,27 +328,27 @@ class PlayersTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PlayersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ConfigTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Players) { // it's a model object
+        } elseif ($values instanceof \Config) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(PlayersTableMap::DATABASE_NAME);
-            $criteria->add(PlayersTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(ConfigTableMap::DATABASE_NAME);
+            $criteria->add(ConfigTableMap::COL_KEY, (array) $values, Criteria::IN);
         }
 
-        $query = PlayersQuery::create()->mergeWith($criteria);
+        $query = ConfigQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            PlayersTableMap::clearInstancePool();
+            ConfigTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                PlayersTableMap::removeInstanceFromPool($singleval);
+                ConfigTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -413,20 +356,20 @@ class PlayersTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the players table.
+     * Deletes all rows from the config table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return PlayersQuery::create()->doDeleteAll($con);
+        return ConfigQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Players or Criteria object.
+     * Performs an INSERT on the database, given a Config or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Players object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Config object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -435,22 +378,18 @@ class PlayersTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PlayersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ConfigTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Players object
-        }
-
-        if ($criteria->containsKey(PlayersTableMap::COL_ID) && $criteria->keyContainsValue(PlayersTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PlayersTableMap::COL_ID.')');
+            $criteria = $criteria->buildCriteria(); // build Criteria from Config object
         }
 
 
         // Set the correct dbName
-        $query = PlayersQuery::create()->mergeWith($criteria);
+        $query = ConfigQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -459,7 +398,7 @@ class PlayersTableMap extends TableMap
         });
     }
 
-} // PlayersTableMap
+} // ConfigTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-PlayersTableMap::buildTableMap();
+ConfigTableMap::buildTableMap();

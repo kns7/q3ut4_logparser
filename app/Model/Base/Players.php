@@ -8,6 +8,8 @@ use \Frags as ChildFrags;
 use \FragsQuery as ChildFragsQuery;
 use \Games as ChildGames;
 use \GamesQuery as ChildGamesQuery;
+use \Hits as ChildHits;
+use \HitsQuery as ChildHitsQuery;
 use \Players as ChildPlayers;
 use \PlayersQuery as ChildPlayersQuery;
 use \Scores as ChildScores;
@@ -19,6 +21,7 @@ use \PDO;
 use Map\FlagsTableMap;
 use Map\FragsTableMap;
 use Map\GamesTableMap;
+use Map\HitsTableMap;
 use Map\PlayersTableMap;
 use Map\ScoresTableMap;
 use Map\TeamsTableMap;
@@ -91,6 +94,13 @@ abstract class Players implements ActiveRecordInterface
     protected $name;
 
     /**
+     * The value for the altname field.
+     *
+     * @var        string
+     */
+    protected $altname;
+
+    /**
      * @var        ObjectCollection|ChildFlags[] Collection to store aggregation of ChildFlags objects.
      */
     protected $collFlags;
@@ -113,6 +123,12 @@ abstract class Players implements ActiveRecordInterface
      */
     protected $collGames;
     protected $collGamesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildHits[] Collection to store aggregation of ChildHits objects.
+     */
+    protected $collHits;
+    protected $collHitsPartial;
 
     /**
      * @var        ObjectCollection|ChildScores[] Collection to store aggregation of ChildScores objects.
@@ -157,6 +173,12 @@ abstract class Players implements ActiveRecordInterface
      * @var ObjectCollection|ChildGames[]
      */
     protected $gamesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildHits[]
+     */
+    protected $hitsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -416,6 +438,16 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
+     * Get the [altname] column value.
+     *
+     * @return string
+     */
+    public function getAltname()
+    {
+        return $this->altname;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -454,6 +486,26 @@ abstract class Players implements ActiveRecordInterface
 
         return $this;
     } // setName()
+
+    /**
+     * Set the value of [altname] column.
+     *
+     * @param string $v new value
+     * @return $this|\Players The current object (for fluent API support)
+     */
+    public function setAltname($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->altname !== $v) {
+            $this->altname = $v;
+            $this->modifiedColumns[PlayersTableMap::COL_ALTNAME] = true;
+        }
+
+        return $this;
+    } // setAltname()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -496,6 +548,9 @@ abstract class Players implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PlayersTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PlayersTableMap::translateFieldName('Altname', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->altname = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -504,7 +559,7 @@ abstract class Players implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = PlayersTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = PlayersTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Players'), 0, $e);
@@ -572,6 +627,8 @@ abstract class Players implements ActiveRecordInterface
             $this->collFraggedPlayers = null;
 
             $this->collGames = null;
+
+            $this->collHits = null;
 
             $this->collScores = null;
 
@@ -759,6 +816,23 @@ abstract class Players implements ActiveRecordInterface
                 }
             }
 
+            if ($this->hitsScheduledForDeletion !== null) {
+                if (!$this->hitsScheduledForDeletion->isEmpty()) {
+                    \HitsQuery::create()
+                        ->filterByPrimaryKeys($this->hitsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->hitsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collHits !== null) {
+                foreach ($this->collHits as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->scoresScheduledForDeletion !== null) {
                 if (!$this->scoresScheduledForDeletion->isEmpty()) {
                     \ScoresQuery::create()
@@ -825,6 +899,9 @@ abstract class Players implements ActiveRecordInterface
         if ($this->isColumnModified(PlayersTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'name';
         }
+        if ($this->isColumnModified(PlayersTableMap::COL_ALTNAME)) {
+            $modifiedColumns[':p' . $index++]  = 'altname';
+        }
 
         $sql = sprintf(
             'INSERT INTO players (%s) VALUES (%s)',
@@ -841,6 +918,9 @@ abstract class Players implements ActiveRecordInterface
                         break;
                     case 'name':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case 'altname':
+                        $stmt->bindValue($identifier, $this->altname, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -910,6 +990,9 @@ abstract class Players implements ActiveRecordInterface
             case 1:
                 return $this->getName();
                 break;
+            case 2:
+                return $this->getAltname();
+                break;
             default:
                 return null;
                 break;
@@ -942,6 +1025,7 @@ abstract class Players implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
+            $keys[2] => $this->getAltname(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1008,6 +1092,21 @@ abstract class Players implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collGames->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collHits) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'hitss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'hitss';
+                        break;
+                    default:
+                        $key = 'Hits';
+                }
+
+                $result[$key] = $this->collHits->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collScores) {
 
@@ -1079,6 +1178,9 @@ abstract class Players implements ActiveRecordInterface
             case 1:
                 $this->setName($value);
                 break;
+            case 2:
+                $this->setAltname($value);
+                break;
         } // switch()
 
         return $this;
@@ -1110,6 +1212,9 @@ abstract class Players implements ActiveRecordInterface
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setName($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setAltname($arr[$keys[2]]);
         }
     }
 
@@ -1157,6 +1262,9 @@ abstract class Players implements ActiveRecordInterface
         }
         if ($this->isColumnModified(PlayersTableMap::COL_NAME)) {
             $criteria->add(PlayersTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(PlayersTableMap::COL_ALTNAME)) {
+            $criteria->add(PlayersTableMap::COL_ALTNAME, $this->altname);
         }
 
         return $criteria;
@@ -1245,6 +1353,7 @@ abstract class Players implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
+        $copyObj->setAltname($this->getAltname());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1272,6 +1381,12 @@ abstract class Players implements ActiveRecordInterface
             foreach ($this->getGames() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addGame($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getHits() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addHit($relObj->copy($deepCopy));
                 }
             }
 
@@ -1342,6 +1457,10 @@ abstract class Players implements ActiveRecordInterface
         }
         if ('Game' == $relationName) {
             $this->initGames();
+            return;
+        }
+        if ('Hit' == $relationName) {
+            $this->initHits();
             return;
         }
         if ('Score' == $relationName) {
@@ -2305,6 +2424,256 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collHits collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addHits()
+     */
+    public function clearHits()
+    {
+        $this->collHits = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collHits collection loaded partially.
+     */
+    public function resetPartialHits($v = true)
+    {
+        $this->collHitsPartial = $v;
+    }
+
+    /**
+     * Initializes the collHits collection.
+     *
+     * By default this just sets the collHits collection to an empty array (like clearcollHits());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initHits($overrideExisting = true)
+    {
+        if (null !== $this->collHits && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = HitsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collHits = new $collectionClassName;
+        $this->collHits->setModel('\Hits');
+    }
+
+    /**
+     * Gets an array of ChildHits objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildPlayers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     * @throws PropelException
+     */
+    public function getHits(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collHitsPartial && !$this->isNew();
+        if (null === $this->collHits || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collHits) {
+                // return empty collection
+                $this->initHits();
+            } else {
+                $collHits = ChildHitsQuery::create(null, $criteria)
+                    ->filterByPlayers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collHitsPartial && count($collHits)) {
+                        $this->initHits(false);
+
+                        foreach ($collHits as $obj) {
+                            if (false == $this->collHits->contains($obj)) {
+                                $this->collHits->append($obj);
+                            }
+                        }
+
+                        $this->collHitsPartial = true;
+                    }
+
+                    return $collHits;
+                }
+
+                if ($partial && $this->collHits) {
+                    foreach ($this->collHits as $obj) {
+                        if ($obj->isNew()) {
+                            $collHits[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collHits = $collHits;
+                $this->collHitsPartial = false;
+            }
+        }
+
+        return $this->collHits;
+    }
+
+    /**
+     * Sets a collection of ChildHits objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $hits A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildPlayers The current object (for fluent API support)
+     */
+    public function setHits(Collection $hits, ConnectionInterface $con = null)
+    {
+        /** @var ChildHits[] $hitsToDelete */
+        $hitsToDelete = $this->getHits(new Criteria(), $con)->diff($hits);
+
+
+        $this->hitsScheduledForDeletion = $hitsToDelete;
+
+        foreach ($hitsToDelete as $hitRemoved) {
+            $hitRemoved->setPlayers(null);
+        }
+
+        $this->collHits = null;
+        foreach ($hits as $hit) {
+            $this->addHit($hit);
+        }
+
+        $this->collHits = $hits;
+        $this->collHitsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Hits objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Hits objects.
+     * @throws PropelException
+     */
+    public function countHits(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collHitsPartial && !$this->isNew();
+        if (null === $this->collHits || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHits) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getHits());
+            }
+
+            $query = ChildHitsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPlayers($this)
+                ->count($con);
+        }
+
+        return count($this->collHits);
+    }
+
+    /**
+     * Method called to associate a ChildHits object to this object
+     * through the ChildHits foreign key attribute.
+     *
+     * @param  ChildHits $l ChildHits
+     * @return $this|\Players The current object (for fluent API support)
+     */
+    public function addHit(ChildHits $l)
+    {
+        if ($this->collHits === null) {
+            $this->initHits();
+            $this->collHitsPartial = true;
+        }
+
+        if (!$this->collHits->contains($l)) {
+            $this->doAddHit($l);
+
+            if ($this->hitsScheduledForDeletion and $this->hitsScheduledForDeletion->contains($l)) {
+                $this->hitsScheduledForDeletion->remove($this->hitsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildHits $hit The ChildHits object to add.
+     */
+    protected function doAddHit(ChildHits $hit)
+    {
+        $this->collHits[]= $hit;
+        $hit->setPlayers($this);
+    }
+
+    /**
+     * @param  ChildHits $hit The ChildHits object to remove.
+     * @return $this|ChildPlayers The current object (for fluent API support)
+     */
+    public function removeHit(ChildHits $hit)
+    {
+        if ($this->getHits()->contains($hit)) {
+            $pos = $this->collHits->search($hit);
+            $this->collHits->remove($pos);
+            if (null === $this->hitsScheduledForDeletion) {
+                $this->hitsScheduledForDeletion = clone $this->collHits;
+                $this->hitsScheduledForDeletion->clear();
+            }
+            $this->hitsScheduledForDeletion[]= clone $hit;
+            $hit->setPlayers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related Hits from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     */
+    public function getHitsJoinBodyparts(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildHitsQuery::create(null, $criteria);
+        $query->joinWith('Bodyparts', $joinBehavior);
+
+        return $this->getHits($query, $con);
+    }
+
+    /**
      * Clears out the collScores collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2788,6 +3157,7 @@ abstract class Players implements ActiveRecordInterface
     {
         $this->id = null;
         $this->name = null;
+        $this->altname = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -2826,6 +3196,11 @@ abstract class Players implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collHits) {
+                foreach ($this->collHits as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collScores) {
                 foreach ($this->collScores as $o) {
                     $o->clearAllReferences($deep);
@@ -2842,6 +3217,7 @@ abstract class Players implements ActiveRecordInterface
         $this->collFraggerPlayers = null;
         $this->collFraggedPlayers = null;
         $this->collGames = null;
+        $this->collHits = null;
         $this->collScores = null;
         $this->collTeams = null;
     }

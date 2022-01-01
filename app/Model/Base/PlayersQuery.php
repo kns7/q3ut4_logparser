@@ -22,9 +22,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildPlayersQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildPlayersQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildPlayersQuery orderByAltname($order = Criteria::ASC) Order by the altname column
  *
  * @method     ChildPlayersQuery groupById() Group by the id column
  * @method     ChildPlayersQuery groupByName() Group by the name column
+ * @method     ChildPlayersQuery groupByAltname() Group by the altname column
  *
  * @method     ChildPlayersQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPlayersQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -74,6 +76,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinWithGame() Adds a RIGHT JOIN clause and with to the query using the Game relation
  * @method     ChildPlayersQuery innerJoinWithGame() Adds a INNER JOIN clause and with to the query using the Game relation
  *
+ * @method     ChildPlayersQuery leftJoinHit($relationAlias = null) Adds a LEFT JOIN clause to the query using the Hit relation
+ * @method     ChildPlayersQuery rightJoinHit($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Hit relation
+ * @method     ChildPlayersQuery innerJoinHit($relationAlias = null) Adds a INNER JOIN clause to the query using the Hit relation
+ *
+ * @method     ChildPlayersQuery joinWithHit($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Hit relation
+ *
+ * @method     ChildPlayersQuery leftJoinWithHit() Adds a LEFT JOIN clause and with to the query using the Hit relation
+ * @method     ChildPlayersQuery rightJoinWithHit() Adds a RIGHT JOIN clause and with to the query using the Hit relation
+ * @method     ChildPlayersQuery innerJoinWithHit() Adds a INNER JOIN clause and with to the query using the Hit relation
+ *
  * @method     ChildPlayersQuery leftJoinScore($relationAlias = null) Adds a LEFT JOIN clause to the query using the Score relation
  * @method     ChildPlayersQuery rightJoinScore($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Score relation
  * @method     ChildPlayersQuery innerJoinScore($relationAlias = null) Adds a INNER JOIN clause to the query using the Score relation
@@ -94,23 +106,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinWithTeam() Adds a RIGHT JOIN clause and with to the query using the Team relation
  * @method     ChildPlayersQuery innerJoinWithTeam() Adds a INNER JOIN clause and with to the query using the Team relation
  *
- * @method     \FlagsQuery|\FragsQuery|\GamesQuery|\ScoresQuery|\TeamsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \FlagsQuery|\FragsQuery|\GamesQuery|\HitsQuery|\ScoresQuery|\TeamsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPlayers findOne(ConnectionInterface $con = null) Return the first ChildPlayers matching the query
  * @method     ChildPlayers findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayers matching the query, or a new ChildPlayers object populated from the query conditions when no match is found
  *
  * @method     ChildPlayers findOneById(int $id) Return the first ChildPlayers filtered by the id column
- * @method     ChildPlayers findOneByName(string $name) Return the first ChildPlayers filtered by the name column *
+ * @method     ChildPlayers findOneByName(string $name) Return the first ChildPlayers filtered by the name column
+ * @method     ChildPlayers findOneByAltname(string $altname) Return the first ChildPlayers filtered by the altname column *
 
  * @method     ChildPlayers requirePk($key, ConnectionInterface $con = null) Return the ChildPlayers by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOne(ConnectionInterface $con = null) Return the first ChildPlayers matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPlayers requireOneById(int $id) Return the first ChildPlayers filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOneByName(string $name) Return the first ChildPlayers filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPlayers requireOneByAltname(string $altname) Return the first ChildPlayers filtered by the altname column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPlayers[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPlayers objects based on current ModelCriteria
  * @method     ChildPlayers[]|ObjectCollection findById(int $id) Return ChildPlayers objects filtered by the id column
  * @method     ChildPlayers[]|ObjectCollection findByName(string $name) Return ChildPlayers objects filtered by the name column
+ * @method     ChildPlayers[]|ObjectCollection findByAltname(string $altname) Return ChildPlayers objects filtered by the altname column
  * @method     ChildPlayers[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -209,7 +224,7 @@ abstract class PlayersQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name FROM players WHERE id = :p0';
+        $sql = 'SELECT id, name, altname FROM players WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -363,6 +378,31 @@ abstract class PlayersQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PlayersTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the altname column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByAltname('fooValue');   // WHERE altname = 'fooValue'
+     * $query->filterByAltname('%fooValue%', Criteria::LIKE); // WHERE altname LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $altname The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPlayersQuery The current query, for fluid interface
+     */
+    public function filterByAltname($altname = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($altname)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PlayersTableMap::COL_ALTNAME, $altname, $comparison);
     }
 
     /**
@@ -655,6 +695,79 @@ abstract class PlayersQuery extends ModelCriteria
         return $this
             ->joinGame($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Game', '\GamesQuery');
+    }
+
+    /**
+     * Filter the query by a related \Hits object
+     *
+     * @param \Hits|ObjectCollection $hits the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPlayersQuery The current query, for fluid interface
+     */
+    public function filterByHit($hits, $comparison = null)
+    {
+        if ($hits instanceof \Hits) {
+            return $this
+                ->addUsingAlias(PlayersTableMap::COL_ID, $hits->getPlayerId(), $comparison);
+        } elseif ($hits instanceof ObjectCollection) {
+            return $this
+                ->useHitQuery()
+                ->filterByPrimaryKeys($hits->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByHit() only accepts arguments of type \Hits or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Hit relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayersQuery The current query, for fluid interface
+     */
+    public function joinHit($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Hit');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Hit');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Hit relation Hits object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \HitsQuery A secondary query class using the current class as primary query
+     */
+    public function useHitQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinHit($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Hit', '\HitsQuery');
     }
 
     /**
