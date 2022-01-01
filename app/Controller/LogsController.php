@@ -12,6 +12,8 @@ class LogsController extends Controller {
     private $_initround = "/^ *([0-9]+):([0-9]+) InitRound: (.*)$/i";
     private $_item = "/^ *[0-9]+:[0-9]{2} Item: ([0-9]+) (?!<world>)(.*)$/i";
     private $_flag = "/^ *[0-9]+:[0-9]{2} Flag: ([0-9]+) ([0-9]+): (.*)$/i";
+    private $_bombplanted = "/^ *[0-9]+:[0-9]{2} Bomb was planted by ([0-9]+)$/i";
+    private $_bombdefused = "/^ *[0-9]+:[0-9]{2} Bomb was defused by ([0-9]+)/i";
     private $_teamscore = "/^ *([0-9]+):([0-9]+) red:([0-9]+)[ ]*blue:([0-9]+)$/i";
     private $_chat = "/^ *[0-9]+:[0-9]{2} (say|sayteam): [0:9]+ (?!<world>)(.*): (.*)$/i";
     private $_playersarray = [];
