@@ -2,3 +2,5 @@
 /app/config/config.php
 propel.yml
 games.log
+generated-sql/*
+logs/*

@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
 
+  <table name="bodyparts" idMethod="native" phpName="Bodyparts">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="code" phpName="Code" type="VARCHAR" size="255" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+  <table name="config" idMethod="native" phpName="Config">
+    <column name="key" phpName="Key" type="VARCHAR" size="255" primaryKey="true" required="true"/>
+    <column name="value" phpName="Value" type="VARCHAR" size="255" required="true"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
   <table name="flags" idMethod="native" phpName="Flags">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
@@ -35,7 +54,6 @@
     </vendor>
   </table>
 
-
   <table name="games" idMethod="native" phpName="Games">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
@@ -50,10 +68,51 @@
     </vendor>
   </table>
 
+  <table name="gametypes" idMethod="native" phpName="Gametypes">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="code" phpName="Code" type="INTEGER" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
+    <column name="description" phpName="Description" type="LONGVARCHAR"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+  <table name="hits" idMethod="native" phpName="Hits">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
+    <column name="bodypart_id" phpName="BodypartId" type="INTEGER" required="true"/>
+    <column name="counter" phpName="Counter" type="INTEGER" required="true"/>
+
+    <foreign-key foreignTable="players" phpName="Players" refPhpName="Hit">
+      <reference local="player_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="bodyparts" phpName="Bodyparts" refPhpName="Hit">
+      <reference local="bodypart_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+  <table name="maps" idMethod="native" phpName="Maps">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="file" phpName="File" type="VARCHAR" size="255" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
+    <column name="imgurl" phpName="Imgurl" type="VARCHAR" size="255"/>
+    <column name="description" phpName="Description" type="LONGVARCHAR"/>
+    <column name="size" phpName="Size" type="VARCHAR" size="3"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
 
   <table name="players" idMethod="native" phpName="Players">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
+    <column name="altname" phpName="Altname" type="LONGVARCHAR"/>
 
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
