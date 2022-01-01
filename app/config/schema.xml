@@ -11,6 +11,19 @@
     </vendor>
   </table>
 
+  <table name="bombs" idMethod="native" phpName="Bombs">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
+    <column name="event" phpName="Event" type="VARCHAR" size="255"/>
+
+    <foreign-key foreignTable="players" phpName="Players" refPhpName="Bomb">
+      <reference local="player_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
   <table name="config" idMethod="native" phpName="Config">
     <column name="key" phpName="Key" type="VARCHAR" size="255" primaryKey="true" required="true"/>
     <column name="value" phpName="Value" type="VARCHAR" size="255" required="true"/>

@@ -107,6 +107,7 @@ class ComposerStaticInit28a17c4ad700c1f4b526c9866f5bae80
     );
 
     public static $classMap = array (
+        'App\\Controller\\BombsController' => __DIR__ . '/../..' . '/app/Controller/BombsController.php',
         'App\\Controller\\Controller' => __DIR__ . '/../..' . '/app/Controller/Controller.php',
         'App\\Controller\\FragsController' => __DIR__ . '/../..' . '/app/Controller/FragsController.php',
         'App\\Controller\\GamesController' => __DIR__ . '/../..' . '/app/Controller/GamesController.php',
@@ -117,6 +118,8 @@ class ComposerStaticInit28a17c4ad700c1f4b526c9866f5bae80
         'App\\Controller\\TeamsController' => __DIR__ . '/../..' . '/app/Controller/TeamsController.php',
         'Base\\Bodyparts' => __DIR__ . '/../..' . '/app/Model/Base/Bodyparts.php',
         'Base\\BodypartsQuery' => __DIR__ . '/../..' . '/app/Model/Base/BodypartsQuery.php',
+        'Base\\Bombs' => __DIR__ . '/../..' . '/app/Model/Base/Bombs.php',
+        'Base\\BombsQuery' => __DIR__ . '/../..' . '/app/Model/Base/BombsQuery.php',
         'Base\\Config' => __DIR__ . '/../..' . '/app/Model/Base/Config.php',
         'Base\\ConfigQuery' => __DIR__ . '/../..' . '/app/Model/Base/ConfigQuery.php',
         'Base\\Flags' => __DIR__ . '/../..' . '/app/Model/Base/Flags.php',
@@ -143,6 +146,8 @@ class ComposerStaticInit28a17c4ad700c1f4b526c9866f5bae80
         'Base\\WeaponsQuery' => __DIR__ . '/../..' . '/app/Model/Base/WeaponsQuery.php',
         'Bodyparts' => __DIR__ . '/../..' . '/app/Model/Bodyparts.php',
         'BodypartsQuery' => __DIR__ . '/../..' . '/app/Model/BodypartsQuery.php',
+        'Bombs' => __DIR__ . '/../..' . '/app/Model/Bombs.php',
+        'BombsQuery' => __DIR__ . '/../..' . '/app/Model/BombsQuery.php',
         'Config' => __DIR__ . '/../..' . '/app/Model/Config.php',
         'ConfigQuery' => __DIR__ . '/../..' . '/app/Model/ConfigQuery.php',
         'Flags' => __DIR__ . '/../..' . '/app/Model/Flags.php',
@@ -158,6 +163,7 @@ class ComposerStaticInit28a17c4ad700c1f4b526c9866f5bae80
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'LogsController' => __DIR__ . '/../..' . '/app/Controller/LogsController.php',
         'Map\\BodypartsTableMap' => __DIR__ . '/../..' . '/app/Model/Map/BodypartsTableMap.php',
+        'Map\\BombsTableMap' => __DIR__ . '/../..' . '/app/Model/Map/BombsTableMap.php',
         'Map\\ConfigTableMap' => __DIR__ . '/../..' . '/app/Model/Map/ConfigTableMap.php',
         'Map\\FlagsTableMap' => __DIR__ . '/../..' . '/app/Model/Map/FlagsTableMap.php',
         'Map\\FragsTableMap' => __DIR__ . '/../..' . '/app/Model/Map/FragsTableMap.php',

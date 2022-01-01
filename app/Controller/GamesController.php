@@ -13,7 +13,8 @@ use Propel\Runtime\Exception\PropelException;
 
 class GamesController extends Controller
 {
-    public function add(\Players $player, $start){
+    public function add(\Players $player, $start)
+    {
         $game = new \Games();
         $game->setPlayers($player)
             ->setStart($start)
@@ -27,7 +28,8 @@ class GamesController extends Controller
         }
     }
 
-    public function stopGame(\Players $player,$stop){
+    public function stopGame(\Players $player,$stop)
+    {
         $game = \GamesQuery::create()->filterByPlayers($player)->filterByStop("-1")->findOne();
         if(!is_null($game)){
             $game->setStop($stop);

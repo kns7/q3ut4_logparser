@@ -13,7 +13,8 @@ use Propel\Runtime\Exception\PropelException;
 
 class RoundsController extends Controller
 {
-    public function add(\Gametypes $gametype){
+    public function add(\Gametypes $gametype)
+    {
         $round = new \Rounds();
         $round->setGametypes($gametype)
             ->setWinner("")

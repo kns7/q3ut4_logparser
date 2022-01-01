@@ -2,6 +2,8 @@
 
 namespace Base;
 
+use \Bombs as ChildBombs;
+use \BombsQuery as ChildBombsQuery;
 use \Flags as ChildFlags;
 use \FlagsQuery as ChildFlagsQuery;
 use \Frags as ChildFrags;
@@ -18,6 +20,7 @@ use \Teams as ChildTeams;
 use \TeamsQuery as ChildTeamsQuery;
 use \Exception;
 use \PDO;
+use Map\BombsTableMap;
 use Map\FlagsTableMap;
 use Map\FragsTableMap;
 use Map\GamesTableMap;
@@ -101,6 +104,12 @@ abstract class Players implements ActiveRecordInterface
     protected $altname;
 
     /**
+     * @var        ObjectCollection|ChildBombs[] Collection to store aggregation of ChildBombs objects.
+     */
+    protected $collBombs;
+    protected $collBombsPartial;
+
+    /**
      * @var        ObjectCollection|ChildFlags[] Collection to store aggregation of ChildFlags objects.
      */
     protected $collFlags;
@@ -155,6 +164,12 @@ abstract class Players implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBombs[]
+     */
+    protected $bombsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -632,6 +647,8 @@ abstract class Players implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collBombs = null;
+
             $this->collFlags = null;
 
             $this->collFraggerPlayers = null;
@@ -760,6 +777,23 @@ abstract class Players implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->bombsScheduledForDeletion !== null) {
+                if (!$this->bombsScheduledForDeletion->isEmpty()) {
+                    \BombsQuery::create()
+                        ->filterByPrimaryKeys($this->bombsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->bombsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBombs !== null) {
+                foreach ($this->collBombs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->flagsScheduledForDeletion !== null) {
@@ -1064,6 +1098,21 @@ abstract class Players implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collBombs) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bombss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'bombss';
+                        break;
+                    default:
+                        $key = 'Bombs';
+                }
+
+                $result[$key] = $this->collBombs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collFlags) {
 
                 switch ($keyType) {
@@ -1406,6 +1455,12 @@ abstract class Players implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getBombs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBomb($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getFlags() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addFlag($relObj->copy($deepCopy));
@@ -1495,6 +1550,10 @@ abstract class Players implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('Bomb' == $relationName) {
+            $this->initBombs();
+            return;
+        }
         if ('Flag' == $relationName) {
             $this->initFlags();
             return;
@@ -1527,6 +1586,231 @@ abstract class Players implements ActiveRecordInterface
             $this->initTeams();
             return;
         }
+    }
+
+    /**
+     * Clears out the collBombs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBombs()
+     */
+    public function clearBombs()
+    {
+        $this->collBombs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBombs collection loaded partially.
+     */
+    public function resetPartialBombs($v = true)
+    {
+        $this->collBombsPartial = $v;
+    }
+
+    /**
+     * Initializes the collBombs collection.
+     *
+     * By default this just sets the collBombs collection to an empty array (like clearcollBombs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBombs($overrideExisting = true)
+    {
+        if (null !== $this->collBombs && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BombsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBombs = new $collectionClassName;
+        $this->collBombs->setModel('\Bombs');
+    }
+
+    /**
+     * Gets an array of ChildBombs objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildPlayers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBombs[] List of ChildBombs objects
+     * @throws PropelException
+     */
+    public function getBombs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBombsPartial && !$this->isNew();
+        if (null === $this->collBombs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBombs) {
+                // return empty collection
+                $this->initBombs();
+            } else {
+                $collBombs = ChildBombsQuery::create(null, $criteria)
+                    ->filterByPlayers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBombsPartial && count($collBombs)) {
+                        $this->initBombs(false);
+
+                        foreach ($collBombs as $obj) {
+                            if (false == $this->collBombs->contains($obj)) {
+                                $this->collBombs->append($obj);
+                            }
+                        }
+
+                        $this->collBombsPartial = true;
+                    }
+
+                    return $collBombs;
+                }
+
+                if ($partial && $this->collBombs) {
+                    foreach ($this->collBombs as $obj) {
+                        if ($obj->isNew()) {
+                            $collBombs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBombs = $collBombs;
+                $this->collBombsPartial = false;
+            }
+        }
+
+        return $this->collBombs;
+    }
+
+    /**
+     * Sets a collection of ChildBombs objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bombs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildPlayers The current object (for fluent API support)
+     */
+    public function setBombs(Collection $bombs, ConnectionInterface $con = null)
+    {
+        /** @var ChildBombs[] $bombsToDelete */
+        $bombsToDelete = $this->getBombs(new Criteria(), $con)->diff($bombs);
+
+
+        $this->bombsScheduledForDeletion = $bombsToDelete;
+
+        foreach ($bombsToDelete as $bombRemoved) {
+            $bombRemoved->setPlayers(null);
+        }
+
+        $this->collBombs = null;
+        foreach ($bombs as $bomb) {
+            $this->addBomb($bomb);
+        }
+
+        $this->collBombs = $bombs;
+        $this->collBombsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Bombs objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Bombs objects.
+     * @throws PropelException
+     */
+    public function countBombs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBombsPartial && !$this->isNew();
+        if (null === $this->collBombs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBombs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBombs());
+            }
+
+            $query = ChildBombsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPlayers($this)
+                ->count($con);
+        }
+
+        return count($this->collBombs);
+    }
+
+    /**
+     * Method called to associate a ChildBombs object to this object
+     * through the ChildBombs foreign key attribute.
+     *
+     * @param  ChildBombs $l ChildBombs
+     * @return $this|\Players The current object (for fluent API support)
+     */
+    public function addBomb(ChildBombs $l)
+    {
+        if ($this->collBombs === null) {
+            $this->initBombs();
+            $this->collBombsPartial = true;
+        }
+
+        if (!$this->collBombs->contains($l)) {
+            $this->doAddBomb($l);
+
+            if ($this->bombsScheduledForDeletion and $this->bombsScheduledForDeletion->contains($l)) {
+                $this->bombsScheduledForDeletion->remove($this->bombsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBombs $bomb The ChildBombs object to add.
+     */
+    protected function doAddBomb(ChildBombs $bomb)
+    {
+        $this->collBombs[]= $bomb;
+        $bomb->setPlayers($this);
+    }
+
+    /**
+     * @param  ChildBombs $bomb The ChildBombs object to remove.
+     * @return $this|ChildPlayers The current object (for fluent API support)
+     */
+    public function removeBomb(ChildBombs $bomb)
+    {
+        if ($this->getBombs()->contains($bomb)) {
+            $pos = $this->collBombs->search($bomb);
+            $this->collBombs->remove($pos);
+            if (null === $this->bombsScheduledForDeletion) {
+                $this->bombsScheduledForDeletion = clone $this->collBombs;
+                $this->bombsScheduledForDeletion->clear();
+            }
+            $this->bombsScheduledForDeletion[]= clone $bomb;
+            $bomb->setPlayers(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -3482,6 +3766,11 @@ abstract class Players implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collBombs) {
+                foreach ($this->collBombs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collFlags) {
                 foreach ($this->collFlags as $o) {
                     $o->clearAllReferences($deep);
@@ -3524,6 +3813,7 @@ abstract class Players implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collBombs = null;
         $this->collFlags = null;
         $this->collFraggerPlayers = null;
         $this->collFraggedPlayers = null;

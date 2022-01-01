@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Controller\\BombsController' => $baseDir . '/app/Controller/BombsController.php',
     'App\\Controller\\Controller' => $baseDir . '/app/Controller/Controller.php',
     'App\\Controller\\FragsController' => $baseDir . '/app/Controller/FragsController.php',
     'App\\Controller\\GamesController' => $baseDir . '/app/Controller/GamesController.php',
@@ -16,6 +17,8 @@ return array(
     'App\\Controller\\TeamsController' => $baseDir . '/app/Controller/TeamsController.php',
     'Base\\Bodyparts' => $baseDir . '/app/Model/Base/Bodyparts.php',
     'Base\\BodypartsQuery' => $baseDir . '/app/Model/Base/BodypartsQuery.php',
+    'Base\\Bombs' => $baseDir . '/app/Model/Base/Bombs.php',
+    'Base\\BombsQuery' => $baseDir . '/app/Model/Base/BombsQuery.php',
     'Base\\Config' => $baseDir . '/app/Model/Base/Config.php',
     'Base\\ConfigQuery' => $baseDir . '/app/Model/Base/ConfigQuery.php',
     'Base\\Flags' => $baseDir . '/app/Model/Base/Flags.php',
@@ -42,6 +45,8 @@ return array(
     'Base\\WeaponsQuery' => $baseDir . '/app/Model/Base/WeaponsQuery.php',
     'Bodyparts' => $baseDir . '/app/Model/Bodyparts.php',
     'BodypartsQuery' => $baseDir . '/app/Model/BodypartsQuery.php',
+    'Bombs' => $baseDir . '/app/Model/Bombs.php',
+    'BombsQuery' => $baseDir . '/app/Model/BombsQuery.php',
     'Config' => $baseDir . '/app/Model/Config.php',
     'ConfigQuery' => $baseDir . '/app/Model/ConfigQuery.php',
     'Flags' => $baseDir . '/app/Model/Flags.php',
@@ -57,6 +62,7 @@ return array(
     'JsonException' => $vendorDir . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
     'LogsController' => $baseDir . '/app/Controller/LogsController.php',
     'Map\\BodypartsTableMap' => $baseDir . '/app/Model/Map/BodypartsTableMap.php',
+    'Map\\BombsTableMap' => $baseDir . '/app/Model/Map/BombsTableMap.php',
     'Map\\ConfigTableMap' => $baseDir . '/app/Model/Map/ConfigTableMap.php',
     'Map\\FlagsTableMap' => $baseDir . '/app/Model/Map/FlagsTableMap.php',
     'Map\\FragsTableMap' => $baseDir . '/app/Model/Map/FragsTableMap.php',

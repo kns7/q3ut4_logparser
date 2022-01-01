@@ -36,6 +36,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildPlayersQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildPlayersQuery leftJoinBomb($relationAlias = null) Adds a LEFT JOIN clause to the query using the Bomb relation
+ * @method     ChildPlayersQuery rightJoinBomb($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Bomb relation
+ * @method     ChildPlayersQuery innerJoinBomb($relationAlias = null) Adds a INNER JOIN clause to the query using the Bomb relation
+ *
+ * @method     ChildPlayersQuery joinWithBomb($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Bomb relation
+ *
+ * @method     ChildPlayersQuery leftJoinWithBomb() Adds a LEFT JOIN clause and with to the query using the Bomb relation
+ * @method     ChildPlayersQuery rightJoinWithBomb() Adds a RIGHT JOIN clause and with to the query using the Bomb relation
+ * @method     ChildPlayersQuery innerJoinWithBomb() Adds a INNER JOIN clause and with to the query using the Bomb relation
+ *
  * @method     ChildPlayersQuery leftJoinFlag($relationAlias = null) Adds a LEFT JOIN clause to the query using the Flag relation
  * @method     ChildPlayersQuery rightJoinFlag($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Flag relation
  * @method     ChildPlayersQuery innerJoinFlag($relationAlias = null) Adds a INNER JOIN clause to the query using the Flag relation
@@ -116,7 +126,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinWithTeam() Adds a RIGHT JOIN clause and with to the query using the Team relation
  * @method     ChildPlayersQuery innerJoinWithTeam() Adds a INNER JOIN clause and with to the query using the Team relation
  *
- * @method     \FlagsQuery|\FragsQuery|\GamesQuery|\HitsQuery|\ScoresQuery|\TeamsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \BombsQuery|\FlagsQuery|\FragsQuery|\GamesQuery|\HitsQuery|\ScoresQuery|\TeamsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPlayers findOne(ConnectionInterface $con = null) Return the first ChildPlayers matching the query
  * @method     ChildPlayers findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayers matching the query, or a new ChildPlayers object populated from the query conditions when no match is found
@@ -413,6 +423,79 @@ abstract class PlayersQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PlayersTableMap::COL_ALTNAME, $altname, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Bombs object
+     *
+     * @param \Bombs|ObjectCollection $bombs the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPlayersQuery The current query, for fluid interface
+     */
+    public function filterByBomb($bombs, $comparison = null)
+    {
+        if ($bombs instanceof \Bombs) {
+            return $this
+                ->addUsingAlias(PlayersTableMap::COL_ID, $bombs->getPlayerId(), $comparison);
+        } elseif ($bombs instanceof ObjectCollection) {
+            return $this
+                ->useBombQuery()
+                ->filterByPrimaryKeys($bombs->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBomb() only accepts arguments of type \Bombs or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Bomb relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayersQuery The current query, for fluid interface
+     */
+    public function joinBomb($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Bomb');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Bomb');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Bomb relation Bombs object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \BombsQuery A secondary query class using the current class as primary query
+     */
+    public function useBombQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinBomb($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Bomb', '\BombsQuery');
     }
 
     /**
