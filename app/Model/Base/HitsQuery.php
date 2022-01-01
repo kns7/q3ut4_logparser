@@ -21,13 +21,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildHitsQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildHitsQuery orderByFraggerId($order = Criteria::ASC) Order by the fragger_id column
- * @method     ChildHitsQuery orderByFraggedId($order = Criteria::ASC) Order by the fragged_id column
+ * @method     ChildHitsQuery orderByHitterId($order = Criteria::ASC) Order by the hitter_id column
+ * @method     ChildHitsQuery orderByHittedId($order = Criteria::ASC) Order by the hitted_id column
  * @method     ChildHitsQuery orderByBodypartId($order = Criteria::ASC) Order by the bodypart_id column
  *
  * @method     ChildHitsQuery groupById() Group by the id column
- * @method     ChildHitsQuery groupByFraggerId() Group by the fragger_id column
- * @method     ChildHitsQuery groupByFraggedId() Group by the fragged_id column
+ * @method     ChildHitsQuery groupByHitterId() Group by the hitter_id column
+ * @method     ChildHitsQuery groupByHittedId() Group by the hitted_id column
  * @method     ChildHitsQuery groupByBodypartId() Group by the bodypart_id column
  *
  * @method     ChildHitsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -38,25 +38,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHitsQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildHitsQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildHitsQuery leftJoinFragger($relationAlias = null) Adds a LEFT JOIN clause to the query using the Fragger relation
- * @method     ChildHitsQuery rightJoinFragger($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Fragger relation
- * @method     ChildHitsQuery innerJoinFragger($relationAlias = null) Adds a INNER JOIN clause to the query using the Fragger relation
+ * @method     ChildHitsQuery leftJoinHitter($relationAlias = null) Adds a LEFT JOIN clause to the query using the Hitter relation
+ * @method     ChildHitsQuery rightJoinHitter($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Hitter relation
+ * @method     ChildHitsQuery innerJoinHitter($relationAlias = null) Adds a INNER JOIN clause to the query using the Hitter relation
  *
- * @method     ChildHitsQuery joinWithFragger($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Fragger relation
+ * @method     ChildHitsQuery joinWithHitter($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Hitter relation
  *
- * @method     ChildHitsQuery leftJoinWithFragger() Adds a LEFT JOIN clause and with to the query using the Fragger relation
- * @method     ChildHitsQuery rightJoinWithFragger() Adds a RIGHT JOIN clause and with to the query using the Fragger relation
- * @method     ChildHitsQuery innerJoinWithFragger() Adds a INNER JOIN clause and with to the query using the Fragger relation
+ * @method     ChildHitsQuery leftJoinWithHitter() Adds a LEFT JOIN clause and with to the query using the Hitter relation
+ * @method     ChildHitsQuery rightJoinWithHitter() Adds a RIGHT JOIN clause and with to the query using the Hitter relation
+ * @method     ChildHitsQuery innerJoinWithHitter() Adds a INNER JOIN clause and with to the query using the Hitter relation
  *
- * @method     ChildHitsQuery leftJoinFragged($relationAlias = null) Adds a LEFT JOIN clause to the query using the Fragged relation
- * @method     ChildHitsQuery rightJoinFragged($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Fragged relation
- * @method     ChildHitsQuery innerJoinFragged($relationAlias = null) Adds a INNER JOIN clause to the query using the Fragged relation
+ * @method     ChildHitsQuery leftJoinHitted($relationAlias = null) Adds a LEFT JOIN clause to the query using the Hitted relation
+ * @method     ChildHitsQuery rightJoinHitted($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Hitted relation
+ * @method     ChildHitsQuery innerJoinHitted($relationAlias = null) Adds a INNER JOIN clause to the query using the Hitted relation
  *
- * @method     ChildHitsQuery joinWithFragged($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Fragged relation
+ * @method     ChildHitsQuery joinWithHitted($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Hitted relation
  *
- * @method     ChildHitsQuery leftJoinWithFragged() Adds a LEFT JOIN clause and with to the query using the Fragged relation
- * @method     ChildHitsQuery rightJoinWithFragged() Adds a RIGHT JOIN clause and with to the query using the Fragged relation
- * @method     ChildHitsQuery innerJoinWithFragged() Adds a INNER JOIN clause and with to the query using the Fragged relation
+ * @method     ChildHitsQuery leftJoinWithHitted() Adds a LEFT JOIN clause and with to the query using the Hitted relation
+ * @method     ChildHitsQuery rightJoinWithHitted() Adds a RIGHT JOIN clause and with to the query using the Hitted relation
+ * @method     ChildHitsQuery innerJoinWithHitted() Adds a INNER JOIN clause and with to the query using the Hitted relation
  *
  * @method     ChildHitsQuery leftJoinBodyparts($relationAlias = null) Adds a LEFT JOIN clause to the query using the Bodyparts relation
  * @method     ChildHitsQuery rightJoinBodyparts($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Bodyparts relation
@@ -74,22 +74,22 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHits findOneOrCreate(ConnectionInterface $con = null) Return the first ChildHits matching the query, or a new ChildHits object populated from the query conditions when no match is found
  *
  * @method     ChildHits findOneById(int $id) Return the first ChildHits filtered by the id column
- * @method     ChildHits findOneByFraggerId(int $fragger_id) Return the first ChildHits filtered by the fragger_id column
- * @method     ChildHits findOneByFraggedId(int $fragged_id) Return the first ChildHits filtered by the fragged_id column
+ * @method     ChildHits findOneByHitterId(int $hitter_id) Return the first ChildHits filtered by the hitter_id column
+ * @method     ChildHits findOneByHittedId(int $hitted_id) Return the first ChildHits filtered by the hitted_id column
  * @method     ChildHits findOneByBodypartId(int $bodypart_id) Return the first ChildHits filtered by the bodypart_id column *
 
  * @method     ChildHits requirePk($key, ConnectionInterface $con = null) Return the ChildHits by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHits requireOne(ConnectionInterface $con = null) Return the first ChildHits matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildHits requireOneById(int $id) Return the first ChildHits filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildHits requireOneByFraggerId(int $fragger_id) Return the first ChildHits filtered by the fragger_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildHits requireOneByFraggedId(int $fragged_id) Return the first ChildHits filtered by the fragged_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHits requireOneByHitterId(int $hitter_id) Return the first ChildHits filtered by the hitter_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHits requireOneByHittedId(int $hitted_id) Return the first ChildHits filtered by the hitted_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHits requireOneByBodypartId(int $bodypart_id) Return the first ChildHits filtered by the bodypart_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildHits[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildHits objects based on current ModelCriteria
  * @method     ChildHits[]|ObjectCollection findById(int $id) Return ChildHits objects filtered by the id column
- * @method     ChildHits[]|ObjectCollection findByFraggerId(int $fragger_id) Return ChildHits objects filtered by the fragger_id column
- * @method     ChildHits[]|ObjectCollection findByFraggedId(int $fragged_id) Return ChildHits objects filtered by the fragged_id column
+ * @method     ChildHits[]|ObjectCollection findByHitterId(int $hitter_id) Return ChildHits objects filtered by the hitter_id column
+ * @method     ChildHits[]|ObjectCollection findByHittedId(int $hitted_id) Return ChildHits objects filtered by the hitted_id column
  * @method     ChildHits[]|ObjectCollection findByBodypartId(int $bodypart_id) Return ChildHits objects filtered by the bodypart_id column
  * @method     ChildHits[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -189,7 +189,7 @@ abstract class HitsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, fragger_id, fragged_id, bodypart_id FROM hits WHERE id = :p0';
+        $sql = 'SELECT id, hitter_id, hitted_id, bodypart_id FROM hits WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -321,18 +321,18 @@ abstract class HitsQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the fragger_id column
+     * Filter the query on the hitter_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByFraggerId(1234); // WHERE fragger_id = 1234
-     * $query->filterByFraggerId(array(12, 34)); // WHERE fragger_id IN (12, 34)
-     * $query->filterByFraggerId(array('min' => 12)); // WHERE fragger_id > 12
+     * $query->filterByHitterId(1234); // WHERE hitter_id = 1234
+     * $query->filterByHitterId(array(12, 34)); // WHERE hitter_id IN (12, 34)
+     * $query->filterByHitterId(array('min' => 12)); // WHERE hitter_id > 12
      * </code>
      *
-     * @see       filterByFragger()
+     * @see       filterByHitter()
      *
-     * @param     mixed $fraggerId The value to use as filter.
+     * @param     mixed $hitterId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -340,16 +340,16 @@ abstract class HitsQuery extends ModelCriteria
      *
      * @return $this|ChildHitsQuery The current query, for fluid interface
      */
-    public function filterByFraggerId($fraggerId = null, $comparison = null)
+    public function filterByHitterId($hitterId = null, $comparison = null)
     {
-        if (is_array($fraggerId)) {
+        if (is_array($hitterId)) {
             $useMinMax = false;
-            if (isset($fraggerId['min'])) {
-                $this->addUsingAlias(HitsTableMap::COL_FRAGGER_ID, $fraggerId['min'], Criteria::GREATER_EQUAL);
+            if (isset($hitterId['min'])) {
+                $this->addUsingAlias(HitsTableMap::COL_HITTER_ID, $hitterId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($fraggerId['max'])) {
-                $this->addUsingAlias(HitsTableMap::COL_FRAGGER_ID, $fraggerId['max'], Criteria::LESS_EQUAL);
+            if (isset($hitterId['max'])) {
+                $this->addUsingAlias(HitsTableMap::COL_HITTER_ID, $hitterId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -360,22 +360,22 @@ abstract class HitsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(HitsTableMap::COL_FRAGGER_ID, $fraggerId, $comparison);
+        return $this->addUsingAlias(HitsTableMap::COL_HITTER_ID, $hitterId, $comparison);
     }
 
     /**
-     * Filter the query on the fragged_id column
+     * Filter the query on the hitted_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByFraggedId(1234); // WHERE fragged_id = 1234
-     * $query->filterByFraggedId(array(12, 34)); // WHERE fragged_id IN (12, 34)
-     * $query->filterByFraggedId(array('min' => 12)); // WHERE fragged_id > 12
+     * $query->filterByHittedId(1234); // WHERE hitted_id = 1234
+     * $query->filterByHittedId(array(12, 34)); // WHERE hitted_id IN (12, 34)
+     * $query->filterByHittedId(array('min' => 12)); // WHERE hitted_id > 12
      * </code>
      *
-     * @see       filterByFragged()
+     * @see       filterByHitted()
      *
-     * @param     mixed $fraggedId The value to use as filter.
+     * @param     mixed $hittedId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -383,16 +383,16 @@ abstract class HitsQuery extends ModelCriteria
      *
      * @return $this|ChildHitsQuery The current query, for fluid interface
      */
-    public function filterByFraggedId($fraggedId = null, $comparison = null)
+    public function filterByHittedId($hittedId = null, $comparison = null)
     {
-        if (is_array($fraggedId)) {
+        if (is_array($hittedId)) {
             $useMinMax = false;
-            if (isset($fraggedId['min'])) {
-                $this->addUsingAlias(HitsTableMap::COL_FRAGGED_ID, $fraggedId['min'], Criteria::GREATER_EQUAL);
+            if (isset($hittedId['min'])) {
+                $this->addUsingAlias(HitsTableMap::COL_HITTED_ID, $hittedId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($fraggedId['max'])) {
-                $this->addUsingAlias(HitsTableMap::COL_FRAGGED_ID, $fraggedId['max'], Criteria::LESS_EQUAL);
+            if (isset($hittedId['max'])) {
+                $this->addUsingAlias(HitsTableMap::COL_HITTED_ID, $hittedId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -403,7 +403,7 @@ abstract class HitsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(HitsTableMap::COL_FRAGGED_ID, $fraggedId, $comparison);
+        return $this->addUsingAlias(HitsTableMap::COL_HITTED_ID, $hittedId, $comparison);
     }
 
     /**
@@ -459,35 +459,35 @@ abstract class HitsQuery extends ModelCriteria
      *
      * @return ChildHitsQuery The current query, for fluid interface
      */
-    public function filterByFragger($players, $comparison = null)
+    public function filterByHitter($players, $comparison = null)
     {
         if ($players instanceof \Players) {
             return $this
-                ->addUsingAlias(HitsTableMap::COL_FRAGGER_ID, $players->getId(), $comparison);
+                ->addUsingAlias(HitsTableMap::COL_HITTER_ID, $players->getId(), $comparison);
         } elseif ($players instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(HitsTableMap::COL_FRAGGER_ID, $players->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(HitsTableMap::COL_HITTER_ID, $players->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByFragger() only accepts arguments of type \Players or Collection');
+            throw new PropelException('filterByHitter() only accepts arguments of type \Players or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Fragger relation
+     * Adds a JOIN clause to the query using the Hitter relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildHitsQuery The current query, for fluid interface
      */
-    public function joinFragger($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinHitter($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Fragger');
+        $relationMap = $tableMap->getRelation('Hitter');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -502,14 +502,14 @@ abstract class HitsQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Fragger');
+            $this->addJoinObject($join, 'Hitter');
         }
 
         return $this;
     }
 
     /**
-     * Use the Fragger relation Players object
+     * Use the Hitter relation Players object
      *
      * @see useQuery()
      *
@@ -519,11 +519,11 @@ abstract class HitsQuery extends ModelCriteria
      *
      * @return \PlayersQuery A secondary query class using the current class as primary query
      */
-    public function useFraggerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useHitterQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinFragger($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Fragger', '\PlayersQuery');
+            ->joinHitter($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Hitter', '\PlayersQuery');
     }
 
     /**
@@ -536,35 +536,35 @@ abstract class HitsQuery extends ModelCriteria
      *
      * @return ChildHitsQuery The current query, for fluid interface
      */
-    public function filterByFragged($players, $comparison = null)
+    public function filterByHitted($players, $comparison = null)
     {
         if ($players instanceof \Players) {
             return $this
-                ->addUsingAlias(HitsTableMap::COL_FRAGGED_ID, $players->getId(), $comparison);
+                ->addUsingAlias(HitsTableMap::COL_HITTED_ID, $players->getId(), $comparison);
         } elseif ($players instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(HitsTableMap::COL_FRAGGED_ID, $players->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(HitsTableMap::COL_HITTED_ID, $players->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByFragged() only accepts arguments of type \Players or Collection');
+            throw new PropelException('filterByHitted() only accepts arguments of type \Players or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Fragged relation
+     * Adds a JOIN clause to the query using the Hitted relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildHitsQuery The current query, for fluid interface
      */
-    public function joinFragged($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinHitted($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Fragged');
+        $relationMap = $tableMap->getRelation('Hitted');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -579,14 +579,14 @@ abstract class HitsQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Fragged');
+            $this->addJoinObject($join, 'Hitted');
         }
 
         return $this;
     }
 
     /**
-     * Use the Fragged relation Players object
+     * Use the Hitted relation Players object
      *
      * @see useQuery()
      *
@@ -596,11 +596,11 @@ abstract class HitsQuery extends ModelCriteria
      *
      * @return \PlayersQuery A secondary query class using the current class as primary query
      */
-    public function useFraggedQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useHittedQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinFragged($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Fragged', '\PlayersQuery');
+            ->joinHitted($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Hitted', '\PlayersQuery');
     }
 
     /**

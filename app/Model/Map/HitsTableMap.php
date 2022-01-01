@@ -77,14 +77,14 @@ class HitsTableMap extends TableMap
     const COL_ID = 'hits.id';
 
     /**
-     * the column name for the fragger_id field
+     * the column name for the hitter_id field
      */
-    const COL_FRAGGER_ID = 'hits.fragger_id';
+    const COL_HITTER_ID = 'hits.hitter_id';
 
     /**
-     * the column name for the fragged_id field
+     * the column name for the hitted_id field
      */
-    const COL_FRAGGED_ID = 'hits.fragged_id';
+    const COL_HITTED_ID = 'hits.hitted_id';
 
     /**
      * the column name for the bodypart_id field
@@ -103,10 +103,10 @@ class HitsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'FraggerId', 'FraggedId', 'BodypartId', ),
-        self::TYPE_CAMELNAME     => array('id', 'fraggerId', 'fraggedId', 'bodypartId', ),
-        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID, HitsTableMap::COL_FRAGGER_ID, HitsTableMap::COL_FRAGGED_ID, HitsTableMap::COL_BODYPART_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'fragger_id', 'fragged_id', 'bodypart_id', ),
+        self::TYPE_PHPNAME       => array('Id', 'HitterId', 'HittedId', 'BodypartId', ),
+        self::TYPE_CAMELNAME     => array('id', 'hitterId', 'hittedId', 'bodypartId', ),
+        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID, HitsTableMap::COL_HITTER_ID, HitsTableMap::COL_HITTED_ID, HitsTableMap::COL_BODYPART_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'hitter_id', 'hitted_id', 'bodypart_id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
@@ -117,10 +117,10 @@ class HitsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'FraggerId' => 1, 'FraggedId' => 2, 'BodypartId' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'fraggerId' => 1, 'fraggedId' => 2, 'bodypartId' => 3, ),
-        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID => 0, HitsTableMap::COL_FRAGGER_ID => 1, HitsTableMap::COL_FRAGGED_ID => 2, HitsTableMap::COL_BODYPART_ID => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'fragger_id' => 1, 'fragged_id' => 2, 'bodypart_id' => 3, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'HitterId' => 1, 'HittedId' => 2, 'BodypartId' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'hitterId' => 1, 'hittedId' => 2, 'bodypartId' => 3, ),
+        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID => 0, HitsTableMap::COL_HITTER_ID => 1, HitsTableMap::COL_HITTED_ID => 2, HitsTableMap::COL_BODYPART_ID => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'hitter_id' => 1, 'hitted_id' => 2, 'bodypart_id' => 3, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
@@ -142,8 +142,8 @@ class HitsTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('fragger_id', 'FraggerId', 'INTEGER', 'players', 'id', true, null, null);
-        $this->addForeignKey('fragged_id', 'FraggedId', 'INTEGER', 'players', 'id', true, null, null);
+        $this->addForeignKey('hitter_id', 'HitterId', 'INTEGER', 'players', 'id', true, null, null);
+        $this->addForeignKey('hitted_id', 'HittedId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addForeignKey('bodypart_id', 'BodypartId', 'INTEGER', 'bodyparts', 'id', true, null, null);
     } // initialize()
 
@@ -152,17 +152,17 @@ class HitsTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Fragger', '\\Players', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Hitter', '\\Players', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':fragger_id',
+    0 => ':hitter_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Fragged', '\\Players', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Hitted', '\\Players', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':fragged_id',
+    0 => ':hitted_id',
     1 => ':id',
   ),
 ), null, null, null, false);
@@ -317,13 +317,13 @@ class HitsTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(HitsTableMap::COL_ID);
-            $criteria->addSelectColumn(HitsTableMap::COL_FRAGGER_ID);
-            $criteria->addSelectColumn(HitsTableMap::COL_FRAGGED_ID);
+            $criteria->addSelectColumn(HitsTableMap::COL_HITTER_ID);
+            $criteria->addSelectColumn(HitsTableMap::COL_HITTED_ID);
             $criteria->addSelectColumn(HitsTableMap::COL_BODYPART_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.fragger_id');
-            $criteria->addSelectColumn($alias . '.fragged_id');
+            $criteria->addSelectColumn($alias . '.hitter_id');
+            $criteria->addSelectColumn($alias . '.hitted_id');
             $criteria->addSelectColumn($alias . '.bodypart_id');
         }
     }

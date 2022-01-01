@@ -71,18 +71,18 @@ abstract class Hits implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the fragger_id field.
+     * The value for the hitter_id field.
      *
      * @var        int
      */
-    protected $fragger_id;
+    protected $hitter_id;
 
     /**
-     * The value for the fragged_id field.
+     * The value for the hitted_id field.
      *
      * @var        int
      */
-    protected $fragged_id;
+    protected $hitted_id;
 
     /**
      * The value for the bodypart_id field.
@@ -94,12 +94,12 @@ abstract class Hits implements ActiveRecordInterface
     /**
      * @var        ChildPlayers
      */
-    protected $aFragger;
+    protected $aHitter;
 
     /**
      * @var        ChildPlayers
      */
-    protected $aFragged;
+    protected $aHitted;
 
     /**
      * @var        ChildBodyparts
@@ -350,23 +350,23 @@ abstract class Hits implements ActiveRecordInterface
     }
 
     /**
-     * Get the [fragger_id] column value.
+     * Get the [hitter_id] column value.
      *
      * @return int
      */
-    public function getFraggerId()
+    public function getHitterId()
     {
-        return $this->fragger_id;
+        return $this->hitter_id;
     }
 
     /**
-     * Get the [fragged_id] column value.
+     * Get the [hitted_id] column value.
      *
      * @return int
      */
-    public function getFraggedId()
+    public function getHittedId()
     {
-        return $this->fragged_id;
+        return $this->hitted_id;
     }
 
     /**
@@ -400,52 +400,52 @@ abstract class Hits implements ActiveRecordInterface
     } // setId()
 
     /**
-     * Set the value of [fragger_id] column.
+     * Set the value of [hitter_id] column.
      *
      * @param int $v new value
      * @return $this|\Hits The current object (for fluent API support)
      */
-    public function setFraggerId($v)
+    public function setHitterId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->fragger_id !== $v) {
-            $this->fragger_id = $v;
-            $this->modifiedColumns[HitsTableMap::COL_FRAGGER_ID] = true;
+        if ($this->hitter_id !== $v) {
+            $this->hitter_id = $v;
+            $this->modifiedColumns[HitsTableMap::COL_HITTER_ID] = true;
         }
 
-        if ($this->aFragger !== null && $this->aFragger->getId() !== $v) {
-            $this->aFragger = null;
+        if ($this->aHitter !== null && $this->aHitter->getId() !== $v) {
+            $this->aHitter = null;
         }
 
         return $this;
-    } // setFraggerId()
+    } // setHitterId()
 
     /**
-     * Set the value of [fragged_id] column.
+     * Set the value of [hitted_id] column.
      *
      * @param int $v new value
      * @return $this|\Hits The current object (for fluent API support)
      */
-    public function setFraggedId($v)
+    public function setHittedId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->fragged_id !== $v) {
-            $this->fragged_id = $v;
-            $this->modifiedColumns[HitsTableMap::COL_FRAGGED_ID] = true;
+        if ($this->hitted_id !== $v) {
+            $this->hitted_id = $v;
+            $this->modifiedColumns[HitsTableMap::COL_HITTED_ID] = true;
         }
 
-        if ($this->aFragged !== null && $this->aFragged->getId() !== $v) {
-            $this->aFragged = null;
+        if ($this->aHitted !== null && $this->aHitted->getId() !== $v) {
+            $this->aHitted = null;
         }
 
         return $this;
-    } // setFraggedId()
+    } // setHittedId()
 
     /**
      * Set the value of [bodypart_id] column.
@@ -510,11 +510,11 @@ abstract class Hits implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : HitsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : HitsTableMap::translateFieldName('FraggerId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->fragger_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : HitsTableMap::translateFieldName('HitterId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->hitter_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : HitsTableMap::translateFieldName('FraggedId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->fragged_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : HitsTableMap::translateFieldName('HittedId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->hitted_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : HitsTableMap::translateFieldName('BodypartId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->bodypart_id = (null !== $col) ? (int) $col : null;
@@ -548,11 +548,11 @@ abstract class Hits implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aFragger !== null && $this->fragger_id !== $this->aFragger->getId()) {
-            $this->aFragger = null;
+        if ($this->aHitter !== null && $this->hitter_id !== $this->aHitter->getId()) {
+            $this->aHitter = null;
         }
-        if ($this->aFragged !== null && $this->fragged_id !== $this->aFragged->getId()) {
-            $this->aFragged = null;
+        if ($this->aHitted !== null && $this->hitted_id !== $this->aHitted->getId()) {
+            $this->aHitted = null;
         }
         if ($this->aBodyparts !== null && $this->bodypart_id !== $this->aBodyparts->getId()) {
             $this->aBodyparts = null;
@@ -596,8 +596,8 @@ abstract class Hits implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aFragger = null;
-            $this->aFragged = null;
+            $this->aHitter = null;
+            $this->aHitted = null;
             $this->aBodyparts = null;
         } // if (deep)
     }
@@ -707,18 +707,18 @@ abstract class Hits implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aFragger !== null) {
-                if ($this->aFragger->isModified() || $this->aFragger->isNew()) {
-                    $affectedRows += $this->aFragger->save($con);
+            if ($this->aHitter !== null) {
+                if ($this->aHitter->isModified() || $this->aHitter->isNew()) {
+                    $affectedRows += $this->aHitter->save($con);
                 }
-                $this->setFragger($this->aFragger);
+                $this->setHitter($this->aHitter);
             }
 
-            if ($this->aFragged !== null) {
-                if ($this->aFragged->isModified() || $this->aFragged->isNew()) {
-                    $affectedRows += $this->aFragged->save($con);
+            if ($this->aHitted !== null) {
+                if ($this->aHitted->isModified() || $this->aHitted->isNew()) {
+                    $affectedRows += $this->aHitted->save($con);
                 }
-                $this->setFragged($this->aFragged);
+                $this->setHitted($this->aHitted);
             }
 
             if ($this->aBodyparts !== null) {
@@ -768,11 +768,11 @@ abstract class Hits implements ActiveRecordInterface
         if ($this->isColumnModified(HitsTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(HitsTableMap::COL_FRAGGER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'fragger_id';
+        if ($this->isColumnModified(HitsTableMap::COL_HITTER_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'hitter_id';
         }
-        if ($this->isColumnModified(HitsTableMap::COL_FRAGGED_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'fragged_id';
+        if ($this->isColumnModified(HitsTableMap::COL_HITTED_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'hitted_id';
         }
         if ($this->isColumnModified(HitsTableMap::COL_BODYPART_ID)) {
             $modifiedColumns[':p' . $index++]  = 'bodypart_id';
@@ -791,11 +791,11 @@ abstract class Hits implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'fragger_id':
-                        $stmt->bindValue($identifier, $this->fragger_id, PDO::PARAM_INT);
+                    case 'hitter_id':
+                        $stmt->bindValue($identifier, $this->hitter_id, PDO::PARAM_INT);
                         break;
-                    case 'fragged_id':
-                        $stmt->bindValue($identifier, $this->fragged_id, PDO::PARAM_INT);
+                    case 'hitted_id':
+                        $stmt->bindValue($identifier, $this->hitted_id, PDO::PARAM_INT);
                         break;
                     case 'bodypart_id':
                         $stmt->bindValue($identifier, $this->bodypart_id, PDO::PARAM_INT);
@@ -866,10 +866,10 @@ abstract class Hits implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getFraggerId();
+                return $this->getHitterId();
                 break;
             case 2:
-                return $this->getFraggedId();
+                return $this->getHittedId();
                 break;
             case 3:
                 return $this->getBodypartId();
@@ -905,8 +905,8 @@ abstract class Hits implements ActiveRecordInterface
         $keys = HitsTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getFraggerId(),
-            $keys[2] => $this->getFraggedId(),
+            $keys[1] => $this->getHitterId(),
+            $keys[2] => $this->getHittedId(),
             $keys[3] => $this->getBodypartId(),
         );
         $virtualColumns = $this->virtualColumns;
@@ -915,7 +915,7 @@ abstract class Hits implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aFragger) {
+            if (null !== $this->aHitter) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -925,12 +925,12 @@ abstract class Hits implements ActiveRecordInterface
                         $key = 'players';
                         break;
                     default:
-                        $key = 'Fragger';
+                        $key = 'Hitter';
                 }
 
-                $result[$key] = $this->aFragger->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aHitter->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aFragged) {
+            if (null !== $this->aHitted) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -940,10 +940,10 @@ abstract class Hits implements ActiveRecordInterface
                         $key = 'players';
                         break;
                     default:
-                        $key = 'Fragged';
+                        $key = 'Hitted';
                 }
 
-                $result[$key] = $this->aFragged->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aHitted->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aBodyparts) {
 
@@ -998,10 +998,10 @@ abstract class Hits implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setFraggerId($value);
+                $this->setHitterId($value);
                 break;
             case 2:
-                $this->setFraggedId($value);
+                $this->setHittedId($value);
                 break;
             case 3:
                 $this->setBodypartId($value);
@@ -1036,10 +1036,10 @@ abstract class Hits implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setFraggerId($arr[$keys[1]]);
+            $this->setHitterId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setFraggedId($arr[$keys[2]]);
+            $this->setHittedId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setBodypartId($arr[$keys[3]]);
@@ -1088,11 +1088,11 @@ abstract class Hits implements ActiveRecordInterface
         if ($this->isColumnModified(HitsTableMap::COL_ID)) {
             $criteria->add(HitsTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(HitsTableMap::COL_FRAGGER_ID)) {
-            $criteria->add(HitsTableMap::COL_FRAGGER_ID, $this->fragger_id);
+        if ($this->isColumnModified(HitsTableMap::COL_HITTER_ID)) {
+            $criteria->add(HitsTableMap::COL_HITTER_ID, $this->hitter_id);
         }
-        if ($this->isColumnModified(HitsTableMap::COL_FRAGGED_ID)) {
-            $criteria->add(HitsTableMap::COL_FRAGGED_ID, $this->fragged_id);
+        if ($this->isColumnModified(HitsTableMap::COL_HITTED_ID)) {
+            $criteria->add(HitsTableMap::COL_HITTED_ID, $this->hitted_id);
         }
         if ($this->isColumnModified(HitsTableMap::COL_BODYPART_ID)) {
             $criteria->add(HitsTableMap::COL_BODYPART_ID, $this->bodypart_id);
@@ -1183,8 +1183,8 @@ abstract class Hits implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setFraggerId($this->getFraggerId());
-        $copyObj->setFraggedId($this->getFraggedId());
+        $copyObj->setHitterId($this->getHitterId());
+        $copyObj->setHittedId($this->getHittedId());
         $copyObj->setBodypartId($this->getBodypartId());
         if ($makeNew) {
             $copyObj->setNew(true);
@@ -1221,20 +1221,20 @@ abstract class Hits implements ActiveRecordInterface
      * @return $this|\Hits The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setFragger(ChildPlayers $v = null)
+    public function setHitter(ChildPlayers $v = null)
     {
         if ($v === null) {
-            $this->setFraggerId(NULL);
+            $this->setHitterId(NULL);
         } else {
-            $this->setFraggerId($v->getId());
+            $this->setHitterId($v->getId());
         }
 
-        $this->aFragger = $v;
+        $this->aHitter = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildPlayers object, it will not be re-added.
         if ($v !== null) {
-            $v->addFraggerPlayer($this);
+            $v->addHitterPlayer($this);
         }
 
 
@@ -1249,20 +1249,20 @@ abstract class Hits implements ActiveRecordInterface
      * @return ChildPlayers The associated ChildPlayers object.
      * @throws PropelException
      */
-    public function getFragger(ConnectionInterface $con = null)
+    public function getHitter(ConnectionInterface $con = null)
     {
-        if ($this->aFragger === null && ($this->fragger_id != 0)) {
-            $this->aFragger = ChildPlayersQuery::create()->findPk($this->fragger_id, $con);
+        if ($this->aHitter === null && ($this->hitter_id != 0)) {
+            $this->aHitter = ChildPlayersQuery::create()->findPk($this->hitter_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aFragger->addFraggerPlayers($this);
+                $this->aHitter->addHitterPlayers($this);
              */
         }
 
-        return $this->aFragger;
+        return $this->aHitter;
     }
 
     /**
@@ -1272,20 +1272,20 @@ abstract class Hits implements ActiveRecordInterface
      * @return $this|\Hits The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setFragged(ChildPlayers $v = null)
+    public function setHitted(ChildPlayers $v = null)
     {
         if ($v === null) {
-            $this->setFraggedId(NULL);
+            $this->setHittedId(NULL);
         } else {
-            $this->setFraggedId($v->getId());
+            $this->setHittedId($v->getId());
         }
 
-        $this->aFragged = $v;
+        $this->aHitted = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildPlayers object, it will not be re-added.
         if ($v !== null) {
-            $v->addFraggedPlayer($this);
+            $v->addHittedPlayer($this);
         }
 
 
@@ -1300,20 +1300,20 @@ abstract class Hits implements ActiveRecordInterface
      * @return ChildPlayers The associated ChildPlayers object.
      * @throws PropelException
      */
-    public function getFragged(ConnectionInterface $con = null)
+    public function getHitted(ConnectionInterface $con = null)
     {
-        if ($this->aFragged === null && ($this->fragged_id != 0)) {
-            $this->aFragged = ChildPlayersQuery::create()->findPk($this->fragged_id, $con);
+        if ($this->aHitted === null && ($this->hitted_id != 0)) {
+            $this->aHitted = ChildPlayersQuery::create()->findPk($this->hitted_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aFragged->addFraggedPlayers($this);
+                $this->aHitted->addHittedPlayers($this);
              */
         }
 
-        return $this->aFragged;
+        return $this->aHitted;
     }
 
     /**
@@ -1374,18 +1374,18 @@ abstract class Hits implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aFragger) {
-            $this->aFragger->removeFraggerPlayer($this);
+        if (null !== $this->aHitter) {
+            $this->aHitter->removeHitterPlayer($this);
         }
-        if (null !== $this->aFragged) {
-            $this->aFragged->removeFraggedPlayer($this);
+        if (null !== $this->aHitted) {
+            $this->aHitted->removeHittedPlayer($this);
         }
         if (null !== $this->aBodyparts) {
             $this->aBodyparts->removeHit($this);
         }
         $this->id = null;
-        $this->fragger_id = null;
-        $this->fragged_id = null;
+        $this->hitter_id = null;
+        $this->hitted_id = null;
         $this->bodypart_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1407,8 +1407,8 @@ abstract class Hits implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aFragger = null;
-        $this->aFragged = null;
+        $this->aHitter = null;
+        $this->aHitted = null;
         $this->aBodyparts = null;
     }
 

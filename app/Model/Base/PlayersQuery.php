@@ -76,25 +76,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinWithGame() Adds a RIGHT JOIN clause and with to the query using the Game relation
  * @method     ChildPlayersQuery innerJoinWithGame() Adds a INNER JOIN clause and with to the query using the Game relation
  *
- * @method     ChildPlayersQuery leftJoinFraggerPlayer($relationAlias = null) Adds a LEFT JOIN clause to the query using the FraggerPlayer relation
- * @method     ChildPlayersQuery rightJoinFraggerPlayer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FraggerPlayer relation
- * @method     ChildPlayersQuery innerJoinFraggerPlayer($relationAlias = null) Adds a INNER JOIN clause to the query using the FraggerPlayer relation
+ * @method     ChildPlayersQuery leftJoinHitterPlayer($relationAlias = null) Adds a LEFT JOIN clause to the query using the HitterPlayer relation
+ * @method     ChildPlayersQuery rightJoinHitterPlayer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the HitterPlayer relation
+ * @method     ChildPlayersQuery innerJoinHitterPlayer($relationAlias = null) Adds a INNER JOIN clause to the query using the HitterPlayer relation
  *
- * @method     ChildPlayersQuery joinWithFraggerPlayer($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the FraggerPlayer relation
+ * @method     ChildPlayersQuery joinWithHitterPlayer($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the HitterPlayer relation
  *
- * @method     ChildPlayersQuery leftJoinWithFraggerPlayer() Adds a LEFT JOIN clause and with to the query using the FraggerPlayer relation
- * @method     ChildPlayersQuery rightJoinWithFraggerPlayer() Adds a RIGHT JOIN clause and with to the query using the FraggerPlayer relation
- * @method     ChildPlayersQuery innerJoinWithFraggerPlayer() Adds a INNER JOIN clause and with to the query using the FraggerPlayer relation
+ * @method     ChildPlayersQuery leftJoinWithHitterPlayer() Adds a LEFT JOIN clause and with to the query using the HitterPlayer relation
+ * @method     ChildPlayersQuery rightJoinWithHitterPlayer() Adds a RIGHT JOIN clause and with to the query using the HitterPlayer relation
+ * @method     ChildPlayersQuery innerJoinWithHitterPlayer() Adds a INNER JOIN clause and with to the query using the HitterPlayer relation
  *
- * @method     ChildPlayersQuery leftJoinFraggedPlayer($relationAlias = null) Adds a LEFT JOIN clause to the query using the FraggedPlayer relation
- * @method     ChildPlayersQuery rightJoinFraggedPlayer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FraggedPlayer relation
- * @method     ChildPlayersQuery innerJoinFraggedPlayer($relationAlias = null) Adds a INNER JOIN clause to the query using the FraggedPlayer relation
+ * @method     ChildPlayersQuery leftJoinHittedPlayer($relationAlias = null) Adds a LEFT JOIN clause to the query using the HittedPlayer relation
+ * @method     ChildPlayersQuery rightJoinHittedPlayer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the HittedPlayer relation
+ * @method     ChildPlayersQuery innerJoinHittedPlayer($relationAlias = null) Adds a INNER JOIN clause to the query using the HittedPlayer relation
  *
- * @method     ChildPlayersQuery joinWithFraggedPlayer($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the FraggedPlayer relation
+ * @method     ChildPlayersQuery joinWithHittedPlayer($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the HittedPlayer relation
  *
- * @method     ChildPlayersQuery leftJoinWithFraggedPlayer() Adds a LEFT JOIN clause and with to the query using the FraggedPlayer relation
- * @method     ChildPlayersQuery rightJoinWithFraggedPlayer() Adds a RIGHT JOIN clause and with to the query using the FraggedPlayer relation
- * @method     ChildPlayersQuery innerJoinWithFraggedPlayer() Adds a INNER JOIN clause and with to the query using the FraggedPlayer relation
+ * @method     ChildPlayersQuery leftJoinWithHittedPlayer() Adds a LEFT JOIN clause and with to the query using the HittedPlayer relation
+ * @method     ChildPlayersQuery rightJoinWithHittedPlayer() Adds a RIGHT JOIN clause and with to the query using the HittedPlayer relation
+ * @method     ChildPlayersQuery innerJoinWithHittedPlayer() Adds a INNER JOIN clause and with to the query using the HittedPlayer relation
  *
  * @method     ChildPlayersQuery leftJoinScore($relationAlias = null) Adds a LEFT JOIN clause to the query using the Score relation
  * @method     ChildPlayersQuery rightJoinScore($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Score relation
@@ -715,33 +715,33 @@ abstract class PlayersQuery extends ModelCriteria
      *
      * @return ChildPlayersQuery The current query, for fluid interface
      */
-    public function filterByFraggerPlayer($hits, $comparison = null)
+    public function filterByHitterPlayer($hits, $comparison = null)
     {
         if ($hits instanceof \Hits) {
             return $this
-                ->addUsingAlias(PlayersTableMap::COL_ID, $hits->getFraggerId(), $comparison);
+                ->addUsingAlias(PlayersTableMap::COL_ID, $hits->getHitterId(), $comparison);
         } elseif ($hits instanceof ObjectCollection) {
             return $this
-                ->useFraggerPlayerQuery()
+                ->useHitterPlayerQuery()
                 ->filterByPrimaryKeys($hits->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByFraggerPlayer() only accepts arguments of type \Hits or Collection');
+            throw new PropelException('filterByHitterPlayer() only accepts arguments of type \Hits or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the FraggerPlayer relation
+     * Adds a JOIN clause to the query using the HitterPlayer relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPlayersQuery The current query, for fluid interface
      */
-    public function joinFraggerPlayer($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinHitterPlayer($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('FraggerPlayer');
+        $relationMap = $tableMap->getRelation('HitterPlayer');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -756,14 +756,14 @@ abstract class PlayersQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'FraggerPlayer');
+            $this->addJoinObject($join, 'HitterPlayer');
         }
 
         return $this;
     }
 
     /**
-     * Use the FraggerPlayer relation Hits object
+     * Use the HitterPlayer relation Hits object
      *
      * @see useQuery()
      *
@@ -773,11 +773,11 @@ abstract class PlayersQuery extends ModelCriteria
      *
      * @return \HitsQuery A secondary query class using the current class as primary query
      */
-    public function useFraggerPlayerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useHitterPlayerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinFraggerPlayer($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'FraggerPlayer', '\HitsQuery');
+            ->joinHitterPlayer($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'HitterPlayer', '\HitsQuery');
     }
 
     /**
@@ -788,33 +788,33 @@ abstract class PlayersQuery extends ModelCriteria
      *
      * @return ChildPlayersQuery The current query, for fluid interface
      */
-    public function filterByFraggedPlayer($hits, $comparison = null)
+    public function filterByHittedPlayer($hits, $comparison = null)
     {
         if ($hits instanceof \Hits) {
             return $this
-                ->addUsingAlias(PlayersTableMap::COL_ID, $hits->getFraggedId(), $comparison);
+                ->addUsingAlias(PlayersTableMap::COL_ID, $hits->getHittedId(), $comparison);
         } elseif ($hits instanceof ObjectCollection) {
             return $this
-                ->useFraggedPlayerQuery()
+                ->useHittedPlayerQuery()
                 ->filterByPrimaryKeys($hits->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByFraggedPlayer() only accepts arguments of type \Hits or Collection');
+            throw new PropelException('filterByHittedPlayer() only accepts arguments of type \Hits or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the FraggedPlayer relation
+     * Adds a JOIN clause to the query using the HittedPlayer relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPlayersQuery The current query, for fluid interface
      */
-    public function joinFraggedPlayer($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinHittedPlayer($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('FraggedPlayer');
+        $relationMap = $tableMap->getRelation('HittedPlayer');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -829,14 +829,14 @@ abstract class PlayersQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'FraggedPlayer');
+            $this->addJoinObject($join, 'HittedPlayer');
         }
 
         return $this;
     }
 
     /**
-     * Use the FraggedPlayer relation Hits object
+     * Use the HittedPlayer relation Hits object
      *
      * @see useQuery()
      *
@@ -846,11 +846,11 @@ abstract class PlayersQuery extends ModelCriteria
      *
      * @return \HitsQuery A secondary query class using the current class as primary query
      */
-    public function useFraggedPlayerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useHittedPlayerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinFraggedPlayer($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'FraggedPlayer', '\HitsQuery');
+            ->joinHittedPlayer($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'HittedPlayer', '\HitsQuery');
     }
 
     /**

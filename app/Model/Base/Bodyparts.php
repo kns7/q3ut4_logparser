@@ -1364,10 +1364,10 @@ abstract class Bodyparts implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
      */
-    public function getHitsJoinFragger(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getHitsJoinHitter(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildHitsQuery::create(null, $criteria);
-        $query->joinWith('Fragger', $joinBehavior);
+        $query->joinWith('Hitter', $joinBehavior);
 
         return $this->getHits($query, $con);
     }
@@ -1389,10 +1389,10 @@ abstract class Bodyparts implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
      */
-    public function getHitsJoinFragged(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getHitsJoinHitted(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildHitsQuery::create(null, $criteria);
-        $query->joinWith('Fragged', $joinBehavior);
+        $query->joinWith('Hitted', $joinBehavior);
 
         return $this->getHits($query, $con);
     }

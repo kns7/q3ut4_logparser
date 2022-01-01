@@ -9,7 +9,7 @@ use Propel\Runtime\Exception\PropelException;
 class PlayersController extends Controller
 {
 
-    public function list()
+    public function getList()
     {
         return PlayersQuery::create()->orderByName()->find();
     }
@@ -17,6 +17,10 @@ class PlayersController extends Controller
     public function get($id)
     {
         return PlayersQuery::create()->findPk($id);
+    }
+
+    public function getByName($name){
+        return PlayersQuery::create()->findOneByName($name);
     }
 
     public function add($name)
@@ -33,7 +37,11 @@ class PlayersController extends Controller
 
     public function getORadd($name)
     {
-        $player = PlayersQuery::create()->findOneByCode($name);
+        $player = PlayersQuery::create()
+            ->where("players.name = ?","$name")
+            ->_or()
+            ->where("players.altname LIKE ?","%$name%")
+            ->findOne();
         if(is_null($player)){
             $player = $this->add($name);
         }

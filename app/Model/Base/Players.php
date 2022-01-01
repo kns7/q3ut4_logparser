@@ -127,14 +127,14 @@ abstract class Players implements ActiveRecordInterface
     /**
      * @var        ObjectCollection|ChildHits[] Collection to store aggregation of ChildHits objects.
      */
-    protected $collFraggerPlayers;
-    protected $collFraggerPlayersPartial;
+    protected $collHitterPlayers;
+    protected $collHitterPlayersPartial;
 
     /**
      * @var        ObjectCollection|ChildHits[] Collection to store aggregation of ChildHits objects.
      */
-    protected $collFraggedPlayers;
-    protected $collFraggedPlayersPartial;
+    protected $collHittedPlayers;
+    protected $collHittedPlayersPartial;
 
     /**
      * @var        ObjectCollection|ChildScores[] Collection to store aggregation of ChildScores objects.
@@ -184,13 +184,13 @@ abstract class Players implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildHits[]
      */
-    protected $fraggerPlayersScheduledForDeletion = null;
+    protected $hitterPlayersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildHits[]
      */
-    protected $fraggedPlayersScheduledForDeletion = null;
+    protected $hittedPlayersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -640,9 +640,9 @@ abstract class Players implements ActiveRecordInterface
 
             $this->collGames = null;
 
-            $this->collFraggerPlayers = null;
+            $this->collHitterPlayers = null;
 
-            $this->collFraggedPlayers = null;
+            $this->collHittedPlayers = null;
 
             $this->collScores = null;
 
@@ -830,34 +830,34 @@ abstract class Players implements ActiveRecordInterface
                 }
             }
 
-            if ($this->fraggerPlayersScheduledForDeletion !== null) {
-                if (!$this->fraggerPlayersScheduledForDeletion->isEmpty()) {
+            if ($this->hitterPlayersScheduledForDeletion !== null) {
+                if (!$this->hitterPlayersScheduledForDeletion->isEmpty()) {
                     \HitsQuery::create()
-                        ->filterByPrimaryKeys($this->fraggerPlayersScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->hitterPlayersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->fraggerPlayersScheduledForDeletion = null;
+                    $this->hitterPlayersScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collFraggerPlayers !== null) {
-                foreach ($this->collFraggerPlayers as $referrerFK) {
+            if ($this->collHitterPlayers !== null) {
+                foreach ($this->collHitterPlayers as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->fraggedPlayersScheduledForDeletion !== null) {
-                if (!$this->fraggedPlayersScheduledForDeletion->isEmpty()) {
+            if ($this->hittedPlayersScheduledForDeletion !== null) {
+                if (!$this->hittedPlayersScheduledForDeletion->isEmpty()) {
                     \HitsQuery::create()
-                        ->filterByPrimaryKeys($this->fraggedPlayersScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->hittedPlayersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->fraggedPlayersScheduledForDeletion = null;
+                    $this->hittedPlayersScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collFraggedPlayers !== null) {
-                foreach ($this->collFraggedPlayers as $referrerFK) {
+            if ($this->collHittedPlayers !== null) {
+                foreach ($this->collHittedPlayers as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1124,7 +1124,7 @@ abstract class Players implements ActiveRecordInterface
 
                 $result[$key] = $this->collGames->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collFraggerPlayers) {
+            if (null !== $this->collHitterPlayers) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1134,12 +1134,12 @@ abstract class Players implements ActiveRecordInterface
                         $key = 'hitss';
                         break;
                     default:
-                        $key = 'FraggerPlayers';
+                        $key = 'HitterPlayers';
                 }
 
-                $result[$key] = $this->collFraggerPlayers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collHitterPlayers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collFraggedPlayers) {
+            if (null !== $this->collHittedPlayers) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1149,10 +1149,10 @@ abstract class Players implements ActiveRecordInterface
                         $key = 'hitss';
                         break;
                     default:
-                        $key = 'FraggedPlayers';
+                        $key = 'HittedPlayers';
                 }
 
-                $result[$key] = $this->collFraggedPlayers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collHittedPlayers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collScores) {
 
@@ -1430,15 +1430,15 @@ abstract class Players implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getFraggerPlayers() as $relObj) {
+            foreach ($this->getHitterPlayers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addFraggerPlayer($relObj->copy($deepCopy));
+                    $copyObj->addHitterPlayer($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getFraggedPlayers() as $relObj) {
+            foreach ($this->getHittedPlayers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addFraggedPlayer($relObj->copy($deepCopy));
+                    $copyObj->addHittedPlayer($relObj->copy($deepCopy));
                 }
             }
 
@@ -1511,12 +1511,12 @@ abstract class Players implements ActiveRecordInterface
             $this->initGames();
             return;
         }
-        if ('FraggerPlayer' == $relationName) {
-            $this->initFraggerPlayers();
+        if ('HitterPlayer' == $relationName) {
+            $this->initHitterPlayers();
             return;
         }
-        if ('FraggedPlayer' == $relationName) {
-            $this->initFraggedPlayers();
+        if ('HittedPlayer' == $relationName) {
+            $this->initHittedPlayers();
             return;
         }
         if ('Score' == $relationName) {
@@ -2480,31 +2480,31 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collFraggerPlayers collection
+     * Clears out the collHitterPlayers collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addFraggerPlayers()
+     * @see        addHitterPlayers()
      */
-    public function clearFraggerPlayers()
+    public function clearHitterPlayers()
     {
-        $this->collFraggerPlayers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collHitterPlayers = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collFraggerPlayers collection loaded partially.
+     * Reset is the collHitterPlayers collection loaded partially.
      */
-    public function resetPartialFraggerPlayers($v = true)
+    public function resetPartialHitterPlayers($v = true)
     {
-        $this->collFraggerPlayersPartial = $v;
+        $this->collHitterPlayersPartial = $v;
     }
 
     /**
-     * Initializes the collFraggerPlayers collection.
+     * Initializes the collHitterPlayers collection.
      *
-     * By default this just sets the collFraggerPlayers collection to an empty array (like clearcollFraggerPlayers());
+     * By default this just sets the collHitterPlayers collection to an empty array (like clearcollHitterPlayers());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2513,16 +2513,16 @@ abstract class Players implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initFraggerPlayers($overrideExisting = true)
+    public function initHitterPlayers($overrideExisting = true)
     {
-        if (null !== $this->collFraggerPlayers && !$overrideExisting) {
+        if (null !== $this->collHitterPlayers && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = HitsTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collFraggerPlayers = new $collectionClassName;
-        $this->collFraggerPlayers->setModel('\Hits');
+        $this->collHitterPlayers = new $collectionClassName;
+        $this->collHitterPlayers->setModel('\Hits');
     }
 
     /**
@@ -2539,48 +2539,48 @@ abstract class Players implements ActiveRecordInterface
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
      * @throws PropelException
      */
-    public function getFraggerPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getHitterPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collFraggerPlayersPartial && !$this->isNew();
-        if (null === $this->collFraggerPlayers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collFraggerPlayers) {
+        $partial = $this->collHitterPlayersPartial && !$this->isNew();
+        if (null === $this->collHitterPlayers || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collHitterPlayers) {
                 // return empty collection
-                $this->initFraggerPlayers();
+                $this->initHitterPlayers();
             } else {
-                $collFraggerPlayers = ChildHitsQuery::create(null, $criteria)
-                    ->filterByFragger($this)
+                $collHitterPlayers = ChildHitsQuery::create(null, $criteria)
+                    ->filterByHitter($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collFraggerPlayersPartial && count($collFraggerPlayers)) {
-                        $this->initFraggerPlayers(false);
+                    if (false !== $this->collHitterPlayersPartial && count($collHitterPlayers)) {
+                        $this->initHitterPlayers(false);
 
-                        foreach ($collFraggerPlayers as $obj) {
-                            if (false == $this->collFraggerPlayers->contains($obj)) {
-                                $this->collFraggerPlayers->append($obj);
+                        foreach ($collHitterPlayers as $obj) {
+                            if (false == $this->collHitterPlayers->contains($obj)) {
+                                $this->collHitterPlayers->append($obj);
                             }
                         }
 
-                        $this->collFraggerPlayersPartial = true;
+                        $this->collHitterPlayersPartial = true;
                     }
 
-                    return $collFraggerPlayers;
+                    return $collHitterPlayers;
                 }
 
-                if ($partial && $this->collFraggerPlayers) {
-                    foreach ($this->collFraggerPlayers as $obj) {
+                if ($partial && $this->collHitterPlayers) {
+                    foreach ($this->collHitterPlayers as $obj) {
                         if ($obj->isNew()) {
-                            $collFraggerPlayers[] = $obj;
+                            $collHitterPlayers[] = $obj;
                         }
                     }
                 }
 
-                $this->collFraggerPlayers = $collFraggerPlayers;
-                $this->collFraggerPlayersPartial = false;
+                $this->collHitterPlayers = $collHitterPlayers;
+                $this->collHitterPlayersPartial = false;
             }
         }
 
-        return $this->collFraggerPlayers;
+        return $this->collHitterPlayers;
     }
 
     /**
@@ -2589,29 +2589,29 @@ abstract class Players implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $fraggerPlayers A Propel collection.
+     * @param      Collection $hitterPlayers A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildPlayers The current object (for fluent API support)
      */
-    public function setFraggerPlayers(Collection $fraggerPlayers, ConnectionInterface $con = null)
+    public function setHitterPlayers(Collection $hitterPlayers, ConnectionInterface $con = null)
     {
-        /** @var ChildHits[] $fraggerPlayersToDelete */
-        $fraggerPlayersToDelete = $this->getFraggerPlayers(new Criteria(), $con)->diff($fraggerPlayers);
+        /** @var ChildHits[] $hitterPlayersToDelete */
+        $hitterPlayersToDelete = $this->getHitterPlayers(new Criteria(), $con)->diff($hitterPlayers);
 
 
-        $this->fraggerPlayersScheduledForDeletion = $fraggerPlayersToDelete;
+        $this->hitterPlayersScheduledForDeletion = $hitterPlayersToDelete;
 
-        foreach ($fraggerPlayersToDelete as $fraggerPlayerRemoved) {
-            $fraggerPlayerRemoved->setFragger(null);
+        foreach ($hitterPlayersToDelete as $hitterPlayerRemoved) {
+            $hitterPlayerRemoved->setHitter(null);
         }
 
-        $this->collFraggerPlayers = null;
-        foreach ($fraggerPlayers as $fraggerPlayer) {
-            $this->addFraggerPlayer($fraggerPlayer);
+        $this->collHitterPlayers = null;
+        foreach ($hitterPlayers as $hitterPlayer) {
+            $this->addHitterPlayer($hitterPlayer);
         }
 
-        $this->collFraggerPlayers = $fraggerPlayers;
-        $this->collFraggerPlayersPartial = false;
+        $this->collHitterPlayers = $hitterPlayers;
+        $this->collHitterPlayersPartial = false;
 
         return $this;
     }
@@ -2625,16 +2625,16 @@ abstract class Players implements ActiveRecordInterface
      * @return int             Count of related Hits objects.
      * @throws PropelException
      */
-    public function countFraggerPlayers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countHitterPlayers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collFraggerPlayersPartial && !$this->isNew();
-        if (null === $this->collFraggerPlayers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collFraggerPlayers) {
+        $partial = $this->collHitterPlayersPartial && !$this->isNew();
+        if (null === $this->collHitterPlayers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHitterPlayers) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getFraggerPlayers());
+                return count($this->getHitterPlayers());
             }
 
             $query = ChildHitsQuery::create(null, $criteria);
@@ -2643,11 +2643,11 @@ abstract class Players implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByFragger($this)
+                ->filterByHitter($this)
                 ->count($con);
         }
 
-        return count($this->collFraggerPlayers);
+        return count($this->collHitterPlayers);
     }
 
     /**
@@ -2657,18 +2657,18 @@ abstract class Players implements ActiveRecordInterface
      * @param  ChildHits $l ChildHits
      * @return $this|\Players The current object (for fluent API support)
      */
-    public function addFraggerPlayer(ChildHits $l)
+    public function addHitterPlayer(ChildHits $l)
     {
-        if ($this->collFraggerPlayers === null) {
-            $this->initFraggerPlayers();
-            $this->collFraggerPlayersPartial = true;
+        if ($this->collHitterPlayers === null) {
+            $this->initHitterPlayers();
+            $this->collHitterPlayersPartial = true;
         }
 
-        if (!$this->collFraggerPlayers->contains($l)) {
-            $this->doAddFraggerPlayer($l);
+        if (!$this->collHitterPlayers->contains($l)) {
+            $this->doAddHitterPlayer($l);
 
-            if ($this->fraggerPlayersScheduledForDeletion and $this->fraggerPlayersScheduledForDeletion->contains($l)) {
-                $this->fraggerPlayersScheduledForDeletion->remove($this->fraggerPlayersScheduledForDeletion->search($l));
+            if ($this->hitterPlayersScheduledForDeletion and $this->hitterPlayersScheduledForDeletion->contains($l)) {
+                $this->hitterPlayersScheduledForDeletion->remove($this->hitterPlayersScheduledForDeletion->search($l));
             }
         }
 
@@ -2676,29 +2676,29 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildHits $fraggerPlayer The ChildHits object to add.
+     * @param ChildHits $hitterPlayer The ChildHits object to add.
      */
-    protected function doAddFraggerPlayer(ChildHits $fraggerPlayer)
+    protected function doAddHitterPlayer(ChildHits $hitterPlayer)
     {
-        $this->collFraggerPlayers[]= $fraggerPlayer;
-        $fraggerPlayer->setFragger($this);
+        $this->collHitterPlayers[]= $hitterPlayer;
+        $hitterPlayer->setHitter($this);
     }
 
     /**
-     * @param  ChildHits $fraggerPlayer The ChildHits object to remove.
+     * @param  ChildHits $hitterPlayer The ChildHits object to remove.
      * @return $this|ChildPlayers The current object (for fluent API support)
      */
-    public function removeFraggerPlayer(ChildHits $fraggerPlayer)
+    public function removeHitterPlayer(ChildHits $hitterPlayer)
     {
-        if ($this->getFraggerPlayers()->contains($fraggerPlayer)) {
-            $pos = $this->collFraggerPlayers->search($fraggerPlayer);
-            $this->collFraggerPlayers->remove($pos);
-            if (null === $this->fraggerPlayersScheduledForDeletion) {
-                $this->fraggerPlayersScheduledForDeletion = clone $this->collFraggerPlayers;
-                $this->fraggerPlayersScheduledForDeletion->clear();
+        if ($this->getHitterPlayers()->contains($hitterPlayer)) {
+            $pos = $this->collHitterPlayers->search($hitterPlayer);
+            $this->collHitterPlayers->remove($pos);
+            if (null === $this->hitterPlayersScheduledForDeletion) {
+                $this->hitterPlayersScheduledForDeletion = clone $this->collHitterPlayers;
+                $this->hitterPlayersScheduledForDeletion->clear();
             }
-            $this->fraggerPlayersScheduledForDeletion[]= clone $fraggerPlayer;
-            $fraggerPlayer->setFragger(null);
+            $this->hitterPlayersScheduledForDeletion[]= clone $hitterPlayer;
+            $hitterPlayer->setHitter(null);
         }
 
         return $this;
@@ -2710,7 +2710,7 @@ abstract class Players implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Players is new, it will return
      * an empty collection; or if this Players has previously
-     * been saved, it will retrieve related FraggerPlayers from storage.
+     * been saved, it will retrieve related HitterPlayers from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2721,40 +2721,40 @@ abstract class Players implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
      */
-    public function getFraggerPlayersJoinBodyparts(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getHitterPlayersJoinBodyparts(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildHitsQuery::create(null, $criteria);
         $query->joinWith('Bodyparts', $joinBehavior);
 
-        return $this->getFraggerPlayers($query, $con);
+        return $this->getHitterPlayers($query, $con);
     }
 
     /**
-     * Clears out the collFraggedPlayers collection
+     * Clears out the collHittedPlayers collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addFraggedPlayers()
+     * @see        addHittedPlayers()
      */
-    public function clearFraggedPlayers()
+    public function clearHittedPlayers()
     {
-        $this->collFraggedPlayers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collHittedPlayers = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collFraggedPlayers collection loaded partially.
+     * Reset is the collHittedPlayers collection loaded partially.
      */
-    public function resetPartialFraggedPlayers($v = true)
+    public function resetPartialHittedPlayers($v = true)
     {
-        $this->collFraggedPlayersPartial = $v;
+        $this->collHittedPlayersPartial = $v;
     }
 
     /**
-     * Initializes the collFraggedPlayers collection.
+     * Initializes the collHittedPlayers collection.
      *
-     * By default this just sets the collFraggedPlayers collection to an empty array (like clearcollFraggedPlayers());
+     * By default this just sets the collHittedPlayers collection to an empty array (like clearcollHittedPlayers());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2763,16 +2763,16 @@ abstract class Players implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initFraggedPlayers($overrideExisting = true)
+    public function initHittedPlayers($overrideExisting = true)
     {
-        if (null !== $this->collFraggedPlayers && !$overrideExisting) {
+        if (null !== $this->collHittedPlayers && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = HitsTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collFraggedPlayers = new $collectionClassName;
-        $this->collFraggedPlayers->setModel('\Hits');
+        $this->collHittedPlayers = new $collectionClassName;
+        $this->collHittedPlayers->setModel('\Hits');
     }
 
     /**
@@ -2789,48 +2789,48 @@ abstract class Players implements ActiveRecordInterface
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
      * @throws PropelException
      */
-    public function getFraggedPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getHittedPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collFraggedPlayersPartial && !$this->isNew();
-        if (null === $this->collFraggedPlayers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collFraggedPlayers) {
+        $partial = $this->collHittedPlayersPartial && !$this->isNew();
+        if (null === $this->collHittedPlayers || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collHittedPlayers) {
                 // return empty collection
-                $this->initFraggedPlayers();
+                $this->initHittedPlayers();
             } else {
-                $collFraggedPlayers = ChildHitsQuery::create(null, $criteria)
-                    ->filterByFragged($this)
+                $collHittedPlayers = ChildHitsQuery::create(null, $criteria)
+                    ->filterByHitted($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collFraggedPlayersPartial && count($collFraggedPlayers)) {
-                        $this->initFraggedPlayers(false);
+                    if (false !== $this->collHittedPlayersPartial && count($collHittedPlayers)) {
+                        $this->initHittedPlayers(false);
 
-                        foreach ($collFraggedPlayers as $obj) {
-                            if (false == $this->collFraggedPlayers->contains($obj)) {
-                                $this->collFraggedPlayers->append($obj);
+                        foreach ($collHittedPlayers as $obj) {
+                            if (false == $this->collHittedPlayers->contains($obj)) {
+                                $this->collHittedPlayers->append($obj);
                             }
                         }
 
-                        $this->collFraggedPlayersPartial = true;
+                        $this->collHittedPlayersPartial = true;
                     }
 
-                    return $collFraggedPlayers;
+                    return $collHittedPlayers;
                 }
 
-                if ($partial && $this->collFraggedPlayers) {
-                    foreach ($this->collFraggedPlayers as $obj) {
+                if ($partial && $this->collHittedPlayers) {
+                    foreach ($this->collHittedPlayers as $obj) {
                         if ($obj->isNew()) {
-                            $collFraggedPlayers[] = $obj;
+                            $collHittedPlayers[] = $obj;
                         }
                     }
                 }
 
-                $this->collFraggedPlayers = $collFraggedPlayers;
-                $this->collFraggedPlayersPartial = false;
+                $this->collHittedPlayers = $collHittedPlayers;
+                $this->collHittedPlayersPartial = false;
             }
         }
 
-        return $this->collFraggedPlayers;
+        return $this->collHittedPlayers;
     }
 
     /**
@@ -2839,29 +2839,29 @@ abstract class Players implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $fraggedPlayers A Propel collection.
+     * @param      Collection $hittedPlayers A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildPlayers The current object (for fluent API support)
      */
-    public function setFraggedPlayers(Collection $fraggedPlayers, ConnectionInterface $con = null)
+    public function setHittedPlayers(Collection $hittedPlayers, ConnectionInterface $con = null)
     {
-        /** @var ChildHits[] $fraggedPlayersToDelete */
-        $fraggedPlayersToDelete = $this->getFraggedPlayers(new Criteria(), $con)->diff($fraggedPlayers);
+        /** @var ChildHits[] $hittedPlayersToDelete */
+        $hittedPlayersToDelete = $this->getHittedPlayers(new Criteria(), $con)->diff($hittedPlayers);
 
 
-        $this->fraggedPlayersScheduledForDeletion = $fraggedPlayersToDelete;
+        $this->hittedPlayersScheduledForDeletion = $hittedPlayersToDelete;
 
-        foreach ($fraggedPlayersToDelete as $fraggedPlayerRemoved) {
-            $fraggedPlayerRemoved->setFragged(null);
+        foreach ($hittedPlayersToDelete as $hittedPlayerRemoved) {
+            $hittedPlayerRemoved->setHitted(null);
         }
 
-        $this->collFraggedPlayers = null;
-        foreach ($fraggedPlayers as $fraggedPlayer) {
-            $this->addFraggedPlayer($fraggedPlayer);
+        $this->collHittedPlayers = null;
+        foreach ($hittedPlayers as $hittedPlayer) {
+            $this->addHittedPlayer($hittedPlayer);
         }
 
-        $this->collFraggedPlayers = $fraggedPlayers;
-        $this->collFraggedPlayersPartial = false;
+        $this->collHittedPlayers = $hittedPlayers;
+        $this->collHittedPlayersPartial = false;
 
         return $this;
     }
@@ -2875,16 +2875,16 @@ abstract class Players implements ActiveRecordInterface
      * @return int             Count of related Hits objects.
      * @throws PropelException
      */
-    public function countFraggedPlayers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countHittedPlayers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collFraggedPlayersPartial && !$this->isNew();
-        if (null === $this->collFraggedPlayers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collFraggedPlayers) {
+        $partial = $this->collHittedPlayersPartial && !$this->isNew();
+        if (null === $this->collHittedPlayers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHittedPlayers) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getFraggedPlayers());
+                return count($this->getHittedPlayers());
             }
 
             $query = ChildHitsQuery::create(null, $criteria);
@@ -2893,11 +2893,11 @@ abstract class Players implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByFragged($this)
+                ->filterByHitted($this)
                 ->count($con);
         }
 
-        return count($this->collFraggedPlayers);
+        return count($this->collHittedPlayers);
     }
 
     /**
@@ -2907,18 +2907,18 @@ abstract class Players implements ActiveRecordInterface
      * @param  ChildHits $l ChildHits
      * @return $this|\Players The current object (for fluent API support)
      */
-    public function addFraggedPlayer(ChildHits $l)
+    public function addHittedPlayer(ChildHits $l)
     {
-        if ($this->collFraggedPlayers === null) {
-            $this->initFraggedPlayers();
-            $this->collFraggedPlayersPartial = true;
+        if ($this->collHittedPlayers === null) {
+            $this->initHittedPlayers();
+            $this->collHittedPlayersPartial = true;
         }
 
-        if (!$this->collFraggedPlayers->contains($l)) {
-            $this->doAddFraggedPlayer($l);
+        if (!$this->collHittedPlayers->contains($l)) {
+            $this->doAddHittedPlayer($l);
 
-            if ($this->fraggedPlayersScheduledForDeletion and $this->fraggedPlayersScheduledForDeletion->contains($l)) {
-                $this->fraggedPlayersScheduledForDeletion->remove($this->fraggedPlayersScheduledForDeletion->search($l));
+            if ($this->hittedPlayersScheduledForDeletion and $this->hittedPlayersScheduledForDeletion->contains($l)) {
+                $this->hittedPlayersScheduledForDeletion->remove($this->hittedPlayersScheduledForDeletion->search($l));
             }
         }
 
@@ -2926,29 +2926,29 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildHits $fraggedPlayer The ChildHits object to add.
+     * @param ChildHits $hittedPlayer The ChildHits object to add.
      */
-    protected function doAddFraggedPlayer(ChildHits $fraggedPlayer)
+    protected function doAddHittedPlayer(ChildHits $hittedPlayer)
     {
-        $this->collFraggedPlayers[]= $fraggedPlayer;
-        $fraggedPlayer->setFragged($this);
+        $this->collHittedPlayers[]= $hittedPlayer;
+        $hittedPlayer->setHitted($this);
     }
 
     /**
-     * @param  ChildHits $fraggedPlayer The ChildHits object to remove.
+     * @param  ChildHits $hittedPlayer The ChildHits object to remove.
      * @return $this|ChildPlayers The current object (for fluent API support)
      */
-    public function removeFraggedPlayer(ChildHits $fraggedPlayer)
+    public function removeHittedPlayer(ChildHits $hittedPlayer)
     {
-        if ($this->getFraggedPlayers()->contains($fraggedPlayer)) {
-            $pos = $this->collFraggedPlayers->search($fraggedPlayer);
-            $this->collFraggedPlayers->remove($pos);
-            if (null === $this->fraggedPlayersScheduledForDeletion) {
-                $this->fraggedPlayersScheduledForDeletion = clone $this->collFraggedPlayers;
-                $this->fraggedPlayersScheduledForDeletion->clear();
+        if ($this->getHittedPlayers()->contains($hittedPlayer)) {
+            $pos = $this->collHittedPlayers->search($hittedPlayer);
+            $this->collHittedPlayers->remove($pos);
+            if (null === $this->hittedPlayersScheduledForDeletion) {
+                $this->hittedPlayersScheduledForDeletion = clone $this->collHittedPlayers;
+                $this->hittedPlayersScheduledForDeletion->clear();
             }
-            $this->fraggedPlayersScheduledForDeletion[]= clone $fraggedPlayer;
-            $fraggedPlayer->setFragged(null);
+            $this->hittedPlayersScheduledForDeletion[]= clone $hittedPlayer;
+            $hittedPlayer->setHitted(null);
         }
 
         return $this;
@@ -2960,7 +2960,7 @@ abstract class Players implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Players is new, it will return
      * an empty collection; or if this Players has previously
-     * been saved, it will retrieve related FraggedPlayers from storage.
+     * been saved, it will retrieve related HittedPlayers from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2971,12 +2971,12 @@ abstract class Players implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
      */
-    public function getFraggedPlayersJoinBodyparts(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getHittedPlayersJoinBodyparts(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildHitsQuery::create(null, $criteria);
         $query->joinWith('Bodyparts', $joinBehavior);
 
-        return $this->getFraggedPlayers($query, $con);
+        return $this->getHittedPlayers($query, $con);
     }
 
     /**
@@ -3502,13 +3502,13 @@ abstract class Players implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collFraggerPlayers) {
-                foreach ($this->collFraggerPlayers as $o) {
+            if ($this->collHitterPlayers) {
+                foreach ($this->collHitterPlayers as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collFraggedPlayers) {
-                foreach ($this->collFraggedPlayers as $o) {
+            if ($this->collHittedPlayers) {
+                foreach ($this->collHittedPlayers as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3528,8 +3528,8 @@ abstract class Players implements ActiveRecordInterface
         $this->collFraggerPlayers = null;
         $this->collFraggedPlayers = null;
         $this->collGames = null;
-        $this->collFraggerPlayers = null;
-        $this->collFraggedPlayers = null;
+        $this->collHitterPlayers = null;
+        $this->collHittedPlayers = null;
         $this->collScores = null;
         $this->collTeams = null;
     }
