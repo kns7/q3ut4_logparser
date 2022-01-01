@@ -15,6 +15,7 @@ class LogsController extends Controller {
     private $_teamscore = "/^ *([0-9]+):([0-9]+) red:([0-9]+)[ ]*blue:([0-9]+)$/i";
     private $_chat = "/^ *[0-9]+:[0-9]{2} (say|sayteam): [0:9]+ (?!<world>)(.*): (.*)$/i";
     private $_playersarray = [];
+    private $_teams = [];
 
     public function parseLog($log)
     {
@@ -24,7 +25,7 @@ class LogsController extends Controller {
                 /* Check Player Connection */
                 preg_match($this->_playerjoin,$line,$matches);
                 if(count($matches) > 0){
-                    $player = $this->app->Ctrl->Players->getORadd($this->getPlayerNameFromConnectionString($matches[4],"name"));
+                    $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[4],"name"));
                     if(array_search($player->getId(),$this->_playersarray) === false){
                         /* Player not found in Temp Array, adding it and declare new Connection */
                         echo "Player connect    | ";
@@ -76,21 +77,11 @@ class LogsController extends Controller {
                 preg_match($this->_playerchange,$line,$matches);
                 if(count($matches) > 0){
                     echo "Player Change     | ";
-                    $player = $this->app->Ctrl->Players->getORadd($this->getPlayerNameFromConnectionString($matches[4],"n"));
-
-                    echo "\n";
-                }
-
-                /* Check Endgame: New game, everybody quits */
-                preg_match($this->_endgame,$line,$matches);
-                if(count($matches) > 0){
-                    echo "End Game          | ";
-                    $time = $this->countGameTime($matches);
-                    foreach($this->_playersarray as $p){
-                        $this->app->Ctrl->Games->stopGame($p,$time);
-                    }
-                    $this->_playersarray = [];
-                    echo "Stopped time for all Players at $time seconds";
+                    $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[2],"n"));
+                    $teamNb = $this->getValueFromConnectionString($matches[2],"t");
+                    $this->_teams[$matches[1]] = $teamNb;
+                    $team = ($teamNb == 1)? "Red":"Blue";
+                    echo $player->getName() ." is now in team $team";
                     echo "\n";
                 }
 
@@ -115,6 +106,22 @@ class LogsController extends Controller {
                     }
                     echo "\n";
                 }
+
+                /* Init Round */
+
+
+                /* Check Endgame: New game, everybody quits */
+                preg_match($this->_endgame,$line,$matches);
+                if(count($matches) > 0){
+                    echo "End Game          | ";
+                    $time = $this->countGameTime($matches);
+                    foreach($this->_playersarray as $p){
+                        $this->app->Ctrl->Games->stopGame($p,$time);
+                    }
+                    $this->_playersarray = [];
+                    echo "Stopped time for all Players at $time seconds";
+                    echo "\n";
+                }
             }
 
             fclose($handle);
@@ -123,7 +130,7 @@ class LogsController extends Controller {
         }
     }
 
-    private function getPlayerNameFromConnectionString($string,$marker){
+    private function getValueFromConnectionString($string,$marker){
         $str = explode("\\",$string);
         $key = array_search($marker, $str);
         return $str[$key + 1];
