@@ -15,9 +15,9 @@ $serviceContainer->setAdapterClass('default', 'mysql');
 $manager = new ConnectionManagerSingle();
 $manager->setConfiguration(array (
     'classname' => 'Propel\\Runtime\\Connection\\DebugPDO',
-    'dsn' => 'mysql:host='.$_SERVER['MYSQL_HOST'].';port='.$_SERVER['MYSQL_PORT'].';dbname='.$_SERVER['MYSQL_DB'],
-    'user' => $_SERVER['MYSQL_USER'],
-    'password' => $_SERVER['MYSQL_PASSWORD'],
+    'dsn' => 'mysql:host='.$config['MYSQL_HOST'].';port='.$config['MYSQL_PORT'].';dbname='.$config['MYSQL_DB'],
+    'user' => $config['MYSQL_USER'],
+    'password' => $config['MYSQL_PASSWD'],
     'attributes' =>
         array (
             'ATTR_EMULATE_PREPARES' => false,
@@ -30,7 +30,7 @@ $serviceContainer->setDefaultDatasource('default');
 
 $app = new Slim([
     'template.path' => 'templates/',
-    'mode' => $_SERVER["SITE_MODE"]
+    'mode' => $config["SITE_MODE"]
 ]);
 
 // Only invoked if mode is "production"
@@ -67,36 +67,7 @@ $app->container->singleton('Ctrl',function() use ($app){
     ];
 });
 
-// Routes
-$app->get('/',function() use ($app){
-    $app->render('home.php',compact('app'));
-})->name("root");
-
-$app->group('/ajax',function() use($app){
-    $app->get('/parselog',function() use($app){
-        $app->Ctrl->Logs->clearDBTests();
-        echo "<pre>";
-        $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/encelade.log");
-        echo "</pre>";
-    });
-});
-
-if($_SERVER['SITE_MODE'] == "development"){
-    $app->group('/test', function() use($app){
-       $app->get('/player/:player', function($player) use($app){
-           echo "<pre>";
-           print_r($app->Ctrl->Players->getORadd($player));
-           echo "</pre>";
-       });
-       $app->get('/newround',function() use($app){
-           $gametype = $app->Ctrl->Gametypes->getByCode(8);
-            $newround = $app->Ctrl->Rounds->add($gametype);
-            echo "<pre>";
-            print_r($newround);
-            echo '</pre>';
-       });
-    });
-
-}
-
-$app->run();
+$app->Ctrl->Logs->clearDBTests();
+echo "<pre>";
+$app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/calypso.log");
+echo "</pre>";

@@ -24,6 +24,7 @@ class LogsController extends Controller {
 
     public function parseLog($log)
     {
+        $this->logOutput("Start parsing Logfile ($log)");
         $handle = fopen($log, "r");
         $l = 1;
         if ($handle) {
@@ -35,114 +36,118 @@ class LogsController extends Controller {
                     $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[4],"name"));
                     if(array_search($player->getId(),$this->_playersarray) === false){
                         /* Player not found in Temp Array, adding it and declare new Connection */
-                        echo "$l: Player connect    | ";
+                        $action = "Connection";
                         $this->_playersarray[$matches[3]] = $player->getId();
                         $time = $this->countGameTime($matches);
-                        echo $player->getName(). " (".$matches[3].") connected at ".$time." seconds";
+                        $message = $player->getName(). " (".$matches[3].") connected at ".$time." seconds";
                         if($this->app->Ctrl->Games->add($player,$time)){
-                            echo " [ADDED]";
+                            $level = "INFO";
                         }else{
-                            echo " [ERROR]";
+                            $level = "ERROR";
                         }
-                        echo "\n";
+                        $this->logOutput($message,$l,$action,$level);
                     }
                 }
 
                 /* Check Frag */
                 preg_match($this->_frag,$line,$matches);
                 if(count($matches) > 0){
-                    echo "$l: Frag found        | ";
+                    $action ="Frag";
                     $fragger = $this->app->Ctrl->Players->getORadd($matches[1]);
                     $fragged = $this->app->Ctrl->Players->getORadd($matches[2]);
                     $weapon = $this->app->Ctrl->Weapons->getORadd($matches[3]);
-                    echo $fragger->getName(). " > ". $fragged->getName()." with ".$weapon->getName();
+                    $message = $fragger->getName(). " killed ". $fragged->getName()." with ".$weapon->getName();
                     if($this->app->Ctrl->Frags->add($fragger,$fragged,$weapon) !== false){
-                        echo " [ADDED]";
+                        $level = "INFO";
                     }else{
-                        echo " [ERROR]";
+                        $level = "ERROR";
                     }
-                    echo "\n";
+                    $this->logOutput($message,$l,$action,$level);
                 }
 
                 /* Check Hits */
                 preg_match($this->_hit,$line,$matches);
                 if(count($matches) > 0){
-                    echo "$l: Hit found         | ";
+                    $action = "Hit";
                     $hitter = $this->app->Ctrl->Players->getORadd($matches[1]);
                     $hitted = $this->app->Ctrl->Players->getORadd($matches[2]);
                     $part = $this->app->Ctrl->Hits->getBodyPart($matches[3]);
-                    echo $hitter->getName(). " hit ". $hitted->getName()." in ".$matches[3];
+                    $message = $hitter->getName(). " hit ". $hitted->getName()." in ".$matches[3];
                     if($this->app->Ctrl->Hits->add($hitter,$hitted,$part) !== false){
-                        echo " [ADDED]";
+                        $level = "INFO";
                     }else{
-                        echo " [ERROR]";
+                        $level = "ERROR";
                     }
-                    echo "\n";
+                    $this->logOutput($message,$l,$action,$level);
                 }
 
                 /* Check Player Changes */
                 preg_match($this->_playerchange,$line,$matches);
                 if(count($matches) > 0){
-                    echo "$l: Player Change     | ";
+                    $action = "Change";
                     $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[2],"n"));
                     $teamNb = $this->getValueFromConnectionString($matches[2],"t");
                     $this->_teams[$matches[1]] = $teamNb;
                     $team = ($teamNb == 1)? "Red":"Blue";
-                    echo $player->getName() ." is now in team $team";
-                    echo "\n";
+                    $message = $player->getName() ." is now in team $team";
+                    $level = "INFO";
+                    $this->logOutput($message,$l,$action,$level);
                 }
 
                 /* Check Player Disconnection */
                 preg_match($this->_playerquits,$line,$matches);
                 if(count($matches) > 0){
-                    echo "$l: Player Disconnect | ";
+                    $action = "Disconnection";
                     $time = $this->countGameTime($matches);
                     $player = $this->getPlayerFromTempArray($matches[3]);
                     if(!is_null($player)) {
-                        echo $player->getName(). " disconnected at ".$time." seconds";
+                        $message = $player->getName(). " disconnected at ".$time." seconds";
                         if($this->app->Ctrl->Games->stopGame($player, $time) !== false){
-                            echo " [ADDED]";
+                            $level = "INFO";
                         }else{
-                            echo " [ERROR]";
+                            $level = "ERROR";
                         }
+                        $this->logOutput($message,$l,$action,$level);
                     }
                     try {
                         unset($this->_playersarray[$matches[3]]);
                     } catch(Exception $e){
 
                     }
-                    echo "\n";
                 }
 
                 /* Init Round */
                 preg_match($this->_initround,$line,$matches);
                 if(count($matches) > 0){
-                    echo "$l: Init Round        | ";
+                    $action = "Init Round";
                     $gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[3],"g_gametype"));
                     $this->_triggerbomb = ($gametype->getCode() == "8")? true:false;
                     $newround = $this->app->Ctrl->Rounds->add($gametype);
-                    echo "Round ".$newround->getId(). " Game Type: ".$gametype->getName();
+                    $message = "Round: ".$newround->getId(). ", Game Type: ".$gametype->getName();
                     if($newround !== false){
-                        echo " [ADDED]";
+                        $level = "INFO";
                         $this->_round = $newround->getId();
                     }else{
-                        echo " [ERROR]";
+                        $level = "ERROR";
                     }
-                    echo "\n";
+                    $this->logOutput($message,$l,$action,$level);
                 }
 
                 /* Bomb Actions */
                 preg_match($this->_bomb,$line,$matches);
                 if(count($matches) > 0){
-                    $action = $matches[1];
-                    if($action == "planted" || $action == "defused") {
-                        echo "$l: Bomb Action       | ";
+                    $event = $matches[1];
+                    if($event == "planted" || $event == "defused") {
                         $player = $this->getPlayerFromTempArray($matches[2]);
-                        echo $player->getName(). " $action bomb";
-                        if($this->app->Ctrl->Bombs->add($player, $action)){
-                            echo " [ADDED]";
-                        }else{
-                            echo " [ERROR]";
+                        if(!is_null($player)){
+                            $action = "Bomb";
+                            echo $player->getName(). " $event bomb";
+                            if($this->app->Ctrl->Bombs->add($player, $action)){
+                                $level = "INFO";
+                            }else{
+                                $level = "ERROR";
+                            }
+                            $this->logOutput($message,$l,$action,$level);
                         }
                     }
                 }
@@ -153,24 +158,25 @@ class LogsController extends Controller {
                 /* Check Endgame: New game, everybody quits */
                 preg_match($this->_endgame,$line,$matches);
                 if(count($matches) > 0){
-                    echo "$l: End Game          | ";
+                    $action = "End Game";
                     $time = $this->countGameTime($matches);
                     foreach($this->_playersarray as $p){
                         $player = $this->app->Ctrl->Players->get($p);
                         $this->app->Ctrl->Games->stopGame($player,$time);
                     }
-                    $this->_playersarray = [];
-                    echo "Stopped time for all Players at $time seconds";
-                    echo "\n";
+                    //$this->_playersarray = [];
+                    $message = "Stopped time for all Players at $time seconds";
+                    $level = "INFO";
+                    $this->logOutput($message,$l,$action,$level);
                 }
 
                 /* Scores */
                 preg_match($this->_teamscore,$line,$matches);
                 if(count($matches) > 0){
-                    echo "$l: End Round Scores  | ";
+                    $action ="Round Scores";
                     $redscore = intval($matches[3]);
                     $bluescore = intval($matches[4]);
-                    echo "Blue $bluescore, Red: $redscore";
+                    $message = "Blue $bluescore, Red: $redscore";
                     $winner = "";
                     if($redscore > $bluescore){
                         $winner = "RED";
@@ -179,46 +185,45 @@ class LogsController extends Controller {
                         $winner = "BLUE";
                     }
                     if($this->app->Ctrl->Rounds->updateResults($this->_round,$redscore, $bluescore, $winner) !== false){
-                        echo " [ADDED]";
+                        $level = "INFO";
                     }else{
-                        echo " [ERROR]";
+                        $level = "ERROR";
                     }
-                    echo "\n";
+                    $this->logOutput($message,$l,$action,$level);
 
                     /* Update Players Team informations */
                     foreach($this->_teams as $key => $value){
-                        echo "$l:   Add Teams Infos | ";
                         $player = $this->getPlayerFromTempArray($key);
-                        switch($value){
-                            default:
-                                $team = "";
-                                break;
-                            case 1:
-                                $team = "RED";
-                                break;
-                            case 2:
-                                $team  = "BLUE";
-                                break;
-                        }
-                        echo $player->getName() ." in team $team";
-                        if($this->app->Ctrl->Teams->add($this->_round,$player,$team) !== false){
-                            echo " [ADDED]";
-                        }else{
-                            echo " [ERROR]";
-                        }
-                        echo "\n";
+                        if(!is_null($player)){
+                            $action = "eams Infos";
+                            switch($value){
+                                default:
+                                    $team = "";
+                                    break;
+                                case 1:
+                                    $team = "RED";
+                                    break;
+                                case 2:
+                                    $team  = "BLUE";
+                                    break;
+                            }
+                            $message = $player->getName() ." in team $team";
+                            if($this->app->Ctrl->Teams->add($this->_round,$player,$team) !== false){
+                                $level = "INFO";
+                            }else{
+                                $level = "ERROR";
+                            }
+                            $this->logOutput($message,$l,$action,$level);
 
-                        if(($team == "RED" && $winner == "RED") || ($team == "BLUE" && $winner == "BLUE")){
-                            $this->app->Ctrl->Scores->add($player,1);
-                        }
-                        if(($team == "RED" && $winner == "BLUE") || ($team == "BLUE" && $winner == "RED")){
-                            $this->app->Ctrl->Scores->add($player,-1);
+                            if(($team == "RED" && $winner == "RED") || ($team == "BLUE" && $winner == "BLUE")){
+                                $this->app->Ctrl->Scores->add($player,1);
+                            }
+                            if(($team == "RED" && $winner == "BLUE") || ($team == "BLUE" && $winner == "RED")){
+                                $this->app->Ctrl->Scores->add($player,-1);
+                            }
                         }
                     }
                 }
-
-                ob_flush();
-                flush();
                 $l++;
             }
 
@@ -235,15 +240,34 @@ class LogsController extends Controller {
     }
 
     private function getPlayerFromTempArray($id){
-        try {
-            $player = $this->app->Ctrl->Players->get($this->_playersarray[$id]);
-            return $player;
-        } catch( ErrorException $e){
-            return false;
+        if(array_key_exists($id,$this->_playersarray)){
+            try {
+                $player = $this->app->Ctrl->Players->get($this->_playersarray[$id]);
+                return $player;
+            } catch( ErrorException $e){
+                return false;
+            }
+        }else{
+            return null;
         }
     }
 
     private function countGameTime($matches){
         return intval($matches[1])*60 + intval($matches[2]);;
+    }
+
+    private function logOutput($message, $line = "", $action = "", $level = "INFO")
+    {
+        $now = new \DateTime();
+        $log = $now->format("Y-m-d H:i:s")." | ".$level." | ";
+        if($line != "") {
+            $log .= $line . "- ";
+        }
+        if($action != "") {
+            $log .= "[". strtoupper($action)."] ";
+        }
+        $log .= $message;
+
+        echo $log."\n";
     }
 }

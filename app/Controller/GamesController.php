@@ -30,7 +30,7 @@ class GamesController extends Controller
 
     public function stopGame(\Players $player,$stop)
     {
-        $game = \GamesQuery::create()->filterByPlayers($player)->filterByStop("-1")->findOne();
+        $game = \GamesQuery::create()->filterByPlayers($player)->filterByStop("-1")->orerById("DESC")->findOne();
         if(!is_null($game)){
             $game->setStop($stop);
             try {
