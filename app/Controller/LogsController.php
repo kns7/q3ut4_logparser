@@ -67,19 +67,23 @@ class LogsController extends Controller {
                 /* Check Player Connection */
                 preg_match($this->_playerjoin,$line,$matches);
                 if(count($matches) > 0){
-                    $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[4],"name"));
-                    if(array_search($player->getId(),$this->_playersarray) === false){
-                        /* Player not found in Temp Array, adding it and declare new Connection */
-                        $action = "Connection";
-                        $this->_playersarray[$matches[3]] = $player->getId();
-                        $time = $this->countGameTime($matches);
-                        $message = $player->getName(). " (".$matches[3].") connected at ".$time." seconds";
-                        if($this->app->Ctrl->Games->add($player,$time)){
-                            $level = "INFO";
-                        }else{
-                            $level = "ERROR";
+                    if(strpos($line,":27960") !== false){
+                        // Skipped, because of Server Connection
+                    }else {
+                        $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[4], "name"));
+                        if (array_search($player->getId(), $this->_playersarray) === false) {
+                            /* Player not found in Temp Array, adding it and declare new Connection */
+                            $action = "Connection";
+                            $this->_playersarray[$matches[3]] = $player->getId();
+                            $time = $this->countGameTime($matches);
+                            $message = $player->getName() . " (" . $matches[3] . ") connected at " . $time . " seconds";
+                            if ($this->app->Ctrl->Games->add($player, $time)) {
+                                $level = "INFO";
+                            } else {
+                                $level = "ERROR";
+                            }
+                            $this->logOutput($message, $l, $action, $level);
                         }
-                        $this->logOutput($message,$l,$action,$level);
                     }
                 }
 
@@ -317,7 +321,7 @@ class LogsController extends Controller {
         $now = new \DateTime();
         $log = $now->format("Y-m-d H:i:s")." | ".$level." | ";
         if($line != "") {
-            $log .= $line . "- ";
+            $log .= $line . ". ";
         }
         if($action != "") {
             $log .= "[". strtoupper($action)."] ";

@@ -68,6 +68,4 @@ $app->container->singleton('Ctrl',function() use ($app){
 });
 
 $app->Ctrl->Logs->clearDBTests();
-echo "<pre>";
 $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/calypso.log");
-echo "</pre>";
