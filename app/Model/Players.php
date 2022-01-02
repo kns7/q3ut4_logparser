@@ -19,9 +19,34 @@ class Players extends BasePlayers
         return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
     }
 
+    public function getKillsDetails()
+    {
+        return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","Kills")->groupByFraggedId()->orderBy("Kills","DESC")->find();
+    }
+
     public function getDeaths()
     {
         return \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
+    }
+
+    public function getDeathsDetails()
+    {
+        return \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","Deaths")->groupByFraggerId()->orderBy("Deaths","DESC")->find();
+    }
+
+    public function getHitsDoneDetails()
+    {
+        return \HitsQuery::create()->filterByHitterId($this->getId())->withColumn("COUNT(*)","Hitsdone")->groupByBodypartId()->orderBy("Hitsdone","DESC")->find();
+    }
+
+    public function getHitsTakenDetails()
+    {
+        return \HitsQuery::create()->filterByHittedId($this->getId())->withColumn("COUNT(*)","Hitstaken")->groupByBodypartId()->orderBy("Hitstaken","DESC")->find();
+    }
+
+    public function getRatio()
+    {
+        return ($this->getDeaths() != 0)? $this->getKills() / $this->getDeaths(): 0;
     }
 
     public function getPlayingTime()
@@ -42,5 +67,36 @@ class Players extends BasePlayers
     public function getRoundLooses()
     {
         return \ScoresQuery::create()->filterByPlayerId($this->getId())->filterByScore("-1")->count();
+    }
+
+    public function getWeaponsRank($type = "")
+    {
+        $query = \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","kills");
+        switch($type){
+            default:
+                break;
+
+            case "primary":
+                $query->filterByWeaponId([1,2,3,4,5,6,7,8,9]);
+                break;
+
+            case "secondary":
+                $query->filterByWeaponId([10,11,12,13,14,15]);
+                break;
+
+            case "sidearm":
+                $query->filterByWeaponId([16,17,18,19,20]);
+                break;
+
+            case "grenade":
+                $query->filterByWeaponId([4,22]);
+                break;
+
+            case "sniper":
+                $query->filterByWeaponId([5,8,9]);
+                break;
+        }
+
+        return $query->groupByWeaponId()->orderBy("kills","DESC")->find();
     }
 }

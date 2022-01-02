@@ -49,3 +49,12 @@
 h2 {
     margin-top: 20px;
 }
+
+.user-profile {
+    width: 200px;
+    margin-top: 5px;
+}
+.userprofile .list-group-item {
+    padding-left: 0px;
+    padding-right: 0px;
+}

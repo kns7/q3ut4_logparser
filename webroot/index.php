@@ -97,15 +97,21 @@ $app->get('/weapon/:id',function($id) use($app){
 })->name('weapon');
 
 
+
+
 $app->group('/views',function() use($app){
     $app->get('/stats/:player',function($player) use($app){
-
+        $player = $app->Ctrl->Players->get($player);
+        $app->render('partials/player.php',compact('app','player'));
     });
 
     $app->get('/vs/:player1/:player2',function($player1,$player2) use($app){
 
     });
 });
+
+
+
 
 $app->group("/ajax",function() use($app){
     $app->get('/parselog',function() use($app){
@@ -114,6 +120,7 @@ $app->group("/ajax",function() use($app){
         $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/log2.log");
         echo "</pre>";
     });
+
     $app->group('/charts',function() use($app){
         $app->get('/weapons-use',function() use($app){
             $app->response->setStatus(200);
@@ -129,6 +136,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/gametypes',function() use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -143,14 +151,165 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
+        $app->get('/player-kills/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getKillsDetails() as $p){
+                array_push($datas,$p->getKills());
+                array_push($labels,$p->getFragged()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+
+        $app->get('/player-deaths/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getDeathsDetails() as $p){
+                array_push($datas,$p->getDeaths());
+                array_push($labels,$p->getFragger()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+
+        $app->get('/player-hitsdone/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getHitsDoneDetails() as $p){
+                array_push($datas,$p->getHitsdone());
+                array_push($labels,$p->getBodyparts()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+
+        $app->get('/player-hitstaken/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getHitsTakenDetails() as $p){
+                array_push($datas,$p->getHitstaken());
+                array_push($labels,$p->getBodyparts()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+
+        $app->get('/player-weapon/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getWeaponsRank() as $p){
+                array_push($datas,$p->getKills());
+                array_push($labels,$p->getWeapons()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/player-weaponprimary/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getWeaponsRank("primary") as $p){
+                array_push($datas,$p->getKills());
+                array_push($labels,$p->getWeapons()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/player-weaponsecondary/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getWeaponsRank('secondary') as $p){
+                array_push($datas,$p->getKills());
+                array_push($labels,$p->getWeapons()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/player-weaponsidearm/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getWeaponsRank('sidearm') as $p){
+                array_push($datas,$p->getKills());
+                array_push($labels,$p->getWeapons()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/player-weaponsniper/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getWeaponsRank('sniper') as $p){
+                array_push($datas,$p->getKills());
+                array_push($labels,$p->getWeapons()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/player-weapongrenade/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getWeaponsRank('grenade') as $p){
+                array_push($datas,$p->getKills());
+                array_push($labels,$p->getWeapons()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
     });
 });
+
+
+
 
 if($_SERVER['SITE_MODE'] == "development"){
     $app->group('/test', function() use($app){
        $app->get('/player/:player', function($player) use($app){
            echo "<pre>";
-           print_r($app->Ctrl->Players->getORadd($player));
+           $player = $app->Ctrl->Players->get($player);
+           foreach($player->getKillsDetails() as $p){
+               print_r(["Player" => $p->getFragged()->getName(), "Kills" => $p->getKills()]);
+           }
            echo "</pre>";
        });
        $app->get('/newround',function() use($app){

@@ -25,9 +25,14 @@ function getRandomColor() {
 
 function makeChart(el) {
     console.log("Make Chart");
-    var url  = "ajax/charts/"+ $(el).attr('data-name');
     var id = $(el).attr('id');
     var type = $(el).attr('data-chart');
+    var dataid = $(el).attr('data-id');
+    if(dataid != "") {
+        var url = "ajax/charts/" + $(el).attr('data-name') + "/" + dataid;
+    }else{
+        var url = "ajax/charts/" + $(el).attr('data-name');
+    }
     console.log(" - Element: "+ id);
     console.log(" - Type: "+type);
     $.ajax({
@@ -63,6 +68,7 @@ function loader(status,overlay){
         $(".loader").fadeOut(200);
     }
 }
+
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -70,4 +76,18 @@ $(document).ready(function(){
         console.log("Loaded Chart [" + $(this).attr('id') + "]");
         makeChart(this);
     })
+
+    $(this)
+        .on("change","#player_choose",function(e){
+            console.log("Chose Player");
+            loader(true,true);
+            $.get("/views/stats/"+$(this).val(),function(d){
+                loader(false);
+                $(".players-stats").html(d);
+                $(".chart").each(function(){
+                    console.log("Loaded Chart [" + $(this).attr('id') + "]");
+                    makeChart(this);
+                })
+            })
+        })
 });
