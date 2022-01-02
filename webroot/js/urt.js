@@ -28,13 +28,15 @@ function makeChart(el) {
     var id = $(el).attr('id');
     var type = $(el).attr('data-chart');
     var dataid = $(el).attr('data-id');
-    if(dataid != "") {
+    console.log(" - Element: "+ id);
+    console.log(" - Type: "+type);
+    if(dataid !== undefined) {
+        console.log(" - Data ID: "+dataid);
         var url = "ajax/charts/" + $(el).attr('data-name') + "/" + dataid;
     }else{
         var url = "ajax/charts/" + $(el).attr('data-name');
     }
-    console.log(" - Element: "+ id);
-    console.log(" - Type: "+type);
+
     $.ajax({
         url: url,
         method: 'GET',
@@ -49,6 +51,13 @@ function makeChart(el) {
                             data: datas.datas,
                             backgroundColor: chartColors
                         }]
+                    },
+                    options: {
+                        plugins: {
+                            colorschemes: {
+                                scheme: 'brewer.Paired12'
+                            }
+                        }
                     }
                 }
             )
