@@ -30,6 +30,40 @@ class LogsController extends Controller {
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
 
+                /* Check Frag */
+                preg_match($this->_frag,$line,$matches);
+                if(count($matches) > 0){
+                    $action ="Frag";
+                    $fragger = $this->app->Ctrl->Players->getORadd($matches[1]);
+                    $fragged = $this->app->Ctrl->Players->getORadd($matches[2]);
+                    $weapon = $this->app->Ctrl->Weapons->getORadd($matches[3]);
+                    $message = $fragger->getName(). " killed ". $fragged->getName()." with ".$weapon->getName();
+                    if($this->app->Ctrl->Frags->add($fragger,$fragged,$weapon) !== false){
+                        $level = "INFO";
+                    }else{
+                        $level = "ERROR";
+                    }
+                    $this->logOutput($message,$l,$action,$level);
+                }
+
+
+                /* Check Hit */
+                preg_match($this->_hit,$line,$matches);
+                if(count($matches) > 0){
+                    $action = "Hit";
+                    $hitter = $this->app->Ctrl->Players->getORadd($matches[1]);
+                    $hitted = $this->app->Ctrl->Players->getORadd($matches[2]);
+                    $part = $this->app->Ctrl->Hits->getBodyPart($matches[3]);
+                    $message = $hitter->getName(). " hit ". $hitted->getName()." in ".$matches[3];
+                    if($this->app->Ctrl->Hits->add($hitter,$hitted,$part) !== false){
+                        $level = "INFO";
+                    }else{
+                        $level = "ERROR";
+                    }
+                    $this->logOutput($message,$l,$action,$level);
+                }
+
+
                 /* Check Player Connection */
                 preg_match($this->_playerjoin,$line,$matches);
                 if(count($matches) > 0){
@@ -49,39 +83,8 @@ class LogsController extends Controller {
                     }
                 }
 
-                /* Check Frag */
-                preg_match($this->_frag,$line,$matches);
-                if(count($matches) > 0){
-                    $action ="Frag";
-                    $fragger = $this->app->Ctrl->Players->getORadd($matches[1]);
-                    $fragged = $this->app->Ctrl->Players->getORadd($matches[2]);
-                    $weapon = $this->app->Ctrl->Weapons->getORadd($matches[3]);
-                    $message = $fragger->getName(). " killed ". $fragged->getName()." with ".$weapon->getName();
-                    if($this->app->Ctrl->Frags->add($fragger,$fragged,$weapon) !== false){
-                        $level = "INFO";
-                    }else{
-                        $level = "ERROR";
-                    }
-                    $this->logOutput($message,$l,$action,$level);
-                }
 
-                /* Check Hits */
-                preg_match($this->_hit,$line,$matches);
-                if(count($matches) > 0){
-                    $action = "Hit";
-                    $hitter = $this->app->Ctrl->Players->getORadd($matches[1]);
-                    $hitted = $this->app->Ctrl->Players->getORadd($matches[2]);
-                    $part = $this->app->Ctrl->Hits->getBodyPart($matches[3]);
-                    $message = $hitter->getName(). " hit ". $hitted->getName()." in ".$matches[3];
-                    if($this->app->Ctrl->Hits->add($hitter,$hitted,$part) !== false){
-                        $level = "INFO";
-                    }else{
-                        $level = "ERROR";
-                    }
-                    $this->logOutput($message,$l,$action,$level);
-                }
-
-                /* Check Player Changes */
+                /* Check Player Change */
                 preg_match($this->_playerchange,$line,$matches);
                 if(count($matches) > 0){
                     $action = "Change";
@@ -93,6 +96,7 @@ class LogsController extends Controller {
                     $level = "INFO";
                     $this->logOutput($message,$l,$action,$level);
                 }
+
 
                 /* Check Player Disconnection */
                 preg_match($this->_playerquits,$line,$matches);
@@ -116,6 +120,7 @@ class LogsController extends Controller {
                     }
                 }
 
+
                 /* Init Round */
                 preg_match($this->_initround,$line,$matches);
                 if(count($matches) > 0){
@@ -133,7 +138,8 @@ class LogsController extends Controller {
                     $this->logOutput($message,$l,$action,$level);
                 }
 
-                /* Bomb Actions */
+
+                /* Bomb Action */
                 preg_match($this->_bomb,$line,$matches);
                 if(count($matches) > 0){
                     $event = $matches[1];
@@ -141,7 +147,7 @@ class LogsController extends Controller {
                         $player = $this->getPlayerFromTempArray($matches[2]);
                         if(!is_null($player)){
                             $action = "Bomb";
-                            echo $player->getName(). " $event bomb";
+                            $message = $player->getName(). " $event bomb";
                             if($this->app->Ctrl->Bombs->add($player, $action)){
                                 $level = "INFO";
                             }else{
@@ -152,7 +158,56 @@ class LogsController extends Controller {
                     }
                 }
 
-                /* Flags Actions */
+
+                /* Flag Pickup */
+                preg_match($this->_item,$line,$matches);
+                if(count($matches) > 0){
+                    if($matches[2] == "team_CTF_redflag" || $matches[2] == "team_CTF_blueflag"){
+                        $player = $this->getPlayerFromTempArray($matches[1]);
+                        if(!is_null($player)) {
+                            $action = "Flag Pickup";
+                            $message = $player->getName(). "picked up ".str_replace("team_CTF_","",$matches[2]);
+                            if($this->app->Ctrl->Flags->add($player,"catch")){
+                                $level = "INFO";
+                            }else{
+                                $level = "ERROR";
+                            }
+                            $this->logOutput($message,$l,$action,$level);
+                        }
+                    }
+                }
+
+
+                /* Flag Return, Drop or Capture */
+                preg_match($this->_flag,$line,$matches);
+                if(count($matches) > 0){
+                    $player = $this->getPlayerFromTempArray($matches[1]);
+                    if(!is_null($player)) {
+                        switch ($matches[2]){
+                            case "0":
+                                $action = "Flag Drop";
+                                $event = "drop";
+                                break;
+
+                            case "1":
+                                $action = "Flag Return";
+                                $event = "return";
+                                break;
+
+                            case "2":
+                                $action = "Flag Capture";
+                                $event = "capture";
+                                break;
+                        }
+                        $message = $player->getName(). " $action ".str_replace("team_CTF_","",$matches[3]);
+                        if($this->app->Ctrl->Flags->add($player,$event)){
+                            $level = "INFO";
+                        }else{
+                            $level = "ERROR";
+                        }
+                        $this->logOutput($message,$l,$action,$level);
+                    }
+                }
 
 
                 /* Check Endgame: New game, everybody quits */
@@ -170,7 +225,8 @@ class LogsController extends Controller {
                     $this->logOutput($message,$l,$action,$level);
                 }
 
-                /* Scores */
+
+                /* Score */
                 preg_match($this->_teamscore,$line,$matches);
                 if(count($matches) > 0){
                     $action ="Round Scores";
