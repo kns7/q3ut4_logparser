@@ -1,3 +1,10 @@
+<?php
+if(!is_null($app)){
+    $uri = explode('/',$app->request->getResourceUri());
+}else{
+    $uri = [];
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,13 +38,13 @@
     <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/ranking"><i class="fas fa-trophy"></i> Classement</a>
+                <a class="nav-link <?= ($uri[1] == "")?"active":"";?>" href="/"><i class="fas fa-trophy"></i> Classement</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/player"><i class="fas fa-user"></i> Joueurs</a>
+                <a class="nav-link <?= ($uri[1] == "player")?"active":"";?>" href="/player"><i class="fas fa-user"></i> Joueurs</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/vs"><i class="fas fa-exchange-alt"></i> Versus</a>
+                <a class="nav-link <?= ($uri[1] == "vs")?"active":"";?>" href="/vs"><i class="fas fa-exchange-alt"></i> Versus</a>
             </li>
         </ul>
         <ul class="navbar-nav">

@@ -72,12 +72,30 @@ $app->get('/',function() use ($app){
     $app->render('home.php',compact('app'));
 })->name("root");
 
+$app->get('/player',function() use($app){
+    $app->render('player.php',compact('app'));
+})->name('player');
+
+$app->get('/vs',function() use($app){
+    $app->render('versus.php',compact('app'));
+})->name('vs');
+
+
+
 $app->group('/ajax',function() use($app){
     $app->get('/parselog',function() use($app){
         $app->Ctrl->Logs->clearDBTests();
         echo "<pre>";
         $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/log2.log");
         echo "</pre>";
+    });
+
+    $app->get('/stats/:player',function($player) use($app){
+
+    });
+
+    $app->get('/vs/:player1/:player2',function($player1,$player2) use($app){
+
     });
 });
 
