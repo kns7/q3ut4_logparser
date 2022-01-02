@@ -24,7 +24,7 @@ include('header.php');
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
-                    <td><a href="/player/<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
+                    <td><a href="/player#<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
                     <td><?= $f->getFrags();?></td>
                 </tr>
                 <?php
@@ -51,7 +51,7 @@ include('header.php');
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
-                    <td><a href="/player/<?=$r['id'];?>"><?= $r['name'];?></a></td>
+                    <td><a href="/player#<?=$r['id'];?>"><?= $r['name'];?></a></td>
                     <td data-toggle="tooltip" data-placement="right" title="Kills: <?=$r['kills']?> / Deaths: <?=$r['deaths'];?>" ><?= number_format(floatval($r['ratio']),6,',',' ');?></td>
                 </tr>
                 <?php
@@ -80,7 +80,7 @@ include('header.php');
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
-                    <td><a href="/player/<?=$w['id'];?>"><?= $w['name'];?></a></td>
+                    <td><a href="/player#<?=$w['id'];?>"><?= $w['name'];?></a></td>
                     <td><strong><?= $w["total"];?></strong></td>
                     <td><?=$w['wins']?></td>
                     <td><?=$w['looses']?></td>
@@ -109,7 +109,7 @@ include('header.php');
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
-                    <td><a href="/player/<?=$t['id'];?>"><?= $t['name'];?></a></td>
+                    <td><a href="/player#<?=$t['id'];?>"><?= $t['name'];?></a></td>
                     <td><?= gmdate("H:i:s",$t['time']);?></td>
                 </tr>
                 <?php
@@ -136,7 +136,7 @@ include('header.php');
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
-                    <td><a href="/player/<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
+                    <td><a href="/player#<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
                     <td><?= $f->getFrags();?></td>
                 </tr>
                 <?php
@@ -163,7 +163,7 @@ include('header.php');
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
-                    <td><a href="/player/<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
+                    <td><a href="/player#<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
                     <td><?= $f->getFrags();?></td>
                 </tr>
                 <?php
@@ -190,7 +190,7 @@ include('header.php');
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
-                    <td><a href="/player/<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
+                    <td><a href="/player#<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
                     <td><?= $f->getFrags();?></td>
                 </tr>
                 <?php

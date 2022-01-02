@@ -27,7 +27,7 @@ if(!is_null($app)){
 </head>
 <body>
 <nav class="navbar sticky-top navbar-dark navbar-expand-lg bg-dark">
-    <a class="navbar-brand" href="#">URT Stats</a>
+    <a class="navbar-brand" href="/">URT Stats</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>

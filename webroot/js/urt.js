@@ -56,6 +56,20 @@ function makeChart(el) {
     })
 }
 
+function loadPlayerStats(id){
+    console.log("Load Player Stats...");
+    loader(true,true);
+    window.location.hash = id;
+    $.get("/views/stats/"+id,function(d){
+        $(".players-stats").html(d);
+        $(".chart").each(function(){
+            console.log("Loaded Chart [" + $(this).attr('id') + "]");
+            makeChart(this);
+        });
+        loader(false);
+    });
+}
+
 function loader(status,overlay){
     if(overlay === undefined){
         overlay = false;
@@ -70,6 +84,13 @@ function loader(status,overlay){
 }
 
 $(document).ready(function(){
+    // Manage Anchors for dynamic loading
+    href = window.location.href.split("/")
+    if(href[href.length - 1].search("player") != -1 && window.location.hash.length > 0){
+        console.log("Mode Player " + window.location.hash);
+        $("#player_choose").val(window.location.hash.replace("#",""));
+        loadPlayerStats(window.location.hash.replace("#",""))
+    }
     $('[data-toggle="tooltip"]').tooltip();
 
     $(".chart").each(function(){
@@ -79,15 +100,6 @@ $(document).ready(function(){
 
     $(this)
         .on("change","#player_choose",function(e){
-            console.log("Chose Player");
-            loader(true,true);
-            $.get("/views/stats/"+$(this).val(),function(d){
-                loader(false);
-                $(".players-stats").html(d);
-                $(".chart").each(function(){
-                    console.log("Loaded Chart [" + $(this).attr('id') + "]");
-                    makeChart(this);
-                })
-            })
+            loadPlayerStats($(this).val());
         })
 });

@@ -1,6 +1,8 @@
 <?php
 if($player->getWeaponsRank()->count() > 0) {
     $bestweapon = $player->getWeaponsRank()->getFirst()->getWeapons();
+    $bestsniper = $player->getWeaponsRank("sniper")->getFirst()->getWeapons();
+    $bestsidearm = $player->getWeaponsRank("sidearm")->getFirst()->getWeapons();
 }else{
     $bestweapon = null;
 }
@@ -12,10 +14,13 @@ if($player->getWeaponsRank()->count() > 0) {
         </div>
         <div class="card-body userprofile">
             <h3 class="card-title text-center"><?= $player->getName();?></h3>
-                <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Temps de jeu: <strong><?= gmdate("H:i:s",$player->getPlayingTime());?></strong></li>
                 <li class="list-group-item">Nombre de Kills: <strong><?= $player->getKills();?></strong></li>
                 <li class="list-group-item">Kill / Death Ratio: <strong><?= number_format(floatval($player->getRatio()),6,',',' ');?></strong> </li>
-                <li class="list-group-item">Arme pr&eacute;f&eacute;r&eacute;e: <strong><?= (!is_null($bestweapon))?$bestweapon->getName():"N/A";?></strong></li>
+                <li class="list-group-item">Arme pr&eacute;f&eacute;r&eacute;e<br/><strong><?= (!is_null($bestweapon))?$bestweapon->getName():"N/A";?></strong></li>
+                <li class="list-group-item">Sniper pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsniper->getName():"N/A";?></strong></li>
+                <li class="list-group-item">Pistolet pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsidearm->getName():"N/A";?></strong></li>
             </ul>
         </div>
     </div>
@@ -72,4 +77,7 @@ if($player->getWeaponsRank()->count() > 0) {
             <canvas class="chart" id="playerweapongrenade_chart" data-name="player-weapongrenade" data-id="<?=$player->getId();?>" data-chart="pie"></canvas>
         </div>
     </div>
+    <hr/>
+    <div class="row"><div class="col text-center"><h1>Statistiques de Jeu</h1></div></div>
+    <div class="row justify-content-around">
 </div>
