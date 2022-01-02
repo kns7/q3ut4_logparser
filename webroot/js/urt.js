@@ -11,5 +11,5 @@ function loader(status,overlay){
     }
 }
 $(document).ready(function(){
-
+    $('[data-toggle="tooltip"]').tooltip();
 });

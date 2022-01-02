@@ -14,5 +14,13 @@ use Base\Players as BasePlayers;
  */
 class Players extends BasePlayers
 {
+    public function getKills()
+    {
+        return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
+    }
 
+    public function getDeaths()
+    {
+        return \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
+    }
 }

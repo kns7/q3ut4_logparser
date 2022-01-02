@@ -2,7 +2,120 @@
 include('header.php');
 ?>
 <div class="row">
-
+    <div class="col text-center">
+        <h1>Classement Global</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <h2 class="text-center">Nombre de Frags</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Frags</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+            foreach($frags as $f){
+                ?>
+                <tr>
+                    <td>#<?= $i;?></td>
+                    <td><a href="/player/<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
+                    <td><?= $f->getFrags();?></td>
+                </tr>
+                <?php
+                $i++;
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-3">
+        <h2 class="text-center">Ratio Kill/Death</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Ratio</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+            foreach($ratios as $r){
+                ?>
+                <tr>
+                    <td>#<?= $i;?></td>
+                    <td><a href="/player/<?=$r['id'];?>"><?= $r['name'];?></a></td>
+                    <td data-toggle="tooltip" data-placement="right" title="Kills: <?=$r['kills']?> / Deaths: <?=$r['deaths'];?>" ><?= number_format(floatval($r['ratio']),6,',',' ');?></td>
+                </tr>
+                <?php
+                $i++;
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-3">
+        <h2 class="text-center">Temps de jeu</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Temps</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+            ?></tbody>
+        </table>
+    </div>
+    <div class="col-3">
+        <h2 class="text-center">Nombre de Rounds</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Rounds</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+            ?></tbody>
+        </table>
+    </div>
+</div>
+<hr/>
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">Classement par Type de jeu</h1>
+        </div>
+    </div>
+<hr/>
+<div class="row">
+    <div class="col">
+        <h1 class="text-center">Statistiques du Serveur</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
+        <h2 class="text-center">Armes les plus utilisées</h2>
+    </div>
+    <div class="col-4">
+        <h2 class="text-center">Modes de Jeux</h2>
+    </div>
+    <div class="col-4">
+        <h2 class="text-center">Nombre de Rounds</h2>
+    </div>
 </div>
 <?php
 include('footer.php');

@@ -16,6 +16,7 @@ return array(
     'App\\Controller\\PlayersController' => $baseDir . '/app/Controller/PlayersController.php',
     'App\\Controller\\RoundsController' => $baseDir . '/app/Controller/RoundsController.php',
     'App\\Controller\\ScoresController' => $baseDir . '/app/Controller/ScoresController.php',
+    'App\\Controller\\StatsController' => $baseDir . '/app/Controller/StatsController.php',
     'App\\Controller\\TeamsController' => $baseDir . '/app/Controller/TeamsController.php',
     'Base\\Bodyparts' => $baseDir . '/app/Model/Base/Bodyparts.php',
     'Base\\BodypartsQuery' => $baseDir . '/app/Model/Base/BodypartsQuery.php',

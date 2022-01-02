@@ -62,6 +62,7 @@ $app->container->singleton('Ctrl',function() use ($app){
         'Players' => new PlayersController($app),
         'Rounds' => new \App\Controller\RoundsController($app),
         'Scores' => new \App\Controller\ScoresController($app),
+        'Stats' => new \App\Controller\StatsController($app),
         'Teams' => new \App\Controller\TeamsController($app),
         'Weapons' => new WeaponsController($app)
     ];
@@ -69,7 +70,9 @@ $app->container->singleton('Ctrl',function() use ($app){
 
 // Routes
 $app->get('/',function() use ($app){
-    $app->render('home.php',compact('app'));
+    $frags = $app->Ctrl->Stats->getFragRanking();
+    $ratios = $app->Ctrl->Stats->getKDRatioRanking();
+    $app->render('home.php',compact('app','frags','ratios'));
 })->name("root");
 
 $app->get('/player',function() use($app){

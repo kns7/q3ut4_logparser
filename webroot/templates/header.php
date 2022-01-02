@@ -54,4 +54,4 @@ if(!is_null($app)){
         </ul>
     </div>
 </nav>
-<div class="container">
+<div class="container-fluid">
