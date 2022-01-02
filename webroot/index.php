@@ -73,7 +73,9 @@ $app->get('/',function() use ($app){
     $frags = $app->Ctrl->Stats->getFragRanking();
     $ratios = $app->Ctrl->Stats->getKDRatioRanking();
     $times = $app->Ctrl->Stats->getPlayingTime();
-    $app->render('home.php',compact('app','frags','ratios','times'));
+    $winlooses = $app->Ctrl->Stats->getRoundsWinLooses();
+    $weapons = $app->Ctrl->Stats->getStatsWeapons();
+    $app->render('home.php',compact('app','frags','ratios','times','winlooses','weapons'));
 })->name("root");
 
 $app->get('/player',function() use($app){
@@ -83,6 +85,11 @@ $app->get('/player',function() use($app){
 $app->get('/vs',function() use($app){
     $app->render('versus.php',compact('app'));
 })->name('vs');
+
+$app->get('/weapon/:id',function($id) use($app){
+    $app->Ctrl->Weapons->get($id);
+    $app->render('weapon.php',compact('app','weapon'));
+})->name('weapon');
 
 
 

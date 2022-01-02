@@ -14,5 +14,8 @@ use Base\Weapons as BaseWeapons;
  */
 class Weapons extends BaseWeapons
 {
-
+    public function getKills()
+    {
+        return \FragsQuery::create()->filterByWeaponId($this->getId())->count();
+    }
 }

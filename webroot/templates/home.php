@@ -68,6 +68,7 @@ include('header.php');
             <tr class="bg-dark text-light">
                 <th></th>
                 <th>Joueur</th>
+                <th>Total</th>
                 <th>Gagné</th>
                 <th>Perdu</th>
             </tr>
@@ -75,7 +76,18 @@ include('header.php');
             <tbody>
             <?php
             $i = 1;
-
+            foreach($winlooses as $w){
+                ?>
+                <tr>
+                    <td>#<?= $i;?></td>
+                    <td><a href="/player/<?=$w['id'];?>"><?= $w['name'];?></a></td>
+                    <td><strong><?= $w["total"];?></strong></td>
+                    <td><?=$w['wins']?></td>
+                    <td><?=$w['looses']?></td>
+                </tr>
+                <?php
+                $i++;
+            }
             ?>
             </tbody>
         </table>
@@ -123,6 +135,33 @@ include('header.php');
 <div class="row">
     <div class="col-4">
         <h2 class="text-center">Armes les plus utilisées</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Arme</th>
+                <th>Kills</th>
+                <th>%</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+            foreach($weapons["weapons"] as $w){
+                $percentKill = $w["kills"] * 100 / $weapons["total"];
+                ?>
+                <tr>
+                    <td>#<?= $i;?></td>
+                    <td><a href="/weapon/<?=$t['id'];?>"><?= $w['name'];?></a></td>
+                    <td><?= $w["kills"];?></td>
+                    <td><?= number_format(floatval($percentKill),2,","," ");?></td>
+                </tr>
+                <?php
+                $i++;
+            }
+            ?>
+            </tbody>
+        </table>
     </div>
     <div class="col-4">
         <h2 class="text-center">Modes de Jeux</h2>

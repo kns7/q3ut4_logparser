@@ -5,9 +5,9 @@ use Propel\Runtime\Exception\PropelException;
 
 class WeaponsController extends Controller {
 
-    public function list()
+    public function getList()
     {
-        return WeaponsQuery::create()->orderByName()->find();
+        return WeaponsQuery::create()->filterByType("world",\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->orderByName()->find();
     }
 
     public function get($id)

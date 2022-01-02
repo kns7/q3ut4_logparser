@@ -33,4 +33,14 @@ class Players extends BasePlayers
         }
         return $return;
     }
+
+    public function getRoundWins()
+    {
+        return \ScoresQuery::create()->filterByPlayerId($this->getId())->filterByScore("1")->count();
+    }
+
+    public function getRoundLooses()
+    {
+        return \ScoresQuery::create()->filterByPlayerId($this->getId())->filterByScore("-1")->count();
+    }
 }
