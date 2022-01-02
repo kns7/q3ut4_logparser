@@ -13,13 +13,14 @@ use Propel\Runtime\Exception\PropelException;
 
 class RoundsController extends Controller
 {
-    public function add(\Gametypes $gametype)
+    public function add(\Gametypes $gametype,$nbplayers)
     {
         $round = new \Rounds();
         $round->setGametypes($gametype)
             ->setWinner("")
             ->setRedScore(0)
-            ->setBlueScore(0);
+            ->setBlueScore(0)
+            ->setNbplayers($nbplayers);
         try {
             $round->save();
             $newround = \RoundsQuery::create()->orderById("DESC")->findOne();

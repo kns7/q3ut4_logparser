@@ -142,6 +142,7 @@
     <column name="red_score" phpName="RedScore" type="INTEGER" required="true"/>
     <column name="blue_score" phpName="BlueScore" type="INTEGER" required="true"/>
     <column name="gametype_id" phpName="GametypeId" type="INTEGER" required="true"/>
+    <column name="nbplayers" phpName="Nbplayers" type="INTEGER" required="true"/>
 
     <foreign-key foreignTable="gametypes" phpName="Gametypes" refPhpName="Round">
       <reference local="gametype_id" foreign="id"/>

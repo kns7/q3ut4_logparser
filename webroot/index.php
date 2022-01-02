@@ -83,7 +83,8 @@ $app->get('/',function() use ($app){
 })->name("root");
 
 $app->get('/player',function() use($app){
-    $app->render('player.php',compact('app'));
+    $players = $app->Ctrl->Players->getList();
+    $app->render('player.php',compact('app','players'));
 })->name('player');
 
 $app->get('/vs',function() use($app){

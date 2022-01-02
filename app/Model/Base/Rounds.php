@@ -102,6 +102,13 @@ abstract class Rounds implements ActiveRecordInterface
     protected $gametype_id;
 
     /**
+     * The value for the nbplayers field.
+     *
+     * @var        int
+     */
+    protected $nbplayers;
+
+    /**
      * @var        ChildGametypes
      */
     protected $aGametypes;
@@ -402,6 +409,16 @@ abstract class Rounds implements ActiveRecordInterface
     }
 
     /**
+     * Get the [nbplayers] column value.
+     *
+     * @return int
+     */
+    public function getNbplayers()
+    {
+        return $this->nbplayers;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -506,6 +523,26 @@ abstract class Rounds implements ActiveRecordInterface
     } // setGametypeId()
 
     /**
+     * Set the value of [nbplayers] column.
+     *
+     * @param int $v new value
+     * @return $this|\Rounds The current object (for fluent API support)
+     */
+    public function setNbplayers($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->nbplayers !== $v) {
+            $this->nbplayers = $v;
+            $this->modifiedColumns[RoundsTableMap::COL_NBPLAYERS] = true;
+        }
+
+        return $this;
+    } // setNbplayers()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -555,6 +592,9 @@ abstract class Rounds implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : RoundsTableMap::translateFieldName('GametypeId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->gametype_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : RoundsTableMap::translateFieldName('Nbplayers', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->nbplayers = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -563,7 +603,7 @@ abstract class Rounds implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = RoundsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = RoundsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Rounds'), 0, $e);
@@ -810,6 +850,9 @@ abstract class Rounds implements ActiveRecordInterface
         if ($this->isColumnModified(RoundsTableMap::COL_GAMETYPE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'gametype_id';
         }
+        if ($this->isColumnModified(RoundsTableMap::COL_NBPLAYERS)) {
+            $modifiedColumns[':p' . $index++]  = 'nbplayers';
+        }
 
         $sql = sprintf(
             'INSERT INTO rounds (%s) VALUES (%s)',
@@ -835,6 +878,9 @@ abstract class Rounds implements ActiveRecordInterface
                         break;
                     case 'gametype_id':
                         $stmt->bindValue($identifier, $this->gametype_id, PDO::PARAM_INT);
+                        break;
+                    case 'nbplayers':
+                        $stmt->bindValue($identifier, $this->nbplayers, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -906,6 +952,9 @@ abstract class Rounds implements ActiveRecordInterface
             case 4:
                 return $this->getGametypeId();
                 break;
+            case 5:
+                return $this->getNbplayers();
+                break;
             default:
                 return null;
                 break;
@@ -941,6 +990,7 @@ abstract class Rounds implements ActiveRecordInterface
             $keys[2] => $this->getRedScore(),
             $keys[3] => $this->getBlueScore(),
             $keys[4] => $this->getGametypeId(),
+            $keys[5] => $this->getNbplayers(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1027,6 +1077,9 @@ abstract class Rounds implements ActiveRecordInterface
             case 4:
                 $this->setGametypeId($value);
                 break;
+            case 5:
+                $this->setNbplayers($value);
+                break;
         } // switch()
 
         return $this;
@@ -1067,6 +1120,9 @@ abstract class Rounds implements ActiveRecordInterface
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setGametypeId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setNbplayers($arr[$keys[5]]);
         }
     }
 
@@ -1123,6 +1179,9 @@ abstract class Rounds implements ActiveRecordInterface
         }
         if ($this->isColumnModified(RoundsTableMap::COL_GAMETYPE_ID)) {
             $criteria->add(RoundsTableMap::COL_GAMETYPE_ID, $this->gametype_id);
+        }
+        if ($this->isColumnModified(RoundsTableMap::COL_NBPLAYERS)) {
+            $criteria->add(RoundsTableMap::COL_NBPLAYERS, $this->nbplayers);
         }
 
         return $criteria;
@@ -1215,6 +1274,7 @@ abstract class Rounds implements ActiveRecordInterface
         $copyObj->setRedScore($this->getRedScore());
         $copyObj->setBlueScore($this->getBlueScore());
         $copyObj->setGametypeId($this->getGametypeId());
+        $copyObj->setNbplayers($this->getNbplayers());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1589,6 +1649,7 @@ abstract class Rounds implements ActiveRecordInterface
         $this->red_score = null;
         $this->blue_score = null;
         $this->gametype_id = null;
+        $this->nbplayers = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

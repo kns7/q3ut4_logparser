@@ -137,18 +137,13 @@ class LogsController extends Controller {
                     $action = "Init Round";
                     $gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[4],"g_gametype"));
                     $this->_triggerbomb = ($gametype->getCode() == "8")? true:false;
-                    if(count($this->_playersarray) > 0){
-                        $newround = $this->app->Ctrl->Rounds->add($gametype);
-                        $message = "Round: ".$newround->getId(). ", Game Type: ".$gametype->getName().", Players: ".count($this->_playersarray);
-                        if($newround !== false){
-                            $level = "INFO";
-                            $this->_round = $newround->getId();
-                        }else{
-                            $level = "ERROR";
-                        }
-                    }else{
-                        $message = "Round: Skipped because empty, Game Type: ".$gametype->getName().", Players: ".count($this->_playersarray);
+                    $newround = $this->app->Ctrl->Rounds->add($gametype,count($this->_playersarray));
+                    $message = "Round: ".$newround->getId(). ", Game Type: ".$gametype->getName().", Players: ".count($this->_playersarray);
+                    if($newround !== false){
                         $level = "INFO";
+                        $this->_round = $newround->getId();
+                    }else{
+                        $level = "ERROR";
                     }
                     $this->logOutput($message,$l,$action,$level);
                 }
