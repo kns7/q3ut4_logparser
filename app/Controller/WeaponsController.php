@@ -30,6 +30,7 @@ class WeaponsController extends Controller {
 
     public function getORadd($code)
     {
+        if($code == "UT_MOD_HK69_HIT"){ $code = "UT_MOD_HK69"; }
         $weapon = WeaponsQuery::create()->findOneByCode($code);
         if(is_null($weapon)){
             $weapon = $this->add($code);

@@ -30,6 +30,7 @@
 
 .container-fluid {
     margin-top: 20px;
+    margin-bottom: 50px;
     padding: 0px 50px;
     position: relative;
 }
@@ -44,4 +45,7 @@
 
 .hidden {
     display:none;
+}
+h2 {
+    margin-top: 20px;
 }

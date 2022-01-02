@@ -9,7 +9,7 @@ class LogsController extends Controller {
     private $_playerchange = "/^ *[0-9]+:[0-9]+ ClientUserinfoChanged: ([0-9]+) (.*)$/i";
     private $_playerquits = "/^ *([0-9]+):([0-9]+) ClientDisconnect: ([0-9]+)$/i";
     private $_endgame = "/^ *([0-9]+):([0-9]+) ShutdownGame:$/i";
-    private $_initround = "/^ *([0-9]+):([0-9]+) InitRound: (.*)$/i";
+    private $_initround = "/^ *([0-9]+):([0-9]+) (InitRound|InitGame): (.*)$/i";
     private $_item = "/^ *[0-9]+:[0-9]{2} Item: ([0-9]+) (?!<world>)(.*)$/i";
     private $_flag = "/^ *[0-9]+:[0-9]{2} Flag: ([0-9]+) ([0-9]+): (.*)$/i";
     private $_bomb = "/^ *[0-9]+:[0-9]{2} Bomb was (.*) by ([0-9]+)/i";
@@ -131,19 +131,24 @@ class LogsController extends Controller {
                 }
 
 
-                /* Init Round */
+                /* Init Round or game */
                 preg_match($this->_initround,$line,$matches);
                 if(count($matches) > 0){
                     $action = "Init Round";
-                    $gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[3],"g_gametype"));
+                    $gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[4],"g_gametype"));
                     $this->_triggerbomb = ($gametype->getCode() == "8")? true:false;
-                    $newround = $this->app->Ctrl->Rounds->add($gametype);
-                    $message = "Round: ".$newround->getId(). ", Game Type: ".$gametype->getName();
-                    if($newround !== false){
-                        $level = "INFO";
-                        $this->_round = $newround->getId();
+                    if(count($this->_playersarray) > 0){
+                        $newround = $this->app->Ctrl->Rounds->add($gametype);
+                        $message = "Round: ".$newround->getId(). ", Game Type: ".$gametype->getName().", Players: ".count($this->_playersarray);
+                        if($newround !== false){
+                            $level = "INFO";
+                            $this->_round = $newround->getId();
+                        }else{
+                            $level = "ERROR";
+                        }
                     }else{
-                        $level = "ERROR";
+                        $message = "Round: Skipped because empty, Game Type: ".$gametype->getName().", Players: ".count($this->_playersarray);
+                        $level = "INFO";
                     }
                     $this->logOutput($message,$l,$action,$level);
                 }

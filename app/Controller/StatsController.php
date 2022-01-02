@@ -11,9 +11,28 @@ namespace App\Controller;
 
 class StatsController extends Controller
 {
-    public function getFragRanking()
+    public function getFragRanking($weapons = "")
     {
-        return \FragsQuery::create()->withColumn("COUNT(*)","Frags")->where("Frags.FraggerId <> Frags.FraggedId")->groupByFraggerId()->orderBy("Frags","DESC")->find();
+        $query = \FragsQuery::create()->withColumn("COUNT(*)","Frags")->where("Frags.FraggerId <> Frags.FraggedId");
+        switch($weapons){
+            default:
+
+                break;
+
+            case "sniper":
+                $query->filterByWeaponId([5,8,9]);
+                break;
+
+            case "grenade":
+                $query->filterByWeaponId(22);
+                break;
+
+            case "knife":
+                $query->filterByWeaponId(21);
+                break;
+        }
+
+        return $query->groupByFraggerId()->orderBy("Frags","DESC")->find();
     }
 
     public function getKDRatioRanking()
@@ -97,7 +116,7 @@ class StatsController extends Controller
     public function getStatsWeapons()
     {
         $return = [];
-        $kills = 0;
+        $total = 0;
         $weapons = $this->app->Ctrl->Weapons->getList();
         foreach($weapons as $w){
             array_push($return,[
@@ -105,7 +124,7 @@ class StatsController extends Controller
                "name" => $w->getName(),
                "kills" => $w->getKills()
             ]);
-            $kills += $w->getKills();
+            $total += $w->getKills();
         }
 
         // Array Sort Kills DESC
@@ -114,6 +133,28 @@ class StatsController extends Controller
         }
         array_multisort($sorting, SORT_DESC, $return);
 
-        return ["weapons" => $return, "total" => $kills];
+        return ["weapons" => $return, "total" => $total];
+    }
+
+    public function getStatsGametypes()
+    {
+        $return = [];
+        $total = 0;
+        foreach($this->app->Ctrl->Gametypes->getList() as $g){
+            array_push($return, [
+                "id" => $g->getId(),
+                "name" => $g->getName(),
+                "rounds" => $g->getRoundsCount()
+            ]);
+            $total += $g->getRoundsCount();
+        }
+
+        // Array Sort Rounds DESC
+        foreach($return as $key => $row){
+            $sorting[$key] = $row["rounds"];
+        }
+        array_multisort($sorting, SORT_DESC, $return);
+
+        return ["gametypes" => $return, "total" => $total];
     }
 }

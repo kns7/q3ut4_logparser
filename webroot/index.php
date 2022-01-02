@@ -75,7 +75,11 @@ $app->get('/',function() use ($app){
     $times = $app->Ctrl->Stats->getPlayingTime();
     $winlooses = $app->Ctrl->Stats->getRoundsWinLooses();
     $weapons = $app->Ctrl->Stats->getStatsWeapons();
-    $app->render('home.php',compact('app','frags','ratios','times','winlooses','weapons'));
+    $snipers = $app->Ctrl->Stats->getFragRanking("sniper");
+    $grenades = $app->Ctrl->Stats->getFragRanking("grenade");
+    $knives = $app->Ctrl->Stats->getFragRanking("knife");
+
+    $app->render('home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','grenades','knives'));
 })->name("root");
 
 $app->get('/player',function() use($app){
@@ -92,21 +96,52 @@ $app->get('/weapon/:id',function($id) use($app){
 })->name('weapon');
 
 
-
-$app->group('/ajax',function() use($app){
-    $app->get('/parselog',function() use($app){
-        $app->Ctrl->Logs->clearDBTests();
-        echo "<pre>";
-        $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/log2.log");
-        echo "</pre>";
-    });
-
+$app->group('/views',function() use($app){
     $app->get('/stats/:player',function($player) use($app){
 
     });
 
     $app->get('/vs/:player1/:player2',function($player1,$player2) use($app){
 
+    });
+});
+
+$app->group("/ajax",function() use($app){
+    $app->get('/parselog',function() use($app){
+        $app->Ctrl->Logs->clearDBTests();
+        echo "<pre>";
+        $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/log2.log");
+        echo "</pre>";
+    });
+    $app->group('/charts',function() use($app){
+        $app->get('/weapons-use',function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Stats->getStatsWeapons()["weapons"] as $w){
+                array_push($datas,$w["kills"]);
+                array_push($labels,$w["name"]);
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/gametypes',function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Stats->getStatsGametypes()["gametypes"] as $g){
+                array_push($datas,$g["rounds"]);
+                array_push($labels,$g["name"]);
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
     });
 });
 

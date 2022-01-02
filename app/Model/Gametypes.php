@@ -14,5 +14,8 @@ use Base\Gametypes as BaseGametypes;
  */
 class Gametypes extends BaseGametypes
 {
-
+    public function getRoundsCount()
+    {
+        return $this->getRounds()->count();
+    }
 }
