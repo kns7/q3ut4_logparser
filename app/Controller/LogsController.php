@@ -67,13 +67,16 @@ class LogsController extends Controller {
                 /* Check Player Connection */
                 preg_match($this->_playerjoin,$line,$matches);
                 if(count($matches) > 0){
-                    if(strpos($line,":27960") !== false){
+                    $action = "Connection";
+                    $playername = $this->getValueFromConnectionString($matches[4], "name");
+                    if(strpos($playername,":27960") !== false){
                         // Skipped, because of Server Connection
+                        $message = "Skipped, Server connection ($playername)";
+                        $level = "INFO";
                     }else {
                         $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[4], "name"));
                         if (array_search($player->getId(), $this->_playersarray) === false) {
                             /* Player not found in Temp Array, adding it and declare new Connection */
-                            $action = "Connection";
                             $this->_playersarray[$matches[3]] = $player->getId();
                             $time = $this->countGameTime($matches);
                             $message = $player->getName() . " (" . $matches[3] . ") connected at " . $time . " seconds";
@@ -82,9 +85,12 @@ class LogsController extends Controller {
                             } else {
                                 $level = "ERROR";
                             }
-                            $this->logOutput($message, $l, $action, $level);
+                        }else{
+                            $message = "Skipped, User ".$player->getName()." already in Game (GameID: ". $matches[3] .", Name: $playername)";
+                            $level = "INFO";
                         }
                     }
+                    $this->logOutput($message, $l, $action, $level);
                 }
 
 
@@ -293,7 +299,7 @@ class LogsController extends Controller {
         }
     }
 
-    private function getValueFromConnectionString($string,$marker){
+    public function getValueFromConnectionString($string,$marker){
         $str = explode("\\",$string);
         $key = array_search($marker, $str);
         return $str[$key + 1];
