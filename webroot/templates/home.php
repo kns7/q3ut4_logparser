@@ -62,6 +62,25 @@ include('header.php');
         </table>
     </div>
     <div class="col-3">
+        <h2 class="text-center">Rounds gagnés / perdus</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Gagné</th>
+                <th>Perdu</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-3">
         <h2 class="text-center">Temps de jeu</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -74,23 +93,18 @@ include('header.php');
             <tbody>
             <?php
             $i = 1;
-            ?></tbody>
-        </table>
-    </div>
-    <div class="col-3">
-        <h2 class="text-center">Nombre de Rounds</h2>
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr class="bg-dark text-light">
-                <th></th>
-                <th>Joueur</th>
-                <th>Rounds</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            ?></tbody>
+            foreach($times as $t){
+                ?>
+                <tr>
+                    <td>#<?= $i;?></td>
+                    <td><a href="/player/<?=$t['id'];?>"><?= $t['name'];?></a></td>
+                    <td><?= gmdate("H:i:s",$t['time']);?></td>
+                </tr>
+                <?php
+                $i++;
+            }
+            ?>
+            </tbody>
         </table>
     </div>
 </div>

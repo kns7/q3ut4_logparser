@@ -47,4 +47,28 @@ class StatsController extends Controller
 
         return $return;
     }
+
+    public function getPlayingTime()
+    {
+        $return = [];
+        // Get all players
+        $players = \PlayersQuery::create()->find();
+        foreach($players as $p){
+            array_push($return,[
+                "id" => $p->getId(),
+                "name" => $p->getName(),
+                "time" => $p->getPlayingTime()
+            ]);
+        }
+
+        // Array Sort (Ratios DESC)
+        foreach($return as $key => $row){
+            $time[$key] = $row["time"];
+        }
+        array_multisort($time, SORT_DESC, $return);
+
+        return $return;
+    }
+
+
 }

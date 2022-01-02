@@ -72,7 +72,8 @@ $app->container->singleton('Ctrl',function() use ($app){
 $app->get('/',function() use ($app){
     $frags = $app->Ctrl->Stats->getFragRanking();
     $ratios = $app->Ctrl->Stats->getKDRatioRanking();
-    $app->render('home.php',compact('app','frags','ratios'));
+    $times = $app->Ctrl->Stats->getPlayingTime();
+    $app->render('home.php',compact('app','frags','ratios','times'));
 })->name("root");
 
 $app->get('/player',function() use($app){
