@@ -17,13 +17,17 @@ class LogsController extends Controller {
     private $_teamscore = "/^ *([0-9]+):([0-9]+) red:([0-9]+)[ ]*blue:([0-9]+)$/i";
     private $_gungameend = "/^ *([0-9]+):([0-9]+) Exit: Gunlimit hit\./i";
     private $_gungamescore = "/^ *([0-9]+):([0-9]+) score: ([0-9]+)  ping: [0-9]+  client: ([0-9]+) (.*)/i";
+    private $_freegameend = "/^ *([0-9]+):([0-9]+) Exit: Timelimit hit\./i";
+    private $_freegamescore = "/^ *([0-9]+):([0-9]+) score: ([0-9]+)  ping: [0-9]+  client: ([0-9]+) (.*)/i";
 
     private $_playersarray = [];
     private $_teams = [];
     private $_round = 0;
     private $_triggerbomb  = false;
     private $_triggergungame = false;
+    private $_triggerfreegame = false;
     private $_bomber = null;
+    private $_gametype = null;
 
     public function parseLog($log)
     {
@@ -143,6 +147,7 @@ class LogsController extends Controller {
                     $this->_triggerbomb = ($gametype->getCode() == "8")? true:false;
                     $newround = $this->app->Ctrl->Rounds->add($gametype,count($this->_playersarray));
                     $message = "Round: ".$newround->getId(). ", Game Type: ".$gametype->getName().", Players: ".count($this->_playersarray);
+                    $this->_gametype = $gametype->getCode();
                     if($newround !== false){
                         $level = "INFO";
                         $this->_round = $newround->getId();
@@ -177,15 +182,17 @@ class LogsController extends Controller {
                     }
                 }
                 preg_match($this->_bombexploded,$line,$matches);
-                if(count($matches) > 0){
+                if(count($matches) > 0 && !is_null($this->_bomber)){
                     $event = "exploded";
                     $action = "Bomb";
-                    $message = "bomb exploded (".$this->_bomber->player->getName(). ")";
-                    if($this->app->Ctrl->Bombs->add($player, $action)){
+                    $message = "bomb exploded (".$this->_bomber->getName(). ")";
+
+                    if($this->app->Ctrl->Bombs->add($this->_bomber, $action)){
                         $level = "INFO";
                     }else{
                         $level = "ERROR";
                     }
+                    $this->_bomber = null;
                     $this->logOutput($message,$l,$action,$level);
                 }
 
@@ -281,6 +288,34 @@ class LogsController extends Controller {
                         }
                         $this->logOutput($message,$l,$action,$level);
                         $this->_triggergungame = false;
+                    }
+                }
+
+
+                /* Free For All End: Trigger On for Score Reading */
+                preg_match($this->_freegameend,$line,$matches);
+                if(count($matches) > 0) {
+                    $action = "End FreeForAll";
+                    $this->_triggerfreegame = $matches[1].":".$matches[2];
+                    $message = "Stopped at ".$matches[1].":".$matches[2];
+                    $level = "INFO";
+                    $this->logOutput($message,$l,$action,$level);
+                }
+                preg_match($this->_freegamescore,$line,$matches);
+                if(count($matches) > 0 && $this->_triggerfreegame !== false) {
+                    if($matches[1].":".$matches[2] == $this->_triggerfreegame && $this->_gametype == "0"){
+                        $action = "FreeForAll Score";
+                        $player = $this->getPlayerFromTempArray($matches[4]);
+                        if(!is_null($player)) {
+                            $message = "Winner is ".$matches[5]." (".$matches[4].")";
+                        }
+                        if($this->app->Ctrl->Rounds->updateResults($this->_round,0, 0, $player->getId()) !== false){
+                            $level = "INFO";
+                        }else{
+                            $level = "ERROR";
+                        }
+                        $this->logOutput($message,$l,$action,$level);
+                        $this->_triggerfreegame = false;
                     }
                 }
 
