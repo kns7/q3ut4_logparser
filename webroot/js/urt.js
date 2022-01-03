@@ -24,6 +24,7 @@ function getRandomColor() {
 }
 
 function makeChart(el) {
+    loader(true);
     console.log("Make Chart");
     var id = $(el).attr('id');
     var type = $(el).attr('data-chart');
@@ -61,6 +62,7 @@ function makeChart(el) {
                     }
                 }
             )
+            loader(false);
         }
     })
 }

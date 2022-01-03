@@ -30,5 +30,18 @@ class Controller
     }
 
 
-    
+    public function logOutput($message, $line = "", $action = "", $level = "INFO")
+    {
+        $now = new \DateTime();
+        $log = $now->format("Y-m-d H:i:s")." | ".$level." | ";
+        if($line != "") {
+            $log .= $line . ". ";
+        }
+        if($action != "") {
+            $log .= "[". strtoupper($action)."] ";
+        }
+        $log .= $message;
+
+        echo $log."\n";
+    }
 }

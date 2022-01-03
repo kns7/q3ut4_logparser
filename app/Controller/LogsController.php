@@ -15,12 +15,12 @@ class LogsController extends Controller {
     private $_bomb = "/^ *[0-9]+:[0-9]{2} Bomb was (.*) by ([0-9]+)/i";
     private $_bombexploded = "/^ *[0-9]+:[0-9]{2} Pop!/i";
     private $_teamscore = "/^ *([0-9]+):([0-9]+) red:([0-9]+)[ ]*blue:([0-9]+)$/i";
-    private $_chat = "/^ *[0-9]+:[0-9]{2} (say|sayteam): [0:9]+ (?!<world>)(.*): (.*)$/i";
+
     private $_playersarray = [];
     private $_teams = [];
     private $_round = 0;
-    private $_bombexplosion = 0;
     private $_triggerbomb  = false;
+    private $_bomber = null;
 
     public function parseLog($log)
     {
@@ -158,14 +158,31 @@ class LogsController extends Controller {
                         if(!is_null($player)){
                             $action = "Bomb";
                             $message = $player->getName(). " $event bomb";
-                            if($this->app->Ctrl->Bombs->add($player, $action)){
+                            if($this->app->Ctrl->Bombs->add($player, $event)){
                                 $level = "INFO";
+                                if($event == "planted"){
+                                    $this->_bomber  = $player;
+                                }elseif($event == "defused"){
+                                    $this->_bomber  = null;
+                                }
                             }else{
                                 $level = "ERROR";
                             }
                             $this->logOutput($message,$l,$action,$level);
                         }
                     }
+                }
+                preg_match($this->_bombexploded,$line,$matches);
+                if(count($matches) > 0){
+                    $event = "exploded";
+                    $action = "Bomb";
+                    $message = "bomb exploded (".$this->_bomber->player->getName(). ")";
+                    if($this->app->Ctrl->Bombs->add($player, $action)){
+                        $level = "INFO";
+                    }else{
+                        $level = "ERROR";
+                    }
+                    $this->logOutput($message,$l,$action,$level);
                 }
 
 
@@ -320,20 +337,5 @@ class LogsController extends Controller {
 
     private function countGameTime($matches){
         return intval($matches[1])*60 + intval($matches[2]);;
-    }
-
-    private function logOutput($message, $line = "", $action = "", $level = "INFO")
-    {
-        $now = new \DateTime();
-        $log = $now->format("Y-m-d H:i:s")." | ".$level." | ";
-        if($line != "") {
-            $log .= $line . ". ";
-        }
-        if($action != "") {
-            $log .= "[". strtoupper($action)."] ";
-        }
-        $log .= $message;
-
-        echo $log."\n";
     }
 }
