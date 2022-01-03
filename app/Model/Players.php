@@ -119,4 +119,25 @@ class Players extends BasePlayers
 
         return $query->groupByWeaponId()->orderBy("kills","DESC")->find();
     }
+
+
+    public function getBombsCount($type = "all")
+    {
+        $query = \BombsQuery::create()->filterByPlayerId($this->getId());
+        switch($type){
+            case "all":
+
+                break;
+
+            default:
+                $query->filterByEvent($type);
+                break;
+        }
+        return $query->count();
+    }
+
+    public function getGunGameCount()
+    {
+        return \RoundsQuery::create()->filterByGametypeId(11)->filterByWinner($this->getId())->count();
+    }
 }

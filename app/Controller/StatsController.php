@@ -157,4 +157,51 @@ class StatsController extends Controller
 
         return ["gametypes" => $return, "total" => $total];
     }
+
+    public function getStatsBombs()
+    {
+        $return = [];
+        // Get all players
+        $players = $this->app->Ctrl->Players->getList();
+        foreach($players as $p){
+            array_push($return,[
+                "id" => $p->getId(),
+                "name" => $p->getName(),
+                "planted" => $p->getBombsCount("planted"),
+                "defused" => $p->getBombsCount("defused"),
+                "exploded" => $p->getBombsCount("exploded")
+            ]);
+        }
+
+        // Array Sort (Total DESC)
+        foreach($return as $key => $row){
+            $exploded[$key] = $row["exploded"];
+            $defused[$key] = $row["defused"];
+        }
+        array_multisort($exploded, SORT_DESC, $defused, SORT_DESC , $return);
+
+        return $return;
+    }
+
+    public function getStatsGunGame()
+    {
+        $return = [];
+        // Get all players
+        $players = $this->app->Ctrl->Players->getList();
+        foreach($players as $p){
+            array_push($return,[
+                "id" => $p->getId(),
+                "name" => $p->getName(),
+                "wins" => $p->getGunGameCount()
+            ]);
+        }
+        // Array Sort (Total DESC)
+        foreach($return as $key => $row){
+            $sorting[$key] = $row["wins"];
+        }
+        array_multisort($sorting, SORT_DESC, $return);
+
+        return $return;
+    }
+
 }

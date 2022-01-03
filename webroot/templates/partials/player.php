@@ -23,6 +23,15 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
                 <li class="list-group-item">Sniper pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsniper->getName():"N/A";?></strong></li>
                 <li class="list-group-item">Pistolet pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsidearm->getName():"N/A";?></strong></li>
             </ul>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Victoires Gun Game: <strong><?= $player->getGunGameCount();?></strong></li>
+                <li class="list-group-item">Victoires Equipes: <strong><?= $player->getRoundWins();?></strong></li>
+                <li class="list-group-item">D&eacute;faites Equipes: <strong><?= $player->getRoundLooses();?></strong></li>
+                <li class="list-group-item">Bombes Plant&eacute;es: <strong><?= $player->getBombsCount("planted");?></strong></li>
+                <li class="list-group-item">Bombes D&eacute;fus&eacute;es: <strong><?= $player->getBombsCount("defused");?></strong></li>
+                <li class="list-group-item">Bombes Explos&eacute;es: <strong><?= $player->getBombsCount("exploded");?></strong></li>
+            </ul>
         </div>
     </div>
 </div>
