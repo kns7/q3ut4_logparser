@@ -299,8 +299,8 @@
                 <th></th>
                 <th>Joueur</th>
                 <th>Captur&eacute;s</th>
-                <th>Drop&eacute;s</th>
                 <th>Retourn&eacute;s</th>
+                <th>Perdus</th>
             </tr>
             </thead>
             <tbody>
@@ -312,8 +312,8 @@
                     <td>#<?= $i;?></td>
                     <td><a href="/player#<?=$c['id'];?>"><?= $c['name'];?></a></td>
                     <td><?= $c["capture"];?></td>
-                    <td><?=$c['drop']?></td>
                     <td><?=$c['return']?></td>
+                    <td><?=$c['drop']?></td>
                 </tr>
                 <?php
                 $i++;

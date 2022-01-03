@@ -32,6 +32,9 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
                 <li class="list-group-item">Bombes Plant&eacute;es: <strong><?= $player->getBombsCount("planted");?></strong></li>
                 <li class="list-group-item">Bombes D&eacute;fus&eacute;es: <strong><?= $player->getBombsCount("defused");?></strong></li>
                 <li class="list-group-item">Bombes Explos&eacute;es: <strong><?= $player->getBombsCount("exploded");?></strong></li>
+                <li class="list-group-item">Flags Captur&eacute;s: <strong><?= $player->getCTFCount("capture");?></strong></li>
+                <li class="list-group-item">Flags Retourn&eacute;s: <strong><?= $player->getCTFCount("return");?></strong></li>
+                <li class="list-group-item">Flags Perdus: <strong><?= $player->getCTFCount("drop");?></strong></li>
             </ul>
         </div>
     </div>

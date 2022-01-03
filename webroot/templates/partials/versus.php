@@ -11,6 +11,11 @@ $team = ['wins' => ['1' => $p1->getRoundWins(), '2' => $p2->getRoundWins()],
 $bomb = ['planted' => ['1' => $p1->getBombsCount("planted"), '2' => $p2->getBombsCount("planted")],
     'defused' => ['1' => $p1->getBombsCount("defused"), '2' => $p2->getBombsCount("defused")],
     'exploded' => ['1' => $p1->getBombsCount("exploded"), '2' => $p2->getBombsCount("exploded")]];
+$ctf = [
+    'capture' => ['1' => $p1->getCTFCount("capture"), '2' => $p2->getCTFCount("capture")],
+    'return' => ['1' => $p1->getCTFCount("return"), '2' => $p2->getCTFCount("return")],
+    'drop' => ['1' => $p1->getCTFCount("drop"), '2' => $p2->getCTFCount("drop")]
+];
 
 $killsplayer = ['1' => $p1->getKillsPerPlayer($p2->getId()), '2' => $p2->getKillsPerPlayer($p1->getId())];
 $deathsplayer = ['1' => $p1->getDeathsPerPlayer($p2->getId()), '2' => $p2->getDeathsPerPlayer($p1->getId())];
@@ -117,6 +122,21 @@ if($p2->getWeaponsRank()->count() > 0) {
                     <td class="text-left"><?= ($bomb['exploded']['1'] > $bomb['exploded']['2'])?"<strong class='text-primary'>":"";?><?= $bomb['exploded']['1'];?><?= ($bomb['exploded']['1'] > $bomb['exploded']['2'])?"</strong>":"";?></td>
                     <th class="text-center">Bombes Explos&eacute;es</th>
                     <td class="text-right"><?= ($bomb['exploded']['2'] > $bomb['exploded']['1'])?"<strong class='text-primary'>":"";?><?= $bomb['exploded']['2'];?><?= ($bomb['exploded']['2'] > $bomb['exploded']['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($ctf['capture']['1'] > $ctf['capture']['2'])?"<strong class='text-primary'>":"";?><?= $ctf['capture']['1'];?><?= ($ctf['capture']['1'] > $ctf['capture']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Flags Captur&eacute;s</th>
+                    <td class="text-right"><?= ($ctf['capture']['2'] > $ctf['capture']['1'])?"<strong class='text-primary'>":"";?><?= $ctf['capture']['2'];?><?= ($ctf['capture']['2'] > $ctf['capture']['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($ctf['return']['1'] > $ctf['return']['2'])?"<strong class='text-primary'>":"";?><?= $ctf['return']['1'];?><?= ($ctf['return']['1'] > $ctf['return']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Flags Retourn&eacute;s</th>
+                    <td class="text-right"><?= ($ctf['return']['2'] > $ctf['return']['1'])?"<strong class='text-primary'>":"";?><?= $ctf['return']['2'];?><?= ($ctf['return']['2'] > $ctf['return']['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($ctf['drop']['1'] < $ctf['drop']['2'])?"<strong class='text-primary'>":"";?><?= $ctf['drop']['1'];?><?= ($ctf['drop']['1'] < $ctf['drop']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Flags Perdus (Dropped)</th>
+                    <td class="text-right"><?= ($ctf['drop']['2'] < $ctf['drop']['1'])?"<strong class='text-primary'>":"";?><?= $ctf['drop']['2'];?><?= ($ctf['drop']['2'] < $ctf['drop']['1'])?"</strong>":"";?></td>
                 </tr>
                 
                 <tr>
