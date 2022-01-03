@@ -6,11 +6,12 @@ if($player->getWeaponsRank()->count() > 0) {
 }else{
     $bestweapon = null;
 }
+$picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$player->getId().".png":"/img/user.png";
 ?>
 <div class="col-sm-2">
     <div class="card">
         <div class="text-center">
-        <img src="/img/user.png" class="card-img-top user-profile" alt="<?= $player->getName();?>">
+        <img src="<?=$picture;?>" class="card-img-top user-profile" alt="<?= $player->getName();?>">
         </div>
         <div class="card-body userprofile">
             <h3 class="card-title text-center"><?= $player->getName();?></h3>

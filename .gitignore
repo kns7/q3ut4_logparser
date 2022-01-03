@@ -4,3 +4,4 @@ propel.yml
 games.log
 generated-sql/*
 logs/*
+/webroot/img/users/*
