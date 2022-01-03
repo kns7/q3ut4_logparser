@@ -15,11 +15,14 @@ class LogsController extends Controller {
     private $_bomb = "/^ *[0-9]+:[0-9]{2} Bomb was (.*) by ([0-9]+)/i";
     private $_bombexploded = "/^ *[0-9]+:[0-9]{2} Pop!/i";
     private $_teamscore = "/^ *([0-9]+):([0-9]+) red:([0-9]+)[ ]*blue:([0-9]+)$/i";
+    private $_gungameend = "/^ *([0-9]+):([0-9]+) Exit: Gunlimit hit\./i";
+    private $_gungamescore = "/^ *([0-9]+):([0-9]+) score: ([0-9]+)  ping: [0-9]+  client: ([0-9]+) (.*)/i";
 
     private $_playersarray = [];
     private $_teams = [];
     private $_round = 0;
     private $_triggerbomb  = false;
+    private $_triggergungame = false;
     private $_bomber = null;
 
     public function parseLog($log)
@@ -250,6 +253,34 @@ class LogsController extends Controller {
                     $message = "Stopped time for all Players at $time seconds";
                     $level = "INFO";
                     $this->logOutput($message,$l,$action,$level);
+                }
+
+
+                /* Gun Game End: Trigger On for Score Reading */
+                preg_match($this->_gungameend,$line,$matches);
+                if(count($matches) > 0) {
+                    $action = "End GunGame";
+                    $this->_triggergungame = $matches[1].":".$matches[2];
+                    $message = "Stopped at ".$matches[1].":".$matches[2];
+                    $level = "INFO";
+                    $this->logOutput($message,$l,$action,$level);
+                }
+                preg_match($this->_gungamescore,$line,$matches);
+                if(count($matches) > 0 && $this->_triggergungame !== false) {
+                    if($matches[1].":".$matches[2] == $this->_triggergungame){
+                        $action = "GunGame Score";
+                        $player = $this->getPlayerFromTempArray($matches[4]);
+                        if(!is_null($player)) {
+                            $message = "Winner is ".$matches[5]." (".$matches[4].")";
+                        }
+                        if($this->app->Ctrl->Rounds->updateResults($this->_round,0, 0, $player->getId()) !== false){
+                            $level = "INFO";
+                        }else{
+                            $level = "ERROR";
+                        }
+                        $this->logOutput($message,$l,$action,$level);
+                        $this->_triggergungame = false;
+                    }
                 }
 
 
