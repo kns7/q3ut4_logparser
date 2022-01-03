@@ -26,14 +26,9 @@ include('header.php');
                     </select>
                 </div>
             </div>
-            <div class="form-group row justify-content-around">
-                <div class="col-sm-3 text-center">
-                    <button class="btn btn-primary">Afficher</button>
-                </div>
-            </div>
         </div>
     </div>
     <hr/>
-    <div class="row versus-stats"></div>
+    <div class="versus-stats"></div>
 <?php
 include('footer.php');

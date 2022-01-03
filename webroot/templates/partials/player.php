@@ -18,7 +18,7 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Temps de jeu: <strong><?= gmdate("H:i:s",$player->getPlayingTime());?></strong></li>
                 <li class="list-group-item">Nombre de Kills: <strong><?= $player->getKills();?></strong></li>
-                <li class="list-group-item">Kill / Death Ratio: <strong><?= number_format(floatval($player->getRatio()),6,',',' ');?></strong> </li>
+                <li class="list-group-item">Kills / Deaths Ratio: <strong><?= number_format(floatval($player->getRatio()),6,',',' ');?></strong> </li>
                 <li class="list-group-item">Arme pr&eacute;f&eacute;r&eacute;e<br/><strong><?= (!is_null($bestweapon))?$bestweapon->getName():"N/A";?></strong></li>
                 <li class="list-group-item">Sniper pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsniper->getName():"N/A";?></strong></li>
                 <li class="list-group-item">Pistolet pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsidearm->getName():"N/A";?></strong></li>

@@ -24,6 +24,11 @@ class Players extends BasePlayers
         return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","Kills")->groupByFraggedId()->orderBy("Kills","DESC")->find();
     }
 
+    public function getKillsPerPlayer($player_id)
+    {
+        return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($player_id)->count();
+    }
+
     public function getDeaths()
     {
         return \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
@@ -34,14 +39,29 @@ class Players extends BasePlayers
         return \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","Deaths")->groupByFraggerId()->orderBy("Deaths","DESC")->find();
     }
 
+    public function getDeathsPerPlayer($player_id)
+    {
+        return \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($player_id)->count();
+    }
+
     public function getHitsDoneDetails()
     {
         return \HitsQuery::create()->filterByHitterId($this->getId())->withColumn("COUNT(*)","Hitsdone")->groupByBodypartId()->orderBy("Hitsdone","DESC")->find();
     }
 
+    public function getHitsDoneToPlayer($player_id)
+    {
+        return \HitsQuery::create()->filterByHitterId($this->getId())->filterByHittedId($player_id)->withColumn("COUNT(*)","Hitsdone")->groupByBodypartId()->orderBy("Hitsdone","DESC")->find();
+    }
+
     public function getHitsTakenDetails()
     {
         return \HitsQuery::create()->filterByHittedId($this->getId())->withColumn("COUNT(*)","Hitstaken")->groupByBodypartId()->orderBy("Hitstaken","DESC")->find();
+    }
+
+    public function getHitsTakenByPlayer($player_id)
+    {
+        return \HitsQuery::create()->filterByHittedId($this->getId())->filterByHitterId($player_id)->withColumn("COUNT(*)","Hitsdone")->groupByBodypartId()->orderBy("Hitsdone","DESC")->find();
     }
 
     public function getRatio()

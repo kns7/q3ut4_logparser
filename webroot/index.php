@@ -107,7 +107,9 @@ $app->group('/views',function() use($app){
     });
 
     $app->get('/vs/:player1/:player2',function($player1,$player2) use($app){
-
+        $p1 = $app->Ctrl->Players->get($player1);
+        $p2 = $app->Ctrl->Players->get($player2);
+        $app->render('partials/versus.php',compact('app','p1','p2'));
     });
 });
 
@@ -227,6 +229,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/player-weaponprimary/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -241,6 +244,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/player-weaponsecondary/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -255,6 +259,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/player-weaponsidearm/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -269,6 +274,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/player-weaponsniper/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -283,6 +289,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/player-weapongrenade/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -291,6 +298,65 @@ $app->group("/ajax",function() use($app){
             foreach($app->Ctrl->Players->get($id)->getWeaponsRank('grenade') as $p){
                 array_push($datas,$p->getKills());
                 array_push($labels,$p->getWeapons()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+
+        $app->get('/vs-killsdeath/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            $p1 = $app->Ctrl->Players->get($ids[0]);
+            $p2 = $app->Ctrl->Players->get($ids[1]);
+            $datas = [$p1->getKillsPerPlayer($ids[1]),$p1->getDeathsPerPlayer($ids[1])];
+            $labels = ["Tué  ".$p2->getName(),"Tué par ".$p2->getName()];
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/vs-killsdeath2/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            $p1 = $app->Ctrl->Players->get($ids[0]);
+            $p2 = $app->Ctrl->Players->get($ids[1]);
+            $datas = [$p1->getKillsPerPlayer($ids[1]),$p1->getDeathsPerPlayer($ids[1])];
+            $labels = ["Tué  ".$p2->getName(),"Tué par ".$p2->getName()];
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/vs-hits/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            $player = $app->Ctrl->Players->get($ids[0]);
+            $datas = [];
+            $labels = [];
+            foreach($player->getHitsDoneToPlayer($ids[1]) as $p){
+                array_push($datas,$p->getHitsdone());
+                array_push($labels,$p->getBodyparts()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/vs-hits2/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            $player = $app->Ctrl->Players->get($ids[0]);
+            $datas = [];
+            $labels = [];
+            foreach($player->getHitsDoneToPlayer($ids[1]) as $p){
+                array_push($datas,$p->getHitsdone());
+                array_push($labels,$p->getBodyparts()->getName());
             }
             $return = new StdClass();
             $return->datas = $datas;

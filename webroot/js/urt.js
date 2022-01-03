@@ -67,10 +67,27 @@ function makeChart(el) {
 
 function loadPlayerStats(id){
     console.log("Load Player Stats...");
+    console.log(" - Player ID: "+ id);
     loader(true,true);
     window.location.hash = id;
     $.get("/views/stats/"+id,function(d){
         $(".players-stats").html(d);
+        $(".chart").each(function(){
+            console.log("Loaded Chart [" + $(this).attr('id') + "]");
+            makeChart(this);
+        });
+        loader(false);
+    });
+}
+
+function loadVersusStats(id1,id2){
+    console.log("Load Versus Stats...");
+    console.log(" - Player1 ID: "+ id1);
+    console.log(" - Player2 ID: "+ id2);
+    loader(true,true);
+    window.location.hash = id1+"-"+id2;
+    $.get("/views/vs/"+id1+"/"+id2,function(d){
+        $(".versus-stats").html(d);
         $(".chart").each(function(){
             console.log("Loaded Chart [" + $(this).attr('id') + "]");
             makeChart(this);
@@ -95,20 +112,57 @@ function loader(status,overlay){
 $(document).ready(function(){
     // Manage Anchors for dynamic loading
     href = window.location.href.split("/")
-    if(href[href.length - 1].search("player") != -1 && window.location.hash.length > 0){
+    console.log(href)
+    if(href[href.length - 1].search("player") != -1 && window.location.hash.length > 1){
         console.log("Mode Player " + window.location.hash);
         $("#player_choose").val(window.location.hash.replace("#",""));
         loadPlayerStats(window.location.hash.replace("#",""))
     }
+    if(href[href.length - 1].search("vs") != -1 && window.location.hash.length > 1){
+        $("#player_choose").val(window.location.hash.replace("#",""));
+        hash = window.location.hash.replace("#","").split("-");
+        if(hash.length == 2){
+            console.log("Mode VS " + window.location.hash);
+            $("#player_choose1").val(hash[0]);
+            $("#player_choose2").val(hash[1]);
+            loadVersusStats(hash[0],hash[1]);
+        }
+
+    }
+
+    // Tooltips
     $('[data-toggle="tooltip"]').tooltip();
 
+    // Charts
     $(".chart").each(function(){
         console.log("Loaded Chart [" + $(this).attr('id') + "]");
         makeChart(this);
-    })
+    });
 
     $(this)
         .on("change","#player_choose",function(e){
             loadPlayerStats($(this).val());
+        })
+        .on("change","#player_choose1",function(e){
+            id1 = $(this).val();
+            $("#player_choose2 > option").removeAttr("disabled");
+            if(id1 != "0"){
+                $("#player_choose2 > option[value="+id1+"]").attr("disabled","disabled");
+                id2 = $("#player_choose2").val();
+                if(id2 != "0"){
+                    loadVersusStats(id1,id2);
+                }
+            }
+        })
+        .on("change","#player_choose2",function(e){
+            id2 = $(this).val();
+            $("#player_choose1 > option").removeAttr("disabled");
+            if(id2 != "0"){
+                $("#player_choose1 > option[value="+id2+"]").attr("disabled","disabled");
+                id1 = $("#player_choose1").val();
+                if(id1 != "0"){
+                    loadVersusStats(id1,id2);
+                }
+            }
         })
 });
