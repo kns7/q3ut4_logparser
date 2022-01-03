@@ -67,5 +67,7 @@ $app->container->singleton('Ctrl',function() use ($app){
     ];
 });
 
-$app->Ctrl->Logs->clearDBTests();
-$app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/calypso.log");
+if($config["PARSE_MODE"] == "full") {
+    $app->Ctrl->Logs->clearDBTests();
+}
+$app->Ctrl->Logs->parseLog($config["PARSE_LOGFILE"]);

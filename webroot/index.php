@@ -123,13 +123,6 @@ $app->group('/views',function() use($app){
 
 
 $app->group("/ajax",function() use($app){
-    $app->get('/parselog',function() use($app){
-        $app->Ctrl->Logs->clearDBTests();
-        echo "<pre>";
-        $app->Ctrl->Logs->parseLog("/var/www/private/q3ut4_logparser/logs/log2.log");
-        echo "</pre>";
-    });
-
     $app->group('/charts',function() use($app){
         $app->get('/weapons-use',function() use($app){
             $app->response->setStatus(200);
