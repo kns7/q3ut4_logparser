@@ -367,9 +367,8 @@ if($_SERVER['SITE_MODE'] == "development"){
        $app->get('/player/:player', function($player) use($app){
            echo "<pre>";
            $player = $app->Ctrl->Players->get($player);
-           foreach($player->getKillsDetails() as $p){
-               print_r(["Player" => $p->getFragged()->getName(), "Kills" => $p->getKills()]);
-           }
+           echo $player->getName();
+           print_r(\RoundsQuery::create()->filterByGametypeId(1)->filterByWinner($player->getId())->find());
            echo "</pre>";
        });
        $app->get('/newround',function() use($app){

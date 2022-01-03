@@ -167,13 +167,13 @@ class LogsController extends Controller {
                         if(!is_null($player)){
                             $action = "Bomb";
                             $message = $player->getName(). " $event bomb";
+                            if($event == "planted"){
+                                $this->_bomber  = $player;
+                            }elseif($event == "defused"){
+                                $this->_bomber  = null;
+                            }
                             if($this->app->Ctrl->Bombs->add($player, $event)){
                                 $level = "INFO";
-                                if($event == "planted"){
-                                    $this->_bomber  = $player;
-                                }elseif($event == "defused"){
-                                    $this->_bomber  = null;
-                                }
                             }else{
                                 $level = "ERROR";
                             }
@@ -187,7 +187,7 @@ class LogsController extends Controller {
                     $action = "Bomb";
                     $message = "bomb exploded (".$this->_bomber->getName(). ")";
 
-                    if($this->app->Ctrl->Bombs->add($this->_bomber, $action)){
+                    if($this->app->Ctrl->Bombs->add($this->_bomber, $event)){
                         $level = "INFO";
                     }else{
                         $level = "ERROR";

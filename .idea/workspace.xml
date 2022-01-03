@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="61faa754-bfd1-4a96-abdf-9f9668816131" name="Default Changelist" comment="" />
+    <list default="true" id="61faa754-bfd1-4a96-abdf-9f9668816131" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Controller/LogsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/LogsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Model/Players.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Players.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webroot/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/webroot/index.php" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +21,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webroot/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="316" column="60" selection-start-line="316" selection-start-column="60" selection-end-line="316" selection-end-column="60" />
+            <state relative-caret-position="706">
+              <caret line="363" selection-start-line="363" selection-end-line="363" />
             </state>
           </provider>
         </entry>
@@ -25,28 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webroot/templates/partials/versus.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
-              <caret line="41" column="66" selection-start-line="41" selection-start-column="66" selection-end-line="41" selection-end-column="66" />
-              <folding>
-                <element signature="e#2407#2413#1#HTML" expanded="true" />
-                <element signature="e#5979#5987#0#HTML" expanded="true" />
-                <element signature="e#6475#6483#0#HTML" expanded="true" />
-                <element signature="e#6955#6963#0#HTML" expanded="true" />
-                <element signature="e#6966#6974#0#HTML" expanded="true" />
-                <element signature="e#7451#7459#0#HTML" expanded="true" />
-                <element signature="e#7880#7888#0#HTML" expanded="true" />
-                <element signature="e#7889#7897#0#HTML" expanded="true" />
-                <element signature="e#7898#7906#0#HTML" expanded="true" />
-                <element signature="e#8244#8252#0#HTML" expanded="true" />
-                <element signature="e#8253#8261#0#HTML" expanded="true" />
-                <element signature="e#8262#8270#0#HTML" expanded="true" />
-                <element signature="e#8611#8619#0#HTML" expanded="true" />
-                <element signature="e#8620#8628#0#HTML" expanded="true" />
-                <element signature="e#8629#8637#0#HTML" expanded="true" />
-                <element signature="e#9404#9412#0#HTML" expanded="true" />
-                <element signature="e#9558#9566#0#HTML" expanded="true" />
-                <element signature="e#9832#9840#0#HTML" expanded="true" />
-              </folding>
+            <state relative-caret-position="690">
+              <caret line="46" column="66" selection-start-line="46" selection-start-column="66" selection-end-line="46" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -56,22 +41,15 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="375">
               <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
-              <folding>
-                <element signature="e#2076#2084#0#HTML" expanded="true" />
-                <element signature="e#2206#2214#0#HTML" expanded="true" />
-                <element signature="e#2328#2336#0#HTML" expanded="true" />
-                <element signature="e#2332#2340#0#HTML" expanded="true" />
-                <element signature="e#2465#2473#0#HTML" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="825">
-              <caret line="199" column="33" lean-forward="true" selection-start-line="199" selection-start-column="33" selection-end-line="199" selection-end-column="33" />
+            <state relative-caret-position="465">
+              <caret line="331" column="40" lean-forward="true" selection-start-line="331" selection-start-column="40" selection-end-line="331" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -79,8 +57,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Model/Players.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1007">
-              <caret line="145" column="59" selection-start-line="145" selection-start-column="59" selection-end-line="145" selection-end-column="59" />
+            <state relative-caret-position="1411">
+              <caret line="117" column="9" lean-forward="true" selection-start-line="117" selection-start-column="9" selection-end-line="117" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -89,7 +67,7 @@
         <entry file="file://$PROJECT_DIR$/app/Controller/BombsController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="22" column="9" lean-forward="true" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
+              <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -106,8 +84,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Controller/StatsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1036">
-              <caret line="225" column="5" lean-forward="true" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
+            <state relative-caret-position="3300">
+              <caret line="225" column="5" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -115,26 +93,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webroot/templates/home.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="736">
-              <caret line="308" column="19" selection-start-line="308" selection-start-column="19" selection-end-line="308" selection-end-column="19" />
-              <folding>
-                <element signature="e#7106#7114#0#HTML" expanded="true" />
-                <element signature="e#7045#7053#0#HTML" expanded="true" />
-                <element signature="e#7054#7062#0#HTML" expanded="true" />
-                <element signature="e#7095#7103#0#HTML" expanded="true" />
-                <element signature="e#9145#9153#0#HTML" expanded="true" />
-                <element signature="e#9186#9194#0#HTML" expanded="true" />
-                <element signature="e#9225#9233#0#HTML" expanded="true" />
-              </folding>
+            <state relative-caret-position="60">
+              <caret line="4" column="5" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webroot/js/urt.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="34" column="39" selection-start-line="34" selection-start-column="39" selection-end-line="34" selection-end-column="39" />
+            <state relative-caret-position="360">
+              <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -196,14 +165,14 @@
         <option value="$PROJECT_DIR$/webroot/templates/versus.php" />
         <option value="$PROJECT_DIR$/app/Controller/Controller.php" />
         <option value="$PROJECT_DIR$/app/Controller/BombsController.php" />
-        <option value="$PROJECT_DIR$/app/Controller/LogsController.php" />
-        <option value="$PROJECT_DIR$/app/Model/Players.php" />
         <option value="$PROJECT_DIR$/app/Controller/StatsController.php" />
         <option value="$PROJECT_DIR$/webroot/templates/home.php" />
         <option value="$PROJECT_DIR$/webroot/templates/partials/player.php" />
-        <option value="$PROJECT_DIR$/webroot/index.php" />
         <option value="$PROJECT_DIR$/webroot/templates/partials/versus.php" />
         <option value="$PROJECT_DIR$/webroot/js/urt.js" />
+        <option value="$PROJECT_DIR$/webroot/index.php" />
+        <option value="$PROJECT_DIR$/app/Model/Players.php" />
+        <option value="$PROJECT_DIR$/app/Controller/LogsController.php" />
       </list>
     </option>
   </component>
@@ -228,8 +197,8 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="3248" />
-    <option name="y" value="44" />
+    <option name="x" value="2874" />
+    <option name="y" value="37" />
     <option name="width" value="2098" />
     <option name="height" value="1321" />
   </component>
@@ -238,7 +207,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -291,6 +259,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -331,6 +300,7 @@
       <workItem from="1614630950056" duration="114000" />
       <workItem from="1641038170480" duration="28940000" />
       <workItem from="1641134769282" duration="43100000" />
+      <workItem from="1641218225047" duration="1192000" />
     </task>
     <task id="LOCAL-00001" summary="Added games.log (URT Logfile) to the ignore list">
       <created>1641040212089</created>
@@ -637,13 +607,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73021000" />
+    <option name="totallyTimeSpent" value="74213000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="3248" y="44" width="2098" height="1321" extended-state="0" />
+    <frame x="2874" y="37" width="2098" height="1321" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18142024" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18287937" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -786,9 +756,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/templates/vs.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/vs.php" />
     <entry file="file://$PROJECT_DIR$/webroot/css/vendors.min.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-24190" />
@@ -925,54 +893,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Controller/Controller.php">
+    <entry file="file://$PROJECT_DIR$/webroot/templates/partials/versus.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Controller/BombsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="22" column="9" lean-forward="true" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="199" column="33" lean-forward="true" selection-start-line="199" selection-start-column="33" selection-end-line="199" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Model/Players.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1007">
-          <caret line="145" column="59" selection-start-line="145" selection-start-column="59" selection-end-line="145" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Controller/StatsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1036">
-          <caret line="225" column="5" lean-forward="true" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/templates/home.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="736">
-          <caret line="308" column="19" selection-start-line="308" selection-start-column="19" selection-end-line="308" selection-end-column="19" />
-          <folding>
-            <element signature="e#7106#7114#0#HTML" expanded="true" />
-            <element signature="e#7045#7053#0#HTML" expanded="true" />
-            <element signature="e#7054#7062#0#HTML" expanded="true" />
-            <element signature="e#7095#7103#0#HTML" expanded="true" />
-            <element signature="e#9145#9153#0#HTML" expanded="true" />
-            <element signature="e#9186#9194#0#HTML" expanded="true" />
-            <element signature="e#9225#9233#0#HTML" expanded="true" />
-          </folding>
+        <state relative-caret-position="690">
+          <caret line="46" column="66" selection-start-line="46" selection-start-column="66" selection-end-line="46" selection-end-column="66" />
         </state>
       </provider>
     </entry>
@@ -980,54 +904,62 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
-          <folding>
-            <element signature="e#2076#2084#0#HTML" expanded="true" />
-            <element signature="e#2206#2214#0#HTML" expanded="true" />
-            <element signature="e#2328#2336#0#HTML" expanded="true" />
-            <element signature="e#2332#2340#0#HTML" expanded="true" />
-            <element signature="e#2465#2473#0#HTML" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/index.php">
+    <entry file="file://$PROJECT_DIR$/app/Controller/BombsController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="316" column="60" selection-start-line="316" selection-start-column="60" selection-end-line="316" selection-end-column="60" />
+        <state relative-caret-position="255">
+          <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/templates/partials/versus.php">
+    <entry file="file://$PROJECT_DIR$/app/Controller/Controller.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="41" column="66" selection-start-line="41" selection-start-column="66" selection-end-line="41" selection-end-column="66" />
-          <folding>
-            <element signature="e#2407#2413#1#HTML" expanded="true" />
-            <element signature="e#5979#5987#0#HTML" expanded="true" />
-            <element signature="e#6475#6483#0#HTML" expanded="true" />
-            <element signature="e#6955#6963#0#HTML" expanded="true" />
-            <element signature="e#6966#6974#0#HTML" expanded="true" />
-            <element signature="e#7451#7459#0#HTML" expanded="true" />
-            <element signature="e#7880#7888#0#HTML" expanded="true" />
-            <element signature="e#7889#7897#0#HTML" expanded="true" />
-            <element signature="e#7898#7906#0#HTML" expanded="true" />
-            <element signature="e#8244#8252#0#HTML" expanded="true" />
-            <element signature="e#8253#8261#0#HTML" expanded="true" />
-            <element signature="e#8262#8270#0#HTML" expanded="true" />
-            <element signature="e#8611#8619#0#HTML" expanded="true" />
-            <element signature="e#8620#8628#0#HTML" expanded="true" />
-            <element signature="e#8629#8637#0#HTML" expanded="true" />
-            <element signature="e#9404#9412#0#HTML" expanded="true" />
-            <element signature="e#9558#9566#0#HTML" expanded="true" />
-            <element signature="e#9832#9840#0#HTML" expanded="true" />
-          </folding>
+        <state relative-caret-position="585">
+          <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/StatsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3300">
+          <caret line="225" column="5" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/home.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="5" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/webroot/js/urt.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="39" selection-start-line="34" selection-start-column="39" selection-end-line="34" selection-end-column="39" />
+        <state relative-caret-position="360">
+          <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="706">
+          <caret line="363" selection-start-line="363" selection-end-line="363" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Players.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1411">
+          <caret line="117" column="9" lean-forward="true" selection-start-line="117" selection-start-column="9" selection-end-line="117" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="331" column="40" lean-forward="true" selection-start-line="331" selection-start-column="40" selection-end-line="331" selection-end-column="40" />
         </state>
       </provider>
     </entry>

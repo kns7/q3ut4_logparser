@@ -143,7 +143,7 @@ class Players extends BasePlayers
 
     public function getFFACount()
     {
-        return \RoundsQuery::create()->filterByGametypeId(0)->filterByWinner($this->getId())->count();
+        return \RoundsQuery::create()->filterByGametypeId(1)->filterByWinner($this->getId())->count();
     }
 
     public function getCTFCount($type = "all")
