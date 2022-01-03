@@ -345,7 +345,7 @@ class LogsController extends Controller {
                     foreach($this->_teams as $key => $value){
                         $player = $this->getPlayerFromTempArray($key);
                         if(!is_null($player)){
-                            $action = "eams Infos";
+                            $action = "Teams Infos";
                             switch($value){
                                 default:
                                     $team = "";
@@ -378,7 +378,7 @@ class LogsController extends Controller {
             }
             fclose($handle);
             $time_end = microtime(true);
-            $this->logOutput("Execution Time:".gmdate("H:i:s",($time_end - $time_start)),"","","INFO");
+            $this->logOutput("Execution Time: ".gmdate("H:i:s",($time_end - $time_start)),"","","INFO");
             $this->logOutput("Script Done","","","INFO");
         } else {
             return false;
