@@ -146,7 +146,7 @@ if($p2->getWeaponsRank()->count() > 0) {
 </div>
 <div class="row justify-content-around">
     <div class="col-sm-4">
-        <canvas class="chart" id="vskillsdeath1_chart" data-name="vs-killsdeath" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="bar"></canvas>
+        <canvas class="chart" id="vskillsdeath1_chart" data-name="vs-killsdeath" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="bar" data-colors="chartColorsVS"></canvas>
     </div>
 </div>
 <div class="row justify-content-center">

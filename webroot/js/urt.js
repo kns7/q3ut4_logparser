@@ -13,6 +13,10 @@ chartColors = [
     'rgb(234, 98, 164)',
     'rgb(234, 121, 98)'
 ];
+chartColorsVS = [
+    'rgb(40, 167, 69)',
+    'rgb(220, 53, 69)'
+];
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF'.split('');
@@ -37,7 +41,6 @@ function makeChart(el) {
     }else{
         var url = "ajax/charts/" + $(el).attr('data-name');
     }
-
     $.ajax({
         url: url,
         method: 'GET',
@@ -52,13 +55,6 @@ function makeChart(el) {
                             data: datas.datas,
                             backgroundColor: chartColors
                         }]
-                    },
-                    options: {
-                        plugins: {
-                            colorschemes: {
-                                scheme: 'brewer.Paired12'
-                            }
-                        }
                     }
                 }
             )

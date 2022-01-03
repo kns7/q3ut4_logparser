@@ -314,7 +314,7 @@ $app->group("/ajax",function() use($app){
             $p1 = $app->Ctrl->Players->get($ids[0]);
             $p2 = $app->Ctrl->Players->get($ids[1]);
             $datas = [$p1->getKillsPerPlayer($ids[1]),$p1->getDeathsPerPlayer($ids[1])];
-            $labels = ["Frags  ".$p1->getName(),"Frags ".$p2->getName()];
+            $labels = ["Frags de ".$p1->getName(),"Frags de ".$p2->getName()];
             $return = new StdClass();
             $return->datas = $datas;
             $return->labels = $labels;
