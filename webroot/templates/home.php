@@ -7,7 +7,7 @@ include('header.php');
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-3">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Nombre de Frags</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -34,7 +34,7 @@ include('header.php');
             </tbody>
         </table>
     </div>
-    <div class="col-sm-3">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Ratio Kill/Death</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -61,7 +61,7 @@ include('header.php');
             </tbody>
         </table>
     </div>
-    <div class="col-sm-3">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Rounds gagnés / perdus</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -92,7 +92,7 @@ include('header.php');
             </tbody>
         </table>
     </div>
-    <div class="col-sm-3">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Temps de jeu</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -119,7 +119,7 @@ include('header.php');
             </tbody>
         </table>
     </div>
-    <div class="col-sm-3">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Snipers</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -146,7 +146,7 @@ include('header.php');
             </tbody>
         </table>
     </div>
-    <div class="col-sm-3">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Grenadiers (Grenades HE)</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -173,7 +173,7 @@ include('header.php');
             </tbody>
         </table>
     </div>
-    <div class="col-sm-3">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Charcuteurs (Couteau)</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -215,17 +215,14 @@ include('header.php');
         <h1 class="text-center">Statistiques du Serveur</h1>
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-4">
+<div class="row justify-content-around">
+    <div class="col-lg-6 col-xl-4">
         <h2 class="text-center">Armes les plus utilisées</h2>
         <canvas class="chart" id="weaponuse_chart" data-name="weapons-use" data-chart="pie"></canvas>
     </div>
-    <div class="col-sm-4">
+    <div class="col-lg-6 col-xl-4">
         <h2 class="text-center">Modes de Jeux</h2>
         <canvas class="chart" id="gametype_chart" data-name="gametypes" data-chart="pie"></canvas>
-    </div>
-    <div class="col-sm-4">
-        <h2 class="text-center">Nombre de Rounds</h2>
     </div>
 </div>
 <?php
