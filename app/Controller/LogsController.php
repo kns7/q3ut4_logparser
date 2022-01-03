@@ -27,6 +27,7 @@ class LogsController extends Controller {
 
     public function parseLog($log)
     {
+        $time_start = microtime(true);
         $this->logOutput("Start parsing Logfile ($log)");
         $handle = fopen($log, "r");
         $l = 1;
@@ -340,8 +341,10 @@ class LogsController extends Controller {
                 }
                 $l++;
             }
-
             fclose($handle);
+            $time_end = microtime(true);
+            $this->logOutput("Execution Time:".gmdate("H:i:s",($time_end - $time_start)),"","","INFO");
+            $this->logOutput("Script Done","","","INFO");
         } else {
             return false;
         }
