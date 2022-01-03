@@ -14,7 +14,7 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
         <img src="<?=$picture;?>" class="card-img-top user-profile" alt="<?= $player->getName();?>">
         </div>
         <div class="card-body userprofile">
-            <h3 class="card-title text-center"><?= $player->getName();?></h3>
+            <h3 class="card-title text-center text-primary"><?= $player->getName();?></h3>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Temps de jeu: <strong><?= gmdate("H:i:s",$player->getPlayingTime());?></strong></li>
                 <li class="list-group-item">Nombre de Kills: <strong><?= $player->getKills();?></strong></li>

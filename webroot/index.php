@@ -88,7 +88,8 @@ $app->get('/player',function() use($app){
 })->name('player');
 
 $app->get('/vs',function() use($app){
-    $app->render('versus.php',compact('app'));
+    $players = $app->Ctrl->Players->getList();
+    $app->render('versus.php',compact('app','players'));
 })->name('vs');
 
 $app->get('/weapon/:id',function($id) use($app){
