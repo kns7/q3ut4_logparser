@@ -5,6 +5,7 @@ $kills = ['1' => $p1->getKills(), '2' => $p2->getKills()];
 $time = ['1' => $p1->getPlayingTime(), '2' => $p2->getPlayingTime()];
 $ratio = ['1' => $p1->getRatio(), '2' => $p2->getRatio()];
 $ggame = ['1' => $p1->getGunGameCount(), '2' => $p2->getGunGameCount()];
+$ffa = ['1' => $p1->getFFACount(), '2' => $p2->getFFACount()];
 $team = ['wins' => ['1' => $p1->getRoundWins(), '2' => $p2->getRoundWins()],
     'lost' => ['1' => $p1->getRoundLooses(), '2' => $p2->getRoundLooses()]];
 $bomb = ['planted' => ['1' => $p1->getBombsCount("planted"), '2' => $p2->getBombsCount("planted")],
@@ -86,6 +87,11 @@ if($p2->getWeaponsRank()->count() > 0) {
                     <td class="text-left"><?= ($ggame['1'] > $ggame['2'])?"<strong class='text-primary'>":"";?><?= $ggame['1'];?><?= ($ggame['1'] > $ggame['2'])?"</strong>":"";?></td>
                     <th class="text-center">Victoires Gun Game</th>
                     <td class="text-right"><?= ($ggame['2'] > $ggame['1'])?"<strong class='text-primary'>":"";?><?= $ggame['2'];?><?= ($ggame['2'] > $ggame['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($ffa['1'] > $ffa['2'])?"<strong class='text-primary'>":"";?><?= $ffa['1'];?><?= ($ffa['1'] > $ffa['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Victoires Free For All</th>
+                    <td class="text-right"><?= ($ffa['2'] > $ffa['1'])?"<strong class='text-primary'>":"";?><?= $ffa['2'];?><?= ($ffa['2'] > $ffa['1'])?"</strong>":"";?></td>
                 </tr>
                 <tr>
                     <td class="text-left"><?= ($team['wins']['1'] > $team['wins']['2'])?"<strong class='text-primary'>":"";?><?= $team['wins']['1'];?><?= ($team['wins']['1'] > $team['wins']['2'])?"</strong>":"";?></td>

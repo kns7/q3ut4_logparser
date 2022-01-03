@@ -26,6 +26,7 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
 
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Victoires Gun Game: <strong><?= $player->getGunGameCount();?></strong></li>
+                <li class="list-group-item">Victoires FreeForAll: <strong><?= $player->getFFACount();?></strong></li>
                 <li class="list-group-item">Victoires Equipes: <strong><?= $player->getRoundWins();?></strong></li>
                 <li class="list-group-item">D&eacute;faites Equipes: <strong><?= $player->getRoundLooses();?></strong></li>
                 <li class="list-group-item">Bombes Plant&eacute;es: <strong><?= $player->getBombsCount("planted");?></strong></li>
