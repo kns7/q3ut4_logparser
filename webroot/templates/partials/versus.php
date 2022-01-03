@@ -4,8 +4,16 @@ $picture2 = (file_exists('img/users/'.$p2->getId().".png"))? "/img/users/".$p2->
 $kills = ['1' => $p1->getKills(), '2' => $p2->getKills()];
 $time = ['1' => $p1->getPlayingTime(), '2' => $p2->getPlayingTime()];
 $ratio = ['1' => $p1->getRatio(), '2' => $p2->getRatio()];
+$ggame = ['1' => $p1->getGunGameCount(), '2' => $p2->getGunGameCount()];
+$team = ['wins' => ['1' => $p1->getRoundWins(), '2' => $p2->getRoundWins()],
+    'lost' => ['1' => $p1->getRoundLooses(), '2' => $p2->getRoundLooses()]];
+$bomb = ['planted' => ['1' => $p1->getBombsCount("planted"), '2' => $p2->getBombsCount("planted")],
+    'defused' => ['1' => $p1->getBombsCount("defused"), '2' => $p2->getBombsCount("defused")],
+    'exploded' => ['1' => $p1->getBombsCount("exploded"), '2' => $p2->getBombsCount("exploded")]];
+
 $killsplayer = ['1' => $p1->getKillsPerPlayer($p2->getId()), '2' => $p2->getKillsPerPlayer($p1->getId())];
 $deathsplayer = ['1' => $p1->getDeathsPerPlayer($p2->getId()), '2' => $p2->getDeathsPerPlayer($p1->getId())];
+
 
 if($p1->getWeaponsRank()->count() > 0) {
     $bestweapon['1'] = $p1->getWeaponsRank()->getFirst()->getWeapons();
@@ -75,6 +83,37 @@ if($p2->getWeaponsRank()->count() > 0) {
                     <td class="text-right"><?= ($ratio['2'] > $ratio['1'])?"<strong class='text-primary'>":"";?><?= number_format(floatval($ratio['2']),6,',',' ');?><?= ($ratio['2'] > $ratio['1'])?"</strong>":"";?></td>
                 </tr>
                 <tr>
+                    <td class="text-left"><?= ($ggame['1'] > $ggame['2'])?"<strong class='text-primary'>":"";?><?= $ggame['1'];?><?= ($ggame['1'] > $ggame['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Victoires Gun Game</th>
+                    <td class="text-right"><?= ($ggame['2'] > $ggame['1'])?"<strong class='text-primary'>":"";?><?= $ggame['2'];?><?= ($ggame['2'] > $ggame['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($team['wins']['1'] > $team['wins']['2'])?"<strong class='text-primary'>":"";?><?= $team['wins']['1'];?><?= ($team['wins']['1'] > $team['wins']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Victoires Equipes</th>
+                    <td class="text-right"><?= ($team['wins']['2'] > $team['wins']['1'])?"<strong class='text-primary'>":"";?><?= $team['wins']['2'];?><?= ($team['wins']['2'] > $team['wins']['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($team['lost']['1'] < $team['lost']['2'])?"<strong class='text-primary'>":"";?><?= $team['lost']['1'];?><?= ($team['lost']['1'] < $team['lost']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">D&eacute;faites Equipes</th>
+                    <td class="text-right"><?= ($team['lost']['2'] < $team['lost']['1'])?"<strong class='text-primary'>":"";?><?= $team['lost']['2'];?><?= ($team['lost']['2'] < $team['lost']['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($bomb['planted']['1'] > $bomb['planted']['2'])?"<strong class='text-primary'>":"";?><?= $bomb['planted']['1'];?><?= ($bomb['planted']['1'] > $bomb['planted']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Bombes Plant&eacute;es</th>
+                    <td class="text-right"><?= ($bomb['planted']['2'] > $bomb['planted']['1'])?"<strong class='text-primary'>":"";?><?= $bomb['planted']['2'];?><?= ($bomb['planted']['2'] > $bomb['planted']['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($bomb['defused']['1'] > $bomb['defused']['2'])?"<strong class='text-primary'>":"";?><?= $bomb['defused']['1'];?><?= ($bomb['defused']['1'] > $bomb['defused']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Bombes D&eacute;fus&eacute;es</th>
+                    <td class="text-right"><?= ($bomb['defused']['2'] > $bomb['defused']['1'])?"<strong class='text-primary'>":"";?><?= $bomb['defused']['2'];?><?= ($bomb['defused']['2'] > $bomb['defused']['1'])?"</strong>":"";?></td>
+                </tr>
+                <tr>
+                    <td class="text-left"><?= ($bomb['exploded']['1'] > $bomb['exploded']['2'])?"<strong class='text-primary'>":"";?><?= $bomb['exploded']['1'];?><?= ($bomb['exploded']['1'] > $bomb['exploded']['2'])?"</strong>":"";?></td>
+                    <th class="text-center">Bombes Explos&eacute;es</th>
+                    <td class="text-right"><?= ($bomb['exploded']['2'] > $bomb['exploded']['1'])?"<strong class='text-primary'>":"";?><?= $bomb['exploded']['2'];?><?= ($bomb['exploded']['2'] > $bomb['exploded']['1'])?"</strong>":"";?></td>
+                </tr>
+                
+                <tr>
                     <td class="text-left"><?= (!is_null($bestweapon['1']))?$bestweapon['1']->getName():"N/A";?></td>
                     <th class="text-center">Arme pr&eacute;f&eacute;r&eacute;e</th>
                     <td class="text-right"><?= (!is_null($bestweapon['2']))?$bestweapon['2']->getName():"N/A";?></td>
@@ -96,15 +135,12 @@ if($p2->getWeaponsRank()->count() > 0) {
 <div class="row justify-content-center">
     <div class="col-sm-8">
         <hr/>
-        <h2 class="text-center">Statistiques de Kills (Frags)</h2>
+        <h2 class="text-center">Statistiques de Frags (entre les 2 joueurs)</h2>
     </div>
 </div>
 <div class="row justify-content-around">
     <div class="col-sm-4">
-        <canvas class="chart" id="vskillsdeath1_chart" data-name="vs-killsdeath" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="pie"></canvas>
-    </div>
-    <div class="col-sm-4">
-        <canvas class="chart" id="vskillsdeath2_chart" data-name="vs-killsdeath" data-id="<?=$p2->getId();?>_<?=$p1->getId();?>" data-chart="pie"></canvas>
+        <canvas class="chart" id="vskillsdeath1_chart" data-name="vs-killsdeath" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="bar"></canvas>
     </div>
 </div>
 <div class="row justify-content-center">

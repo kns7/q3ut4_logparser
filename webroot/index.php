@@ -314,20 +314,7 @@ $app->group("/ajax",function() use($app){
             $p1 = $app->Ctrl->Players->get($ids[0]);
             $p2 = $app->Ctrl->Players->get($ids[1]);
             $datas = [$p1->getKillsPerPlayer($ids[1]),$p1->getDeathsPerPlayer($ids[1])];
-            $labels = ["Tué  ".$p2->getName(),"Tué par ".$p2->getName()];
-            $return = new StdClass();
-            $return->datas = $datas;
-            $return->labels = $labels;
-            echo json_encode($return);
-        });
-        $app->get('/vs-killsdeath2/:id',function($id) use($app){
-            $app->response->setStatus(200);
-            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
-            $ids = explode("_",$id);
-            $p1 = $app->Ctrl->Players->get($ids[0]);
-            $p2 = $app->Ctrl->Players->get($ids[1]);
-            $datas = [$p1->getKillsPerPlayer($ids[1]),$p1->getDeathsPerPlayer($ids[1])];
-            $labels = ["Tué  ".$p2->getName(),"Tué par ".$p2->getName()];
+            $labels = ["Frags  ".$p1->getName(),"Frags ".$p2->getName()];
             $return = new StdClass();
             $return->datas = $datas;
             $return->labels = $labels;

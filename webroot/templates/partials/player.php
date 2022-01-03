@@ -87,7 +87,4 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
             <canvas class="chart" id="playerweapongrenade_chart" data-name="player-weapongrenade" data-id="<?=$player->getId();?>" data-chart="pie"></canvas>
         </div>
     </div>
-    <hr/>
-    <div class="row"><div class="col text-center"><h1>Statistiques de Jeu</h1></div></div>
-    <div class="row justify-content-around">
 </div>
