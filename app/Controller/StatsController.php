@@ -169,16 +169,16 @@ class StatsController extends Controller
                 "name" => $p->getName(),
                 "planted" => $p->getBombsCount("planted"),
                 "defused" => $p->getBombsCount("defused"),
-                "exploded" => $p->getBombsCount("exploded")
+                "exploded" => $p->getBombsCount("exploded"),
+                "total" => intval($p->getBombsCount("planted")) + intval($p->getBombsCount("defused")) + intval($p->getBombsCount("exploded"))
             ]);
         }
 
         // Array Sort (Total DESC)
         foreach($return as $key => $row){
-            $exploded[$key] = $row["exploded"];
-            $defused[$key] = $row["defused"];
+            $sorting[$key] = $row["total"];
         }
-        array_multisort($exploded, SORT_DESC, $defused, SORT_DESC , $return);
+        array_multisort($sorting, SORT_DESC, $return);
 
         return $return;
     }
@@ -193,6 +193,27 @@ class StatsController extends Controller
                 "id" => $p->getId(),
                 "name" => $p->getName(),
                 "wins" => $p->getGunGameCount()
+            ]);
+        }
+        // Array Sort (Total DESC)
+        foreach($return as $key => $row){
+            $sorting[$key] = $row["wins"];
+        }
+        array_multisort($sorting, SORT_DESC, $return);
+
+        return $return;
+    }
+
+    public function getStatsFFA()
+    {
+        $return = [];
+        // Get all players
+        $players = $this->app->Ctrl->Players->getList();
+        foreach($players as $p){
+            array_push($return,[
+                "id" => $p->getId(),
+                "name" => $p->getName(),
+                "wins" => $p->getFFACount()
             ]);
         }
         // Array Sort (Total DESC)

@@ -80,8 +80,8 @@ $app->get('/',function() use ($app){
     $knives = $app->Ctrl->Stats->getFragRanking("knife");
     $bombs = $app->Ctrl->Stats->getStatsBombs();
     $ggame = $app->Ctrl->Stats->getStatsGunGame();
-
-    $app->render('home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','grenades','knives', 'bombs', 'ggame'));
+    $ffa = $app->Ctrl->Stats->getStatsFFA();
+    $app->render('home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','grenades','knives', 'bombs', 'ggame', 'ffa'));
 })->name("root");
 
 $app->get('/player',function() use($app){

@@ -267,6 +267,49 @@ include('header.php');
             </tbody>
         </table>
     </div>
+    <div class="col-xl-4 col-lg-6">
+        <h2 class="text-center">Free For All</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Victoires</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+            foreach($ffa as $f){
+                ?>
+                <tr>
+                    <td>#<?= $i;?></td>
+                    <td><a href="/player#<?=$f['id'];?>"><?= $f['name'];?></a></td>
+                    <td><?= $f["wins"];?></td>
+                </tr>
+                <?php
+                $i++;
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+        <h2 class="text-center">Capture The Flag</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Captur&eacute;s</th>
+                <th>Drop&eacute;s</th>
+                <th>Retourn&eacute;s</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
 <hr/>
 
