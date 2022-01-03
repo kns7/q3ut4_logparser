@@ -16,8 +16,13 @@ class BombsController extends Controller
     public function add(\Players $player, $event)
     {
         $bomb = new \Bombs();
-        $bomb->setPlayers($player)
-            ->setEvent($event);
+        if(is_null($player)) {
+            $bomb->setPlayerId(0);
+        }else{
+            $bomb->setPlayers($player);
+        }
+        $bomb->setEvent($event);
+
         try {
             $bomb->save();
             return $bomb;
