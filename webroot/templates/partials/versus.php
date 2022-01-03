@@ -22,33 +22,42 @@ if($p2->getWeaponsRank()->count() > 0) {
     $bestweapon['2'] = null;
 }
 ?>
-<div class="row justify-content-around">
-    <div class="col-sm-2">
-        <div class="card">
-            <div class="text-center">
-                <img src="<?=$picture1;?>" class="card-img-top user-profile" alt="<?= $p1->getName();?>">
+<div class="d-none d-md-block">
+    <div class="row justify-content-around">
+        <div class="col-xl-2 col-lg-4">
+            <div class="card">
+                <div class="text-center">
+                    <img src="<?=$picture1;?>" class="card-img-top user-profile" alt="<?= $p1->getName();?>">
+                </div>
+                <div class="card-body userprofile">
+                    <h3 class="card-title text-center text-primary"><?= $p1->getName();?></h3>
+                </div>
             </div>
-            <div class="card-body userprofile">
-                <h3 class="card-title text-center text-primary"><?= $p1->getName();?></h3>
-            </div>
+            <hr/>
         </div>
-        <hr/>
-    </div>
-    <div class="col-sm-2">
-        <div class="card">
-            <div class="text-center">
-                <img src="<?=$picture2;?>" class="card-img-top user-profile" alt="<?= $p2->getName();?>">
+        <div class="col-xl-2 col-lg-4">
+            <div class="card">
+                <div class="text-center">
+                    <img src="<?=$picture2;?>" class="card-img-top user-profile" alt="<?= $p2->getName();?>">
+                </div>
+                <div class="card-body userprofile">
+                    <h3 class="card-title text-center text-primary"><?= $p2->getName();?></h3>
+                </div>
             </div>
-            <div class="card-body userprofile">
-                <h3 class="card-title text-center text-primary"><?= $p2->getName();?></h3>
-            </div>
+            <hr/>
         </div>
-        <hr/>
     </div>
 </div>
 <div class="row justify-content-center">
-    <div class="col-sm-8">
+    <div class="col-xl-8 col-lg-10">
         <table class="table table-hover table-striped">
+            <thead class="d-md-none">
+            <tr>
+                <th class="text-left"><?= $p1->getName();?></th>
+                <th>&nbsp;</th>
+                <th class="text-right"><?= $p2->getName();?></th>
+            </tr>
+            </thead>
             <tbody>
                 <tr>
                     <td class="text-left"><?= ($time['1'] > $time['2'])?"<strong class='text-primary'>":"";?><?= gmdate("H:i:s",$time['1']);?><?= ($time['1'] > $time['2'])?"</strong>":"";?></td>
@@ -106,9 +115,11 @@ if($p2->getWeaponsRank()->count() > 0) {
 </div>
 <div class="row justify-content-around">
     <div class="col-sm-4">
+        <caption  class="d-md-none">Coups port&eacute;s par <?= $p1->getName();?></caption>
         <canvas class="chart" id="vshits1_chart" data-name="vs-hits" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="pie"></canvas>
     </div>
     <div class="col-sm-4">
+        <caption  class="d-md-none">Coups port&eacute;s par <?= $p2->getName();?></caption>
         <canvas class="chart" id="vshits2_chart" data-name="vs-hits" data-id="<?=$p2->getId();?>_<?=$p1->getId();?>" data-chart="pie"></canvas>
     </div>
 </div>
