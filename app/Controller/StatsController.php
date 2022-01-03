@@ -225,4 +225,28 @@ class StatsController extends Controller
         return $return;
     }
 
+    public function getStatsCTF()
+    {
+        $return = [];
+        // Get all players
+        $players = $this->app->Ctrl->Players->getList();
+        foreach($players as $p){
+            array_push($return,[
+                "id" => $p->getId(),
+                "name" => $p->getName(),
+                "capture" => $p->getCTFCount("capture"),
+                "drop" => $p->getCTFCount("drop"),
+                "return" => $p->getCTFCount("return"),
+                "total" => intval($p->getCTFCount("capture")) + intval($p->getCTFCount("return"))
+            ]);
+        }
+
+        // Array Sort (Total DESC)
+        foreach($return as $key => $row){
+            $sorting[$key] = $row["total"];
+        }
+        array_multisort($sorting, SORT_DESC, $return);
+
+        return $return;
+    }
 }

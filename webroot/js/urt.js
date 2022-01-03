@@ -94,6 +94,19 @@ function loadVersusStats(id1,id2){
     });
 }
 
+function loadHome(){
+    console.log("Load Home Stats...");
+    loader(true,true);
+    $.get("/views/home",function(d){
+        $(".home-stats").html(d);
+        $(".chart").each(function(){
+            console.log("Loaded Chart [" + $(this).attr('id') + "]");
+            makeChart(this);
+        });
+        loader(false);
+    });
+}
+
 function loader(status,overlay){
     if(overlay === undefined){
         overlay = false;
@@ -111,6 +124,10 @@ $(document).ready(function(){
     // Manage Anchors for dynamic loading
     href = window.location.href.split("/")
     console.log(href)
+    if(href[href.length - 1]== ""){
+        console.log("Home Page");
+        loadHome();
+    }
     if(href[href.length - 1].search("player") != -1 && window.location.hash.length > 1){
         console.log("Mode Player " + window.location.hash);
         $("#player_choose").val(window.location.hash.replace("#",""));

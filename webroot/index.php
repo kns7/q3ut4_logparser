@@ -70,18 +70,7 @@ $app->container->singleton('Ctrl',function() use ($app){
 
 // Routes
 $app->get('/',function() use ($app){
-    $frags = $app->Ctrl->Stats->getFragRanking();
-    $ratios = $app->Ctrl->Stats->getKDRatioRanking();
-    $times = $app->Ctrl->Stats->getPlayingTime();
-    $winlooses = $app->Ctrl->Stats->getRoundsWinLooses();
-    $weapons = $app->Ctrl->Stats->getStatsWeapons();
-    $snipers = $app->Ctrl->Stats->getFragRanking("sniper");
-    $grenades = $app->Ctrl->Stats->getFragRanking("grenade");
-    $knives = $app->Ctrl->Stats->getFragRanking("knife");
-    $bombs = $app->Ctrl->Stats->getStatsBombs();
-    $ggame = $app->Ctrl->Stats->getStatsGunGame();
-    $ffa = $app->Ctrl->Stats->getStatsFFA();
-    $app->render('home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','grenades','knives', 'bombs', 'ggame', 'ffa'));
+    $app->render('home.php',compact('app'));
 })->name("root");
 
 $app->get('/player',function() use($app){
@@ -103,6 +92,21 @@ $app->get('/weapon/:id',function($id) use($app){
 
 
 $app->group('/views',function() use($app){
+    $app->get('/home',function() use($app){
+        $frags = $app->Ctrl->Stats->getFragRanking();
+        $ratios = $app->Ctrl->Stats->getKDRatioRanking();
+        $times = $app->Ctrl->Stats->getPlayingTime();
+        $winlooses = $app->Ctrl->Stats->getRoundsWinLooses();
+        $weapons = $app->Ctrl->Stats->getStatsWeapons();
+        $snipers = $app->Ctrl->Stats->getFragRanking("sniper");
+        $grenades = $app->Ctrl->Stats->getFragRanking("grenade");
+        $knives = $app->Ctrl->Stats->getFragRanking("knife");
+        $bombs = $app->Ctrl->Stats->getStatsBombs();
+        $ggame = $app->Ctrl->Stats->getStatsGunGame();
+        $ffa = $app->Ctrl->Stats->getStatsFFA();
+        $ctf = $app->Ctrl->Stats->getStatsCTF();
+        $app->render('partials/home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','grenades','knives', 'bombs', 'ggame', 'ffa', 'ctf'));
+    });
     $app->get('/stats/:player',function($player) use($app){
         $player = $app->Ctrl->Players->get($player);
         $app->render('partials/player.php',compact('app','player'));

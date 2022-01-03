@@ -145,4 +145,19 @@ class Players extends BasePlayers
     {
         return \RoundsQuery::create()->filterByGametypeId(0)->filterByWinner($this->getId())->count();
     }
+
+    public function getCTFCount($type = "all")
+    {
+        $query = \FlagsQuery::create()->filterByPlayerId($this->getId());
+        switch($type){
+            case "all":
+
+                break;
+
+            default:
+                $query->filterByEvent($type);
+                break;
+        }
+        return $query->count();
+    }
 }

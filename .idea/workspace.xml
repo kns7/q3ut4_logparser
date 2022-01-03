@@ -1,0 +1,1035 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="61faa754-bfd1-4a96-abdf-9f9668816131" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webroot/index.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="235">
+              <caret line="316" column="60" selection-start-line="316" selection-start-column="60" selection-end-line="316" selection-end-column="60" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webroot/templates/partials/versus.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="451">
+              <caret line="41" column="66" selection-start-line="41" selection-start-column="66" selection-end-line="41" selection-end-column="66" />
+              <folding>
+                <element signature="e#2407#2413#1#HTML" expanded="true" />
+                <element signature="e#5979#5987#0#HTML" expanded="true" />
+                <element signature="e#6475#6483#0#HTML" expanded="true" />
+                <element signature="e#6955#6963#0#HTML" expanded="true" />
+                <element signature="e#6966#6974#0#HTML" expanded="true" />
+                <element signature="e#7451#7459#0#HTML" expanded="true" />
+                <element signature="e#7880#7888#0#HTML" expanded="true" />
+                <element signature="e#7889#7897#0#HTML" expanded="true" />
+                <element signature="e#7898#7906#0#HTML" expanded="true" />
+                <element signature="e#8244#8252#0#HTML" expanded="true" />
+                <element signature="e#8253#8261#0#HTML" expanded="true" />
+                <element signature="e#8262#8270#0#HTML" expanded="true" />
+                <element signature="e#8611#8619#0#HTML" expanded="true" />
+                <element signature="e#8620#8628#0#HTML" expanded="true" />
+                <element signature="e#8629#8637#0#HTML" expanded="true" />
+                <element signature="e#9404#9412#0#HTML" expanded="true" />
+                <element signature="e#9558#9566#0#HTML" expanded="true" />
+                <element signature="e#9832#9840#0#HTML" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webroot/templates/partials/player.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
+              <folding>
+                <element signature="e#2076#2084#0#HTML" expanded="true" />
+                <element signature="e#2206#2214#0#HTML" expanded="true" />
+                <element signature="e#2328#2336#0#HTML" expanded="true" />
+                <element signature="e#2332#2340#0#HTML" expanded="true" />
+                <element signature="e#2465#2473#0#HTML" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="825">
+              <caret line="199" column="33" lean-forward="true" selection-start-line="199" selection-start-column="33" selection-end-line="199" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Model/Players.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1007">
+              <caret line="145" column="59" selection-start-line="145" selection-start-column="59" selection-end-line="145" selection-end-column="59" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Controller/BombsController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="22" column="9" lean-forward="true" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Controller/Controller.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="585">
+              <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Controller/StatsController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1036">
+              <caret line="225" column="5" lean-forward="true" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webroot/templates/home.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="736">
+              <caret line="308" column="19" selection-start-line="308" selection-start-column="19" selection-end-line="308" selection-end-column="19" />
+              <folding>
+                <element signature="e#7106#7114#0#HTML" expanded="true" />
+                <element signature="e#7045#7053#0#HTML" expanded="true" />
+                <element signature="e#7054#7062#0#HTML" expanded="true" />
+                <element signature="e#7095#7103#0#HTML" expanded="true" />
+                <element signature="e#9145#9153#0#HTML" expanded="true" />
+                <element signature="e#9186#9194#0#HTML" expanded="true" />
+                <element signature="e#9225#9233#0#HTML" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/webroot/js/urt.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="510">
+              <caret line="34" column="39" selection-start-line="34" selection-start-column="39" selection-end-line="34" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Hit:</find>
+      <find>ClientUserInfo:</find>
+      <find>$bomb</find>
+      <find>chart</find>
+      <find>/player/&lt;?</find>
+      <find>col-4</find>
+      <find>col-3</find>
+      <find>col-lg-4</find>
+      <find>updateResults</find>
+      <find>&lt;strong&gt;</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>$flag</replace>
+      <replace>/player#&lt;?</replace>
+      <replace>col-sm-4</replace>
+      <replace>col-sm-3</replace>
+      <replace>col-lg-6</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/propel.yml" />
+        <option value="$PROJECT_DIR$/app/Controller/FragsController.php" />
+        <option value="$PROJECT_DIR$/app/Controller/HitsController.php" />
+        <option value="$PROJECT_DIR$/app/Controller/PlayersController.php" />
+        <option value="$PROJECT_DIR$/logs/testlog.log" />
+        <option value="$PROJECT_DIR$/app/Controller/GametypesController.php" />
+        <option value="$PROJECT_DIR$/app/Controller/TeamsController.php" />
+        <option value="$PROJECT_DIR$/app/Controller/ScoresController.php" />
+        <option value="$PROJECT_DIR$/app/Controller/FlagsController.php" />
+        <option value="$PROJECT_DIR$/webroot/parser.php" />
+        <option value="$PROJECT_DIR$/app/Controller/GamesController.php" />
+        <option value="$PROJECT_DIR$/logs/log2.log" />
+        <option value="$PROJECT_DIR$/webroot/templates/ranking.php" />
+        <option value="$PROJECT_DIR$/app/Model/Weapons.php" />
+        <option value="$PROJECT_DIR$/webroot/templates/weapon.php" />
+        <option value="$PROJECT_DIR$/app/Controller/WeaponsController.php" />
+        <option value="$PROJECT_DIR$/webroot/templates/footer.php" />
+        <option value="$PROJECT_DIR$/app/config/schema.xml" />
+        <option value="$PROJECT_DIR$/app/Controller/RoundsController.php" />
+        <option value="$PROJECT_DIR$/app/Model/Gametypes.php" />
+        <option value="$PROJECT_DIR$/webroot/templates/player.php" />
+        <option value="$PROJECT_DIR$/webroot/css/style.css" />
+        <option value="$PROJECT_DIR$/webroot/js/vendors.min.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/webroot/templates/header.php" />
+        <option value="$PROJECT_DIR$/webroot/templates/versus.php" />
+        <option value="$PROJECT_DIR$/app/Controller/Controller.php" />
+        <option value="$PROJECT_DIR$/app/Controller/BombsController.php" />
+        <option value="$PROJECT_DIR$/app/Controller/LogsController.php" />
+        <option value="$PROJECT_DIR$/app/Model/Players.php" />
+        <option value="$PROJECT_DIR$/app/Controller/StatsController.php" />
+        <option value="$PROJECT_DIR$/webroot/templates/home.php" />
+        <option value="$PROJECT_DIR$/webroot/templates/partials/player.php" />
+        <option value="$PROJECT_DIR$/webroot/index.php" />
+        <option value="$PROJECT_DIR$/webroot/templates/partials/versus.php" />
+        <option value="$PROJECT_DIR$/webroot/js/urt.js" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/slim/slim" />
+      <path value="$PROJECT_DIR$/vendor/propel/propel" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+    </include_path>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="3248" />
+    <option name="y" value="44" />
+    <option name="width" value="2098" />
+    <option name="height" value="1321" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="Controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+              <item name="webroot" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+              <item name="webroot" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+              <item name="webroot" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
+              <item name="webroot" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="partials" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../q3ut4_manager" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/logs" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="61faa754-bfd1-4a96-abdf-9f9668816131" name="Default Changelist" comment="" />
+      <created>1614284367233</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1614284367233</updated>
+      <workItem from="1614284368387" duration="268000" />
+      <workItem from="1614619716272" duration="599000" />
+      <workItem from="1614630950056" duration="114000" />
+      <workItem from="1641038170480" duration="28940000" />
+      <workItem from="1641134769282" duration="43100000" />
+    </task>
+    <task id="LOCAL-00001" summary="Added games.log (URT Logfile) to the ignore list">
+      <created>1641040212089</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1641040212089</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Updated DB Schema">
+      <created>1641041823722</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1641041823722</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Updated ORM Models">
+      <created>1641041870966</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1641041870966</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Updated Table &quot;Hits&quot;">
+      <created>1641045282347</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1641045282347</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Logging Hits and Frags OK">
+      <created>1641052448683</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1641052448683</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Logparser: Connections infos (Join, Quit)">
+      <created>1641065608504</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1641065608504</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Logparser: Player Changes (update Teams)">
+      <created>1641066120164</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1641066120164</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added Gamemode (gametypes) in Rounds table">
+      <created>1641066586005</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1641066586005</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Logparse: Init Round done">
+      <created>1641067102171</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1641067102171</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Logparse: Valid Regex for Bomb planted and bomb defused">
+      <created>1641067619382</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1641067619382</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added Table &quot;Bombs&quot;">
+      <created>1641068504550</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1641068504550</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Parselog: Added Bombs actions &amp; missing Controllers (Teams, Flags, Scores)">
+      <created>1641072108373</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1641072108373</updated>
+    </task>
+    <task id="LOCAL-00013" summary="ParseLog: added Scores &amp; Teams">
+      <created>1641078495991</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1641078495991</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added Parser Script (for cronjobs) and function logOutput()">
+      <created>1641135822811</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1641135822811</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Managed Flags actions (Pickup, Drop, Return, Capture)">
+      <created>1641136613226</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1641136613227</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Change Order for ClearDBTests, added exception for Servers Connection (with port :27960)">
+      <created>1641137223686</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1641137223686</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Bugfix in stopGame()">
+      <created>1641137246832</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1641137246832</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Parselog: Bugfix in &quot;Player Connection&quot;">
+      <created>1641140066812</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1641140066812</updated>
+    </task>
+    <task id="LOCAL-00019" summary="New files for Front-End">
+      <created>1641140190898</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1641140190898</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Header Menu active">
+      <created>1641140712320</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1641140712320</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Stats: Frags &amp; Ratio">
+      <created>1641146054607</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1641146054607</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Stats: Game Time">
+      <created>1641146805054</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1641146805054</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Stats: Weapons use">
+      <created>1641152317452</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1641152317452</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Stats: Gametypes + Modified Parselog: Changed InitRound only to InitRound + InitGame">
+      <created>1641158367674</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1641158367674</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Bugfix in empty rounds. Now added to DB, but with Amount of Players as new information (for filtering before stats)">
+      <created>1641159147278</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1641159147278</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Stats Player OK">
+      <created>1641165541737</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1641165541737</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Link to Player Stats">
+      <created>1641166861596</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1641166861596</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Design Responsive">
+      <created>1641167596024</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1641167596024</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Added User Pictures">
+      <created>1641168076831</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1641168076831</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Starting page Versus">
+      <created>1641169525855</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1641169525855</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Stats Versus OK">
+      <created>1641176445690</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1641176445690</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Responsive Design BugFixes">
+      <created>1641177337508</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1641177337508</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Responsive Design BugFixes">
+      <created>1641177639080</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1641177639080</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Parselog: Added Bomb explosions">
+      <created>1641184885379</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1641184885379</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Parselog: Added Bomb explosions">
+      <created>1641184954748</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1641184954748</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Parselog: Added Gungame Winner">
+      <created>1641186046666</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1641186046666</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Parselog: Added execution time">
+      <created>1641186268161</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1641186268161</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Added Stats to Gametypes">
+      <created>1641188267118</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1641188267118</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Added Stats to Gametypes in Versus">
+      <created>1641194089582</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1641194089582</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Parselog: Added Stats (Winner) for Free For All">
+      <created>1641194897234</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1641194897234</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Added FFA Stats">
+      <created>1641195269687</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1641195269687</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Added FFA Stats">
+      <created>1641195382078</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1641195382078</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Added FFA Stats">
+      <created>1641195832219</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1641195832219</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="73021000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="3248" y="44" width="2098" height="1321" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18142024" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Managed Flags actions (Pickup, Drop, Return, Capture)" />
+    <MESSAGE value="Change Order for ClearDBTests, added exception for Servers Connection (with port :27960)" />
+    <MESSAGE value="Bugfix in stopGame()" />
+    <MESSAGE value="Parselog: Bugfix in &quot;Player Connection&quot;" />
+    <MESSAGE value="New files for Front-End" />
+    <MESSAGE value="Header Menu active" />
+    <MESSAGE value="Stats: Frags &amp; Ratio" />
+    <MESSAGE value="Stats: Game Time" />
+    <MESSAGE value="Stats: Weapons use" />
+    <MESSAGE value="Stats: Gametypes + Modified Parselog: Changed InitRound only to InitRound + InitGame" />
+    <MESSAGE value="Bugfix in empty rounds. Now added to DB, but with Amount of Players as new information (for filtering before stats)" />
+    <MESSAGE value="Stats Player OK" />
+    <MESSAGE value="Link to Player Stats" />
+    <MESSAGE value="Design Responsive" />
+    <MESSAGE value="Added User Pictures" />
+    <MESSAGE value="Starting page Versus" />
+    <MESSAGE value="Stats Versus OK" />
+    <MESSAGE value="Responsive Design BugFixes" />
+    <MESSAGE value="Parselog: Added Bomb explosions" />
+    <MESSAGE value="Parselog: Added Gungame Winner" />
+    <MESSAGE value="Parselog: Added execution time" />
+    <MESSAGE value="Added Stats to Gametypes" />
+    <MESSAGE value="Added Stats to Gametypes in Versus" />
+    <MESSAGE value="Parselog: Added Stats (Winner) for Free For All" />
+    <MESSAGE value="Added FFA Stats" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added FFA Stats" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/logs/calypso.log">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="-930">
+          <caret line="8495" column="61" selection-start-line="8495" selection-start-column="61" selection-end-line="8495" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Base/Flags.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Flags.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/propel.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="33" lean-forward="true" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated-sql/default.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="117" selection-start-line="117" selection-end-line="136" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="39" lean-forward="true" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/testlog.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1096">
+          <caret line="1788" column="51" lean-forward="true" selection-start-line="1788" selection-start-column="51" selection-end-line="1788" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/HitsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="30" column="1" selection-start-line="30" selection-start-column="1" selection-end-line="30" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/TeamsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/ScoresController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="25" column="25" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/FlagsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/parser.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="18" column="36" selection-start-line="18" selection-start-column="36" selection-end-line="18" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/GamesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="36" column="30" selection-start-line="36" selection-start-column="30" selection-end-line="36" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/log2.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/vs.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/css/vendors.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-24190" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/ranking.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="7" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Weapons.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/WeaponsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="33" column="63" lean-forward="true" selection-start-line="33" selection-start-column="63" selection-end-line="33" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/weapon.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/footer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="7" lean-forward="true" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/GametypesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="29" lean-forward="true" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/PlayersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="11" column="27" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Games.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/GamesQuery.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Gametypes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="56" column="31" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Frags.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/js/vendors.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1567">
+          <caret line="23" column="41810" selection-start-line="23" selection-start-column="41810" selection-end-line="23" selection-end-column="41810" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/player.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="22" lean-forward="true" selection-end-line="23" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/header.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="39" selection-start-line="29" selection-start-column="39" selection-end-line="29" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/versus.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" column="14" lean-forward="true" selection-start-line="28" selection-start-column="14" selection-end-line="28" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/FragsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="30" column="1" selection-start-line="30" selection-start-column="1" selection-end-line="30" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/schema.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2160">
+          <caret line="144" column="81" selection-start-line="144" selection-start-column="81" selection-end-line="144" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/RoundsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="32" column="75" lean-forward="true" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/Controller.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/BombsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="22" column="9" lean-forward="true" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="199" column="33" lean-forward="true" selection-start-line="199" selection-start-column="33" selection-end-line="199" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Model/Players.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1007">
+          <caret line="145" column="59" selection-start-line="145" selection-start-column="59" selection-end-line="145" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/StatsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1036">
+          <caret line="225" column="5" lean-forward="true" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/home.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="308" column="19" selection-start-line="308" selection-start-column="19" selection-end-line="308" selection-end-column="19" />
+          <folding>
+            <element signature="e#7106#7114#0#HTML" expanded="true" />
+            <element signature="e#7045#7053#0#HTML" expanded="true" />
+            <element signature="e#7054#7062#0#HTML" expanded="true" />
+            <element signature="e#7095#7103#0#HTML" expanded="true" />
+            <element signature="e#9145#9153#0#HTML" expanded="true" />
+            <element signature="e#9186#9194#0#HTML" expanded="true" />
+            <element signature="e#9225#9233#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/partials/player.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
+          <folding>
+            <element signature="e#2076#2084#0#HTML" expanded="true" />
+            <element signature="e#2206#2214#0#HTML" expanded="true" />
+            <element signature="e#2328#2336#0#HTML" expanded="true" />
+            <element signature="e#2332#2340#0#HTML" expanded="true" />
+            <element signature="e#2465#2473#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="316" column="60" selection-start-line="316" selection-start-column="60" selection-end-line="316" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/templates/partials/versus.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="451">
+          <caret line="41" column="66" selection-start-line="41" selection-start-column="66" selection-end-line="41" selection-end-column="66" />
+          <folding>
+            <element signature="e#2407#2413#1#HTML" expanded="true" />
+            <element signature="e#5979#5987#0#HTML" expanded="true" />
+            <element signature="e#6475#6483#0#HTML" expanded="true" />
+            <element signature="e#6955#6963#0#HTML" expanded="true" />
+            <element signature="e#6966#6974#0#HTML" expanded="true" />
+            <element signature="e#7451#7459#0#HTML" expanded="true" />
+            <element signature="e#7880#7888#0#HTML" expanded="true" />
+            <element signature="e#7889#7897#0#HTML" expanded="true" />
+            <element signature="e#7898#7906#0#HTML" expanded="true" />
+            <element signature="e#8244#8252#0#HTML" expanded="true" />
+            <element signature="e#8253#8261#0#HTML" expanded="true" />
+            <element signature="e#8262#8270#0#HTML" expanded="true" />
+            <element signature="e#8611#8619#0#HTML" expanded="true" />
+            <element signature="e#8620#8628#0#HTML" expanded="true" />
+            <element signature="e#8629#8637#0#HTML" expanded="true" />
+            <element signature="e#9404#9412#0#HTML" expanded="true" />
+            <element signature="e#9558#9566#0#HTML" expanded="true" />
+            <element signature="e#9832#9840#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/js/urt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="34" column="39" selection-start-line="34" selection-start-column="39" selection-end-line="34" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
