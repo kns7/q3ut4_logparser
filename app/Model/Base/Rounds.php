@@ -109,6 +109,13 @@ abstract class Rounds implements ActiveRecordInterface
     protected $nbplayers;
 
     /**
+     * The value for the week field.
+     *
+     * @var        string
+     */
+    protected $week;
+
+    /**
      * @var        ChildGametypes
      */
     protected $aGametypes;
@@ -419,6 +426,16 @@ abstract class Rounds implements ActiveRecordInterface
     }
 
     /**
+     * Get the [week] column value.
+     *
+     * @return string
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -543,6 +560,26 @@ abstract class Rounds implements ActiveRecordInterface
     } // setNbplayers()
 
     /**
+     * Set the value of [week] column.
+     *
+     * @param string $v new value
+     * @return $this|\Rounds The current object (for fluent API support)
+     */
+    public function setWeek($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->week !== $v) {
+            $this->week = $v;
+            $this->modifiedColumns[RoundsTableMap::COL_WEEK] = true;
+        }
+
+        return $this;
+    } // setWeek()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -595,6 +632,9 @@ abstract class Rounds implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : RoundsTableMap::translateFieldName('Nbplayers', TableMap::TYPE_PHPNAME, $indexType)];
             $this->nbplayers = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : RoundsTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->week = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -603,7 +643,7 @@ abstract class Rounds implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = RoundsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = RoundsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Rounds'), 0, $e);
@@ -853,6 +893,9 @@ abstract class Rounds implements ActiveRecordInterface
         if ($this->isColumnModified(RoundsTableMap::COL_NBPLAYERS)) {
             $modifiedColumns[':p' . $index++]  = 'nbplayers';
         }
+        if ($this->isColumnModified(RoundsTableMap::COL_WEEK)) {
+            $modifiedColumns[':p' . $index++]  = 'week';
+        }
 
         $sql = sprintf(
             'INSERT INTO rounds (%s) VALUES (%s)',
@@ -881,6 +924,9 @@ abstract class Rounds implements ActiveRecordInterface
                         break;
                     case 'nbplayers':
                         $stmt->bindValue($identifier, $this->nbplayers, PDO::PARAM_INT);
+                        break;
+                    case 'week':
+                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -955,6 +1001,9 @@ abstract class Rounds implements ActiveRecordInterface
             case 5:
                 return $this->getNbplayers();
                 break;
+            case 6:
+                return $this->getWeek();
+                break;
             default:
                 return null;
                 break;
@@ -991,6 +1040,7 @@ abstract class Rounds implements ActiveRecordInterface
             $keys[3] => $this->getBlueScore(),
             $keys[4] => $this->getGametypeId(),
             $keys[5] => $this->getNbplayers(),
+            $keys[6] => $this->getWeek(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1080,6 +1130,9 @@ abstract class Rounds implements ActiveRecordInterface
             case 5:
                 $this->setNbplayers($value);
                 break;
+            case 6:
+                $this->setWeek($value);
+                break;
         } // switch()
 
         return $this;
@@ -1123,6 +1176,9 @@ abstract class Rounds implements ActiveRecordInterface
         }
         if (array_key_exists($keys[5], $arr)) {
             $this->setNbplayers($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setWeek($arr[$keys[6]]);
         }
     }
 
@@ -1182,6 +1238,9 @@ abstract class Rounds implements ActiveRecordInterface
         }
         if ($this->isColumnModified(RoundsTableMap::COL_NBPLAYERS)) {
             $criteria->add(RoundsTableMap::COL_NBPLAYERS, $this->nbplayers);
+        }
+        if ($this->isColumnModified(RoundsTableMap::COL_WEEK)) {
+            $criteria->add(RoundsTableMap::COL_WEEK, $this->week);
         }
 
         return $criteria;
@@ -1275,6 +1334,7 @@ abstract class Rounds implements ActiveRecordInterface
         $copyObj->setBlueScore($this->getBlueScore());
         $copyObj->setGametypeId($this->getGametypeId());
         $copyObj->setNbplayers($this->getNbplayers());
+        $copyObj->setWeek($this->getWeek());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1650,6 +1710,7 @@ abstract class Rounds implements ActiveRecordInterface
         $this->blue_score = null;
         $this->gametype_id = null;
         $this->nbplayers = null;
+        $this->week = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

@@ -59,7 +59,7 @@ class TeamsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class TeamsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the id field
@@ -92,6 +92,11 @@ class TeamsTableMap extends TableMap
     const COL_TEAM = 'teams.team';
 
     /**
+     * the column name for the week field
+     */
+    const COL_WEEK = 'teams.week';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -103,11 +108,11 @@ class TeamsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'RoundId', 'PlayerId', 'Team', ),
-        self::TYPE_CAMELNAME     => array('id', 'roundId', 'playerId', 'team', ),
-        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID, TeamsTableMap::COL_ROUND_ID, TeamsTableMap::COL_PLAYER_ID, TeamsTableMap::COL_TEAM, ),
-        self::TYPE_FIELDNAME     => array('id', 'round_id', 'player_id', 'team', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'RoundId', 'PlayerId', 'Team', 'Week', ),
+        self::TYPE_CAMELNAME     => array('id', 'roundId', 'playerId', 'team', 'week', ),
+        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID, TeamsTableMap::COL_ROUND_ID, TeamsTableMap::COL_PLAYER_ID, TeamsTableMap::COL_TEAM, TeamsTableMap::COL_WEEK, ),
+        self::TYPE_FIELDNAME     => array('id', 'round_id', 'player_id', 'team', 'week', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -117,11 +122,11 @@ class TeamsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'RoundId' => 1, 'PlayerId' => 2, 'Team' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'roundId' => 1, 'playerId' => 2, 'team' => 3, ),
-        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID => 0, TeamsTableMap::COL_ROUND_ID => 1, TeamsTableMap::COL_PLAYER_ID => 2, TeamsTableMap::COL_TEAM => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'round_id' => 1, 'player_id' => 2, 'team' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'RoundId' => 1, 'PlayerId' => 2, 'Team' => 3, 'Week' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'roundId' => 1, 'playerId' => 2, 'team' => 3, 'week' => 4, ),
+        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID => 0, TeamsTableMap::COL_ROUND_ID => 1, TeamsTableMap::COL_PLAYER_ID => 2, TeamsTableMap::COL_TEAM => 3, TeamsTableMap::COL_WEEK => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'round_id' => 1, 'player_id' => 2, 'team' => 3, 'week' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -145,6 +150,7 @@ class TeamsTableMap extends TableMap
         $this->addForeignKey('round_id', 'RoundId', 'INTEGER', 'rounds', 'id', true, null, null);
         $this->addForeignKey('player_id', 'PlayerId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addColumn('team', 'Team', 'VARCHAR', true, 255, null);
+        $this->addColumn('week', 'Week', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -313,11 +319,13 @@ class TeamsTableMap extends TableMap
             $criteria->addSelectColumn(TeamsTableMap::COL_ROUND_ID);
             $criteria->addSelectColumn(TeamsTableMap::COL_PLAYER_ID);
             $criteria->addSelectColumn(TeamsTableMap::COL_TEAM);
+            $criteria->addSelectColumn(TeamsTableMap::COL_WEEK);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.round_id');
             $criteria->addSelectColumn($alias . '.player_id');
             $criteria->addSelectColumn($alias . '.team');
+            $criteria->addSelectColumn($alias . '.week');
         }
     }
 

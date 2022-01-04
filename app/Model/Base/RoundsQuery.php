@@ -26,6 +26,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRoundsQuery orderByBlueScore($order = Criteria::ASC) Order by the blue_score column
  * @method     ChildRoundsQuery orderByGametypeId($order = Criteria::ASC) Order by the gametype_id column
  * @method     ChildRoundsQuery orderByNbplayers($order = Criteria::ASC) Order by the nbplayers column
+ * @method     ChildRoundsQuery orderByWeek($order = Criteria::ASC) Order by the week column
  *
  * @method     ChildRoundsQuery groupById() Group by the id column
  * @method     ChildRoundsQuery groupByWinner() Group by the winner column
@@ -33,6 +34,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRoundsQuery groupByBlueScore() Group by the blue_score column
  * @method     ChildRoundsQuery groupByGametypeId() Group by the gametype_id column
  * @method     ChildRoundsQuery groupByNbplayers() Group by the nbplayers column
+ * @method     ChildRoundsQuery groupByWeek() Group by the week column
  *
  * @method     ChildRoundsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildRoundsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -72,7 +74,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRounds findOneByRedScore(int $red_score) Return the first ChildRounds filtered by the red_score column
  * @method     ChildRounds findOneByBlueScore(int $blue_score) Return the first ChildRounds filtered by the blue_score column
  * @method     ChildRounds findOneByGametypeId(int $gametype_id) Return the first ChildRounds filtered by the gametype_id column
- * @method     ChildRounds findOneByNbplayers(int $nbplayers) Return the first ChildRounds filtered by the nbplayers column *
+ * @method     ChildRounds findOneByNbplayers(int $nbplayers) Return the first ChildRounds filtered by the nbplayers column
+ * @method     ChildRounds findOneByWeek(string $week) Return the first ChildRounds filtered by the week column *
 
  * @method     ChildRounds requirePk($key, ConnectionInterface $con = null) Return the ChildRounds by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRounds requireOne(ConnectionInterface $con = null) Return the first ChildRounds matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -83,6 +86,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRounds requireOneByBlueScore(int $blue_score) Return the first ChildRounds filtered by the blue_score column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRounds requireOneByGametypeId(int $gametype_id) Return the first ChildRounds filtered by the gametype_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRounds requireOneByNbplayers(int $nbplayers) Return the first ChildRounds filtered by the nbplayers column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRounds requireOneByWeek(string $week) Return the first ChildRounds filtered by the week column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildRounds[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildRounds objects based on current ModelCriteria
  * @method     ChildRounds[]|ObjectCollection findById(int $id) Return ChildRounds objects filtered by the id column
@@ -91,6 +95,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRounds[]|ObjectCollection findByBlueScore(int $blue_score) Return ChildRounds objects filtered by the blue_score column
  * @method     ChildRounds[]|ObjectCollection findByGametypeId(int $gametype_id) Return ChildRounds objects filtered by the gametype_id column
  * @method     ChildRounds[]|ObjectCollection findByNbplayers(int $nbplayers) Return ChildRounds objects filtered by the nbplayers column
+ * @method     ChildRounds[]|ObjectCollection findByWeek(string $week) Return ChildRounds objects filtered by the week column
  * @method     ChildRounds[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -189,7 +194,7 @@ abstract class RoundsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, winner, red_score, blue_score, gametype_id, nbplayers FROM rounds WHERE id = :p0';
+        $sql = 'SELECT id, winner, red_score, blue_score, gametype_id, nbplayers, week FROM rounds WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -509,6 +514,31 @@ abstract class RoundsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(RoundsTableMap::COL_NBPLAYERS, $nbplayers, $comparison);
+    }
+
+    /**
+     * Filter the query on the week column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWeek('fooValue');   // WHERE week = 'fooValue'
+     * $query->filterByWeek('%fooValue%', Criteria::LIKE); // WHERE week LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $week The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildRoundsQuery The current query, for fluid interface
+     */
+    public function filterByWeek($week = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($week)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(RoundsTableMap::COL_WEEK, $week, $comparison);
     }
 
     /**

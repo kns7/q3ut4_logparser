@@ -59,7 +59,7 @@ class HitsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class HitsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the id field
@@ -92,6 +92,11 @@ class HitsTableMap extends TableMap
     const COL_BODYPART_ID = 'hits.bodypart_id';
 
     /**
+     * the column name for the week field
+     */
+    const COL_WEEK = 'hits.week';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -103,11 +108,11 @@ class HitsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'HitterId', 'HittedId', 'BodypartId', ),
-        self::TYPE_CAMELNAME     => array('id', 'hitterId', 'hittedId', 'bodypartId', ),
-        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID, HitsTableMap::COL_HITTER_ID, HitsTableMap::COL_HITTED_ID, HitsTableMap::COL_BODYPART_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'hitter_id', 'hitted_id', 'bodypart_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'HitterId', 'HittedId', 'BodypartId', 'Week', ),
+        self::TYPE_CAMELNAME     => array('id', 'hitterId', 'hittedId', 'bodypartId', 'week', ),
+        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID, HitsTableMap::COL_HITTER_ID, HitsTableMap::COL_HITTED_ID, HitsTableMap::COL_BODYPART_ID, HitsTableMap::COL_WEEK, ),
+        self::TYPE_FIELDNAME     => array('id', 'hitter_id', 'hitted_id', 'bodypart_id', 'week', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -117,11 +122,11 @@ class HitsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'HitterId' => 1, 'HittedId' => 2, 'BodypartId' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'hitterId' => 1, 'hittedId' => 2, 'bodypartId' => 3, ),
-        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID => 0, HitsTableMap::COL_HITTER_ID => 1, HitsTableMap::COL_HITTED_ID => 2, HitsTableMap::COL_BODYPART_ID => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'hitter_id' => 1, 'hitted_id' => 2, 'bodypart_id' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'HitterId' => 1, 'HittedId' => 2, 'BodypartId' => 3, 'Week' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'hitterId' => 1, 'hittedId' => 2, 'bodypartId' => 3, 'week' => 4, ),
+        self::TYPE_COLNAME       => array(HitsTableMap::COL_ID => 0, HitsTableMap::COL_HITTER_ID => 1, HitsTableMap::COL_HITTED_ID => 2, HitsTableMap::COL_BODYPART_ID => 3, HitsTableMap::COL_WEEK => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'hitter_id' => 1, 'hitted_id' => 2, 'bodypart_id' => 3, 'week' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -145,6 +150,7 @@ class HitsTableMap extends TableMap
         $this->addForeignKey('hitter_id', 'HitterId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addForeignKey('hitted_id', 'HittedId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addForeignKey('bodypart_id', 'BodypartId', 'INTEGER', 'bodyparts', 'id', true, null, null);
+        $this->addColumn('week', 'Week', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -320,11 +326,13 @@ class HitsTableMap extends TableMap
             $criteria->addSelectColumn(HitsTableMap::COL_HITTER_ID);
             $criteria->addSelectColumn(HitsTableMap::COL_HITTED_ID);
             $criteria->addSelectColumn(HitsTableMap::COL_BODYPART_ID);
+            $criteria->addSelectColumn(HitsTableMap::COL_WEEK);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.hitter_id');
             $criteria->addSelectColumn($alias . '.hitted_id');
             $criteria->addSelectColumn($alias . '.bodypart_id');
+            $criteria->addSelectColumn($alias . '.week');
         }
     }
 

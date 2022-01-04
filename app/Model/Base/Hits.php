@@ -92,6 +92,13 @@ abstract class Hits implements ActiveRecordInterface
     protected $bodypart_id;
 
     /**
+     * The value for the week field.
+     *
+     * @var        string
+     */
+    protected $week;
+
+    /**
      * @var        ChildPlayers
      */
     protected $aHitter;
@@ -380,6 +387,16 @@ abstract class Hits implements ActiveRecordInterface
     }
 
     /**
+     * Get the [week] column value.
+     *
+     * @return string
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -472,6 +489,26 @@ abstract class Hits implements ActiveRecordInterface
     } // setBodypartId()
 
     /**
+     * Set the value of [week] column.
+     *
+     * @param string $v new value
+     * @return $this|\Hits The current object (for fluent API support)
+     */
+    public function setWeek($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->week !== $v) {
+            $this->week = $v;
+            $this->modifiedColumns[HitsTableMap::COL_WEEK] = true;
+        }
+
+        return $this;
+    } // setWeek()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -518,6 +555,9 @@ abstract class Hits implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : HitsTableMap::translateFieldName('BodypartId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->bodypart_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : HitsTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->week = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -526,7 +566,7 @@ abstract class Hits implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = HitsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = HitsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Hits'), 0, $e);
@@ -777,6 +817,9 @@ abstract class Hits implements ActiveRecordInterface
         if ($this->isColumnModified(HitsTableMap::COL_BODYPART_ID)) {
             $modifiedColumns[':p' . $index++]  = 'bodypart_id';
         }
+        if ($this->isColumnModified(HitsTableMap::COL_WEEK)) {
+            $modifiedColumns[':p' . $index++]  = 'week';
+        }
 
         $sql = sprintf(
             'INSERT INTO hits (%s) VALUES (%s)',
@@ -799,6 +842,9 @@ abstract class Hits implements ActiveRecordInterface
                         break;
                     case 'bodypart_id':
                         $stmt->bindValue($identifier, $this->bodypart_id, PDO::PARAM_INT);
+                        break;
+                    case 'week':
+                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -874,6 +920,9 @@ abstract class Hits implements ActiveRecordInterface
             case 3:
                 return $this->getBodypartId();
                 break;
+            case 4:
+                return $this->getWeek();
+                break;
             default:
                 return null;
                 break;
@@ -908,6 +957,7 @@ abstract class Hits implements ActiveRecordInterface
             $keys[1] => $this->getHitterId(),
             $keys[2] => $this->getHittedId(),
             $keys[3] => $this->getBodypartId(),
+            $keys[4] => $this->getWeek(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1006,6 +1056,9 @@ abstract class Hits implements ActiveRecordInterface
             case 3:
                 $this->setBodypartId($value);
                 break;
+            case 4:
+                $this->setWeek($value);
+                break;
         } // switch()
 
         return $this;
@@ -1043,6 +1096,9 @@ abstract class Hits implements ActiveRecordInterface
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setBodypartId($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setWeek($arr[$keys[4]]);
         }
     }
 
@@ -1096,6 +1152,9 @@ abstract class Hits implements ActiveRecordInterface
         }
         if ($this->isColumnModified(HitsTableMap::COL_BODYPART_ID)) {
             $criteria->add(HitsTableMap::COL_BODYPART_ID, $this->bodypart_id);
+        }
+        if ($this->isColumnModified(HitsTableMap::COL_WEEK)) {
+            $criteria->add(HitsTableMap::COL_WEEK, $this->week);
         }
 
         return $criteria;
@@ -1186,6 +1245,7 @@ abstract class Hits implements ActiveRecordInterface
         $copyObj->setHitterId($this->getHitterId());
         $copyObj->setHittedId($this->getHittedId());
         $copyObj->setBodypartId($this->getBodypartId());
+        $copyObj->setWeek($this->getWeek());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1387,6 +1447,7 @@ abstract class Hits implements ActiveRecordInterface
         $this->hitter_id = null;
         $this->hitted_id = null;
         $this->bodypart_id = null;
+        $this->week = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

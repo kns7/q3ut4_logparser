@@ -59,7 +59,7 @@ class FlagsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class FlagsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
@@ -87,6 +87,11 @@ class FlagsTableMap extends TableMap
     const COL_EVENT = 'flags.event';
 
     /**
+     * the column name for the week field
+     */
+    const COL_WEEK = 'flags.week';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -98,11 +103,11 @@ class FlagsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Event', ),
-        self::TYPE_CAMELNAME     => array('id', 'playerId', 'event', ),
-        self::TYPE_COLNAME       => array(FlagsTableMap::COL_ID, FlagsTableMap::COL_PLAYER_ID, FlagsTableMap::COL_EVENT, ),
-        self::TYPE_FIELDNAME     => array('id', 'player_id', 'event', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Event', 'Week', ),
+        self::TYPE_CAMELNAME     => array('id', 'playerId', 'event', 'week', ),
+        self::TYPE_COLNAME       => array(FlagsTableMap::COL_ID, FlagsTableMap::COL_PLAYER_ID, FlagsTableMap::COL_EVENT, FlagsTableMap::COL_WEEK, ),
+        self::TYPE_FIELDNAME     => array('id', 'player_id', 'event', 'week', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -112,11 +117,11 @@ class FlagsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Event' => 2, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'event' => 2, ),
-        self::TYPE_COLNAME       => array(FlagsTableMap::COL_ID => 0, FlagsTableMap::COL_PLAYER_ID => 1, FlagsTableMap::COL_EVENT => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'event' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Event' => 2, 'Week' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'event' => 2, 'week' => 3, ),
+        self::TYPE_COLNAME       => array(FlagsTableMap::COL_ID => 0, FlagsTableMap::COL_PLAYER_ID => 1, FlagsTableMap::COL_EVENT => 2, FlagsTableMap::COL_WEEK => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'event' => 2, 'week' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -138,7 +143,8 @@ class FlagsTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('player_id', 'PlayerId', 'INTEGER', 'players', 'id', true, null, null);
-        $this->addColumn('event', 'Event', 'VARCHAR', false, 255, null);
+        $this->addColumn('event', 'Event', 'VARCHAR', true, 255, null);
+        $this->addColumn('week', 'Week', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -299,10 +305,12 @@ class FlagsTableMap extends TableMap
             $criteria->addSelectColumn(FlagsTableMap::COL_ID);
             $criteria->addSelectColumn(FlagsTableMap::COL_PLAYER_ID);
             $criteria->addSelectColumn(FlagsTableMap::COL_EVENT);
+            $criteria->addSelectColumn(FlagsTableMap::COL_WEEK);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.player_id');
             $criteria->addSelectColumn($alias . '.event');
+            $criteria->addSelectColumn($alias . '.week');
         }
     }
 

@@ -24,11 +24,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFragsQuery orderByFraggerId($order = Criteria::ASC) Order by the fragger_id column
  * @method     ChildFragsQuery orderByFraggedId($order = Criteria::ASC) Order by the fragged_id column
  * @method     ChildFragsQuery orderByWeaponId($order = Criteria::ASC) Order by the weapon_id column
+ * @method     ChildFragsQuery orderByWeek($order = Criteria::ASC) Order by the week column
  *
  * @method     ChildFragsQuery groupById() Group by the id column
  * @method     ChildFragsQuery groupByFraggerId() Group by the fragger_id column
  * @method     ChildFragsQuery groupByFraggedId() Group by the fragged_id column
  * @method     ChildFragsQuery groupByWeaponId() Group by the weapon_id column
+ * @method     ChildFragsQuery groupByWeek() Group by the week column
  *
  * @method     ChildFragsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildFragsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -76,7 +78,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFrags findOneById(int $id) Return the first ChildFrags filtered by the id column
  * @method     ChildFrags findOneByFraggerId(int $fragger_id) Return the first ChildFrags filtered by the fragger_id column
  * @method     ChildFrags findOneByFraggedId(int $fragged_id) Return the first ChildFrags filtered by the fragged_id column
- * @method     ChildFrags findOneByWeaponId(int $weapon_id) Return the first ChildFrags filtered by the weapon_id column *
+ * @method     ChildFrags findOneByWeaponId(int $weapon_id) Return the first ChildFrags filtered by the weapon_id column
+ * @method     ChildFrags findOneByWeek(string $week) Return the first ChildFrags filtered by the week column *
 
  * @method     ChildFrags requirePk($key, ConnectionInterface $con = null) Return the ChildFrags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFrags requireOne(ConnectionInterface $con = null) Return the first ChildFrags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -85,12 +88,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFrags requireOneByFraggerId(int $fragger_id) Return the first ChildFrags filtered by the fragger_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFrags requireOneByFraggedId(int $fragged_id) Return the first ChildFrags filtered by the fragged_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFrags requireOneByWeaponId(int $weapon_id) Return the first ChildFrags filtered by the weapon_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildFrags requireOneByWeek(string $week) Return the first ChildFrags filtered by the week column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildFrags[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildFrags objects based on current ModelCriteria
  * @method     ChildFrags[]|ObjectCollection findById(int $id) Return ChildFrags objects filtered by the id column
  * @method     ChildFrags[]|ObjectCollection findByFraggerId(int $fragger_id) Return ChildFrags objects filtered by the fragger_id column
  * @method     ChildFrags[]|ObjectCollection findByFraggedId(int $fragged_id) Return ChildFrags objects filtered by the fragged_id column
  * @method     ChildFrags[]|ObjectCollection findByWeaponId(int $weapon_id) Return ChildFrags objects filtered by the weapon_id column
+ * @method     ChildFrags[]|ObjectCollection findByWeek(string $week) Return ChildFrags objects filtered by the week column
  * @method     ChildFrags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -189,7 +194,7 @@ abstract class FragsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, fragger_id, fragged_id, weapon_id FROM frags WHERE id = :p0';
+        $sql = 'SELECT id, fragger_id, fragged_id, weapon_id, week FROM frags WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -447,6 +452,31 @@ abstract class FragsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(FragsTableMap::COL_WEAPON_ID, $weaponId, $comparison);
+    }
+
+    /**
+     * Filter the query on the week column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWeek('fooValue');   // WHERE week = 'fooValue'
+     * $query->filterByWeek('%fooValue%', Criteria::LIKE); // WHERE week LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $week The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildFragsQuery The current query, for fluid interface
+     */
+    public function filterByWeek($week = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($week)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(FragsTableMap::COL_WEEK, $week, $comparison);
     }
 
     /**

@@ -83,6 +83,13 @@ abstract class Flags implements ActiveRecordInterface
     protected $event;
 
     /**
+     * The value for the week field.
+     *
+     * @var        string
+     */
+    protected $week;
+
+    /**
      * @var        ChildPlayers
      */
     protected $aPlayers;
@@ -351,6 +358,16 @@ abstract class Flags implements ActiveRecordInterface
     }
 
     /**
+     * Get the [week] column value.
+     *
+     * @return string
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -415,6 +432,26 @@ abstract class Flags implements ActiveRecordInterface
     } // setEvent()
 
     /**
+     * Set the value of [week] column.
+     *
+     * @param string $v new value
+     * @return $this|\Flags The current object (for fluent API support)
+     */
+    public function setWeek($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->week !== $v) {
+            $this->week = $v;
+            $this->modifiedColumns[FlagsTableMap::COL_WEEK] = true;
+        }
+
+        return $this;
+    } // setWeek()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -458,6 +495,9 @@ abstract class Flags implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : FlagsTableMap::translateFieldName('Event', TableMap::TYPE_PHPNAME, $indexType)];
             $this->event = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : FlagsTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->week = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -466,7 +506,7 @@ abstract class Flags implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = FlagsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = FlagsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Flags'), 0, $e);
@@ -692,6 +732,9 @@ abstract class Flags implements ActiveRecordInterface
         if ($this->isColumnModified(FlagsTableMap::COL_EVENT)) {
             $modifiedColumns[':p' . $index++]  = 'event';
         }
+        if ($this->isColumnModified(FlagsTableMap::COL_WEEK)) {
+            $modifiedColumns[':p' . $index++]  = 'week';
+        }
 
         $sql = sprintf(
             'INSERT INTO flags (%s) VALUES (%s)',
@@ -711,6 +754,9 @@ abstract class Flags implements ActiveRecordInterface
                         break;
                     case 'event':
                         $stmt->bindValue($identifier, $this->event, PDO::PARAM_STR);
+                        break;
+                    case 'week':
+                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -783,6 +829,9 @@ abstract class Flags implements ActiveRecordInterface
             case 2:
                 return $this->getEvent();
                 break;
+            case 3:
+                return $this->getWeek();
+                break;
             default:
                 return null;
                 break;
@@ -816,6 +865,7 @@ abstract class Flags implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPlayerId(),
             $keys[2] => $this->getEvent(),
+            $keys[3] => $this->getWeek(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -881,6 +931,9 @@ abstract class Flags implements ActiveRecordInterface
             case 2:
                 $this->setEvent($value);
                 break;
+            case 3:
+                $this->setWeek($value);
+                break;
         } // switch()
 
         return $this;
@@ -915,6 +968,9 @@ abstract class Flags implements ActiveRecordInterface
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setEvent($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setWeek($arr[$keys[3]]);
         }
     }
 
@@ -965,6 +1021,9 @@ abstract class Flags implements ActiveRecordInterface
         }
         if ($this->isColumnModified(FlagsTableMap::COL_EVENT)) {
             $criteria->add(FlagsTableMap::COL_EVENT, $this->event);
+        }
+        if ($this->isColumnModified(FlagsTableMap::COL_WEEK)) {
+            $criteria->add(FlagsTableMap::COL_WEEK, $this->week);
         }
 
         return $criteria;
@@ -1054,6 +1113,7 @@ abstract class Flags implements ActiveRecordInterface
     {
         $copyObj->setPlayerId($this->getPlayerId());
         $copyObj->setEvent($this->getEvent());
+        $copyObj->setWeek($this->getWeek());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1146,6 +1206,7 @@ abstract class Flags implements ActiveRecordInterface
         $this->id = null;
         $this->player_id = null;
         $this->event = null;
+        $this->week = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

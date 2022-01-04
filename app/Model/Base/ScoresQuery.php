@@ -23,10 +23,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildScoresQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildScoresQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
  * @method     ChildScoresQuery orderByScore($order = Criteria::ASC) Order by the score column
+ * @method     ChildScoresQuery orderByWeek($order = Criteria::ASC) Order by the week column
  *
  * @method     ChildScoresQuery groupById() Group by the id column
  * @method     ChildScoresQuery groupByPlayerId() Group by the player_id column
  * @method     ChildScoresQuery groupByScore() Group by the score column
+ * @method     ChildScoresQuery groupByWeek() Group by the week column
  *
  * @method     ChildScoresQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildScoresQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,7 +55,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildScores findOneById(int $id) Return the first ChildScores filtered by the id column
  * @method     ChildScores findOneByPlayerId(int $player_id) Return the first ChildScores filtered by the player_id column
- * @method     ChildScores findOneByScore(int $score) Return the first ChildScores filtered by the score column *
+ * @method     ChildScores findOneByScore(int $score) Return the first ChildScores filtered by the score column
+ * @method     ChildScores findOneByWeek(string $week) Return the first ChildScores filtered by the week column *
 
  * @method     ChildScores requirePk($key, ConnectionInterface $con = null) Return the ChildScores by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildScores requireOne(ConnectionInterface $con = null) Return the first ChildScores matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -61,11 +64,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildScores requireOneById(int $id) Return the first ChildScores filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildScores requireOneByPlayerId(int $player_id) Return the first ChildScores filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildScores requireOneByScore(int $score) Return the first ChildScores filtered by the score column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildScores requireOneByWeek(string $week) Return the first ChildScores filtered by the week column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildScores[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildScores objects based on current ModelCriteria
  * @method     ChildScores[]|ObjectCollection findById(int $id) Return ChildScores objects filtered by the id column
  * @method     ChildScores[]|ObjectCollection findByPlayerId(int $player_id) Return ChildScores objects filtered by the player_id column
  * @method     ChildScores[]|ObjectCollection findByScore(int $score) Return ChildScores objects filtered by the score column
+ * @method     ChildScores[]|ObjectCollection findByWeek(string $week) Return ChildScores objects filtered by the week column
  * @method     ChildScores[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -164,7 +169,7 @@ abstract class ScoresQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, player_id, score FROM scores WHERE id = :p0';
+        $sql = 'SELECT id, player_id, score, week FROM scores WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -377,6 +382,31 @@ abstract class ScoresQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ScoresTableMap::COL_SCORE, $score, $comparison);
+    }
+
+    /**
+     * Filter the query on the week column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWeek('fooValue');   // WHERE week = 'fooValue'
+     * $query->filterByWeek('%fooValue%', Criteria::LIKE); // WHERE week LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $week The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildScoresQuery The current query, for fluid interface
+     */
+    public function filterByWeek($week = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($week)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ScoresTableMap::COL_WEEK, $week, $comparison);
     }
 
     /**

@@ -90,6 +90,13 @@ abstract class Games implements ActiveRecordInterface
     protected $stop;
 
     /**
+     * The value for the week field.
+     *
+     * @var        string
+     */
+    protected $week;
+
+    /**
      * @var        ChildPlayers
      */
     protected $aPlayers;
@@ -368,6 +375,16 @@ abstract class Games implements ActiveRecordInterface
     }
 
     /**
+     * Get the [week] column value.
+     *
+     * @return string
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -452,6 +469,26 @@ abstract class Games implements ActiveRecordInterface
     } // setStop()
 
     /**
+     * Set the value of [week] column.
+     *
+     * @param string $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setWeek($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->week !== $v) {
+            $this->week = $v;
+            $this->modifiedColumns[GamesTableMap::COL_WEEK] = true;
+        }
+
+        return $this;
+    } // setWeek()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -498,6 +535,9 @@ abstract class Games implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GamesTableMap::translateFieldName('Stop', TableMap::TYPE_PHPNAME, $indexType)];
             $this->stop = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GamesTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->week = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -506,7 +546,7 @@ abstract class Games implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = GamesTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = GamesTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Games'), 0, $e);
@@ -731,6 +771,9 @@ abstract class Games implements ActiveRecordInterface
         if ($this->isColumnModified(GamesTableMap::COL_STOP)) {
             $modifiedColumns[':p' . $index++]  = 'stop';
         }
+        if ($this->isColumnModified(GamesTableMap::COL_WEEK)) {
+            $modifiedColumns[':p' . $index++]  = 'week';
+        }
 
         $sql = sprintf(
             'INSERT INTO games (%s) VALUES (%s)',
@@ -753,6 +796,9 @@ abstract class Games implements ActiveRecordInterface
                         break;
                     case 'stop':
                         $stmt->bindValue($identifier, $this->stop, PDO::PARAM_INT);
+                        break;
+                    case 'week':
+                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -821,6 +867,9 @@ abstract class Games implements ActiveRecordInterface
             case 3:
                 return $this->getStop();
                 break;
+            case 4:
+                return $this->getWeek();
+                break;
             default:
                 return null;
                 break;
@@ -855,6 +904,7 @@ abstract class Games implements ActiveRecordInterface
             $keys[1] => $this->getPlayerId(),
             $keys[2] => $this->getStart(),
             $keys[3] => $this->getStop(),
+            $keys[4] => $this->getWeek(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -923,6 +973,9 @@ abstract class Games implements ActiveRecordInterface
             case 3:
                 $this->setStop($value);
                 break;
+            case 4:
+                $this->setWeek($value);
+                break;
         } // switch()
 
         return $this;
@@ -960,6 +1013,9 @@ abstract class Games implements ActiveRecordInterface
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setStop($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setWeek($arr[$keys[4]]);
         }
     }
 
@@ -1013,6 +1069,9 @@ abstract class Games implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GamesTableMap::COL_STOP)) {
             $criteria->add(GamesTableMap::COL_STOP, $this->stop);
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_WEEK)) {
+            $criteria->add(GamesTableMap::COL_WEEK, $this->week);
         }
 
         return $criteria;
@@ -1104,6 +1163,7 @@ abstract class Games implements ActiveRecordInterface
         $copyObj->setPlayerId($this->getPlayerId());
         $copyObj->setStart($this->getStart());
         $copyObj->setStop($this->getStop());
+        $copyObj->setWeek($this->getWeek());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1196,6 +1256,7 @@ abstract class Games implements ActiveRecordInterface
         $this->player_id = null;
         $this->start = null;
         $this->stop = null;
+        $this->week = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

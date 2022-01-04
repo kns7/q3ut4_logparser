@@ -83,6 +83,13 @@ abstract class Scores implements ActiveRecordInterface
     protected $score;
 
     /**
+     * The value for the week field.
+     *
+     * @var        string
+     */
+    protected $week;
+
+    /**
      * @var        ChildPlayers
      */
     protected $aPlayers;
@@ -351,6 +358,16 @@ abstract class Scores implements ActiveRecordInterface
     }
 
     /**
+     * Get the [week] column value.
+     *
+     * @return string
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -415,6 +432,26 @@ abstract class Scores implements ActiveRecordInterface
     } // setScore()
 
     /**
+     * Set the value of [week] column.
+     *
+     * @param string $v new value
+     * @return $this|\Scores The current object (for fluent API support)
+     */
+    public function setWeek($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->week !== $v) {
+            $this->week = $v;
+            $this->modifiedColumns[ScoresTableMap::COL_WEEK] = true;
+        }
+
+        return $this;
+    } // setWeek()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -458,6 +495,9 @@ abstract class Scores implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ScoresTableMap::translateFieldName('Score', TableMap::TYPE_PHPNAME, $indexType)];
             $this->score = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ScoresTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->week = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -466,7 +506,7 @@ abstract class Scores implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = ScoresTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = ScoresTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Scores'), 0, $e);
@@ -692,6 +732,9 @@ abstract class Scores implements ActiveRecordInterface
         if ($this->isColumnModified(ScoresTableMap::COL_SCORE)) {
             $modifiedColumns[':p' . $index++]  = 'score';
         }
+        if ($this->isColumnModified(ScoresTableMap::COL_WEEK)) {
+            $modifiedColumns[':p' . $index++]  = 'week';
+        }
 
         $sql = sprintf(
             'INSERT INTO scores (%s) VALUES (%s)',
@@ -711,6 +754,9 @@ abstract class Scores implements ActiveRecordInterface
                         break;
                     case 'score':
                         $stmt->bindValue($identifier, $this->score, PDO::PARAM_INT);
+                        break;
+                    case 'week':
+                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -783,6 +829,9 @@ abstract class Scores implements ActiveRecordInterface
             case 2:
                 return $this->getScore();
                 break;
+            case 3:
+                return $this->getWeek();
+                break;
             default:
                 return null;
                 break;
@@ -816,6 +865,7 @@ abstract class Scores implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPlayerId(),
             $keys[2] => $this->getScore(),
+            $keys[3] => $this->getWeek(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -881,6 +931,9 @@ abstract class Scores implements ActiveRecordInterface
             case 2:
                 $this->setScore($value);
                 break;
+            case 3:
+                $this->setWeek($value);
+                break;
         } // switch()
 
         return $this;
@@ -915,6 +968,9 @@ abstract class Scores implements ActiveRecordInterface
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setScore($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setWeek($arr[$keys[3]]);
         }
     }
 
@@ -965,6 +1021,9 @@ abstract class Scores implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ScoresTableMap::COL_SCORE)) {
             $criteria->add(ScoresTableMap::COL_SCORE, $this->score);
+        }
+        if ($this->isColumnModified(ScoresTableMap::COL_WEEK)) {
+            $criteria->add(ScoresTableMap::COL_WEEK, $this->week);
         }
 
         return $criteria;
@@ -1054,6 +1113,7 @@ abstract class Scores implements ActiveRecordInterface
     {
         $copyObj->setPlayerId($this->getPlayerId());
         $copyObj->setScore($this->getScore());
+        $copyObj->setWeek($this->getWeek());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1146,6 +1206,7 @@ abstract class Scores implements ActiveRecordInterface
         $this->id = null;
         $this->player_id = null;
         $this->score = null;
+        $this->week = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

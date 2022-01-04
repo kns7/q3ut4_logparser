@@ -92,6 +92,13 @@ abstract class Frags implements ActiveRecordInterface
     protected $weapon_id;
 
     /**
+     * The value for the week field.
+     *
+     * @var        string
+     */
+    protected $week;
+
+    /**
      * @var        ChildPlayers
      */
     protected $aFragger;
@@ -380,6 +387,16 @@ abstract class Frags implements ActiveRecordInterface
     }
 
     /**
+     * Get the [week] column value.
+     *
+     * @return string
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -472,6 +489,26 @@ abstract class Frags implements ActiveRecordInterface
     } // setWeaponId()
 
     /**
+     * Set the value of [week] column.
+     *
+     * @param string $v new value
+     * @return $this|\Frags The current object (for fluent API support)
+     */
+    public function setWeek($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->week !== $v) {
+            $this->week = $v;
+            $this->modifiedColumns[FragsTableMap::COL_WEEK] = true;
+        }
+
+        return $this;
+    } // setWeek()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -518,6 +555,9 @@ abstract class Frags implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : FragsTableMap::translateFieldName('WeaponId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->weapon_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : FragsTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->week = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -526,7 +566,7 @@ abstract class Frags implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = FragsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = FragsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Frags'), 0, $e);
@@ -777,6 +817,9 @@ abstract class Frags implements ActiveRecordInterface
         if ($this->isColumnModified(FragsTableMap::COL_WEAPON_ID)) {
             $modifiedColumns[':p' . $index++]  = 'weapon_id';
         }
+        if ($this->isColumnModified(FragsTableMap::COL_WEEK)) {
+            $modifiedColumns[':p' . $index++]  = 'week';
+        }
 
         $sql = sprintf(
             'INSERT INTO frags (%s) VALUES (%s)',
@@ -799,6 +842,9 @@ abstract class Frags implements ActiveRecordInterface
                         break;
                     case 'weapon_id':
                         $stmt->bindValue($identifier, $this->weapon_id, PDO::PARAM_INT);
+                        break;
+                    case 'week':
+                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -874,6 +920,9 @@ abstract class Frags implements ActiveRecordInterface
             case 3:
                 return $this->getWeaponId();
                 break;
+            case 4:
+                return $this->getWeek();
+                break;
             default:
                 return null;
                 break;
@@ -908,6 +957,7 @@ abstract class Frags implements ActiveRecordInterface
             $keys[1] => $this->getFraggerId(),
             $keys[2] => $this->getFraggedId(),
             $keys[3] => $this->getWeaponId(),
+            $keys[4] => $this->getWeek(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1006,6 +1056,9 @@ abstract class Frags implements ActiveRecordInterface
             case 3:
                 $this->setWeaponId($value);
                 break;
+            case 4:
+                $this->setWeek($value);
+                break;
         } // switch()
 
         return $this;
@@ -1043,6 +1096,9 @@ abstract class Frags implements ActiveRecordInterface
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setWeaponId($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setWeek($arr[$keys[4]]);
         }
     }
 
@@ -1096,6 +1152,9 @@ abstract class Frags implements ActiveRecordInterface
         }
         if ($this->isColumnModified(FragsTableMap::COL_WEAPON_ID)) {
             $criteria->add(FragsTableMap::COL_WEAPON_ID, $this->weapon_id);
+        }
+        if ($this->isColumnModified(FragsTableMap::COL_WEEK)) {
+            $criteria->add(FragsTableMap::COL_WEEK, $this->week);
         }
 
         return $criteria;
@@ -1186,6 +1245,7 @@ abstract class Frags implements ActiveRecordInterface
         $copyObj->setFraggerId($this->getFraggerId());
         $copyObj->setFraggedId($this->getFraggedId());
         $copyObj->setWeaponId($this->getWeaponId());
+        $copyObj->setWeek($this->getWeek());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1387,6 +1447,7 @@ abstract class Frags implements ActiveRecordInterface
         $this->fragger_id = null;
         $this->fragged_id = null;
         $this->weapon_id = null;
+        $this->week = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

@@ -59,7 +59,7 @@ class ScoresTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ScoresTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
@@ -87,6 +87,11 @@ class ScoresTableMap extends TableMap
     const COL_SCORE = 'scores.score';
 
     /**
+     * the column name for the week field
+     */
+    const COL_WEEK = 'scores.week';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -98,11 +103,11 @@ class ScoresTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Score', ),
-        self::TYPE_CAMELNAME     => array('id', 'playerId', 'score', ),
-        self::TYPE_COLNAME       => array(ScoresTableMap::COL_ID, ScoresTableMap::COL_PLAYER_ID, ScoresTableMap::COL_SCORE, ),
-        self::TYPE_FIELDNAME     => array('id', 'player_id', 'score', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Score', 'Week', ),
+        self::TYPE_CAMELNAME     => array('id', 'playerId', 'score', 'week', ),
+        self::TYPE_COLNAME       => array(ScoresTableMap::COL_ID, ScoresTableMap::COL_PLAYER_ID, ScoresTableMap::COL_SCORE, ScoresTableMap::COL_WEEK, ),
+        self::TYPE_FIELDNAME     => array('id', 'player_id', 'score', 'week', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -112,11 +117,11 @@ class ScoresTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Score' => 2, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'score' => 2, ),
-        self::TYPE_COLNAME       => array(ScoresTableMap::COL_ID => 0, ScoresTableMap::COL_PLAYER_ID => 1, ScoresTableMap::COL_SCORE => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'score' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Score' => 2, 'Week' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'score' => 2, 'week' => 3, ),
+        self::TYPE_COLNAME       => array(ScoresTableMap::COL_ID => 0, ScoresTableMap::COL_PLAYER_ID => 1, ScoresTableMap::COL_SCORE => 2, ScoresTableMap::COL_WEEK => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'score' => 2, 'week' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -139,6 +144,7 @@ class ScoresTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('player_id', 'PlayerId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addColumn('score', 'Score', 'INTEGER', true, null, null);
+        $this->addColumn('week', 'Week', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -299,10 +305,12 @@ class ScoresTableMap extends TableMap
             $criteria->addSelectColumn(ScoresTableMap::COL_ID);
             $criteria->addSelectColumn(ScoresTableMap::COL_PLAYER_ID);
             $criteria->addSelectColumn(ScoresTableMap::COL_SCORE);
+            $criteria->addSelectColumn(ScoresTableMap::COL_WEEK);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.player_id');
             $criteria->addSelectColumn($alias . '.score');
+            $criteria->addSelectColumn($alias . '.week');
         }
     }
 

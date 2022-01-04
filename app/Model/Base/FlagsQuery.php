@@ -23,10 +23,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFlagsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildFlagsQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
  * @method     ChildFlagsQuery orderByEvent($order = Criteria::ASC) Order by the event column
+ * @method     ChildFlagsQuery orderByWeek($order = Criteria::ASC) Order by the week column
  *
  * @method     ChildFlagsQuery groupById() Group by the id column
  * @method     ChildFlagsQuery groupByPlayerId() Group by the player_id column
  * @method     ChildFlagsQuery groupByEvent() Group by the event column
+ * @method     ChildFlagsQuery groupByWeek() Group by the week column
  *
  * @method     ChildFlagsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildFlagsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,7 +55,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildFlags findOneById(int $id) Return the first ChildFlags filtered by the id column
  * @method     ChildFlags findOneByPlayerId(int $player_id) Return the first ChildFlags filtered by the player_id column
- * @method     ChildFlags findOneByEvent(string $event) Return the first ChildFlags filtered by the event column *
+ * @method     ChildFlags findOneByEvent(string $event) Return the first ChildFlags filtered by the event column
+ * @method     ChildFlags findOneByWeek(string $week) Return the first ChildFlags filtered by the week column *
 
  * @method     ChildFlags requirePk($key, ConnectionInterface $con = null) Return the ChildFlags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFlags requireOne(ConnectionInterface $con = null) Return the first ChildFlags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -61,11 +64,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFlags requireOneById(int $id) Return the first ChildFlags filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFlags requireOneByPlayerId(int $player_id) Return the first ChildFlags filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFlags requireOneByEvent(string $event) Return the first ChildFlags filtered by the event column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildFlags requireOneByWeek(string $week) Return the first ChildFlags filtered by the week column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildFlags[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildFlags objects based on current ModelCriteria
  * @method     ChildFlags[]|ObjectCollection findById(int $id) Return ChildFlags objects filtered by the id column
  * @method     ChildFlags[]|ObjectCollection findByPlayerId(int $player_id) Return ChildFlags objects filtered by the player_id column
  * @method     ChildFlags[]|ObjectCollection findByEvent(string $event) Return ChildFlags objects filtered by the event column
+ * @method     ChildFlags[]|ObjectCollection findByWeek(string $week) Return ChildFlags objects filtered by the week column
  * @method     ChildFlags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -164,7 +169,7 @@ abstract class FlagsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, player_id, event FROM flags WHERE id = :p0';
+        $sql = 'SELECT id, player_id, event, week FROM flags WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -361,6 +366,31 @@ abstract class FlagsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(FlagsTableMap::COL_EVENT, $event, $comparison);
+    }
+
+    /**
+     * Filter the query on the week column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWeek('fooValue');   // WHERE week = 'fooValue'
+     * $query->filterByWeek('%fooValue%', Criteria::LIKE); // WHERE week LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $week The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildFlagsQuery The current query, for fluid interface
+     */
+    public function filterByWeek($week = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($week)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(FlagsTableMap::COL_WEEK, $week, $comparison);
     }
 
     /**

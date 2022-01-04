@@ -24,11 +24,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTeamsQuery orderByRoundId($order = Criteria::ASC) Order by the round_id column
  * @method     ChildTeamsQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
  * @method     ChildTeamsQuery orderByTeam($order = Criteria::ASC) Order by the team column
+ * @method     ChildTeamsQuery orderByWeek($order = Criteria::ASC) Order by the week column
  *
  * @method     ChildTeamsQuery groupById() Group by the id column
  * @method     ChildTeamsQuery groupByRoundId() Group by the round_id column
  * @method     ChildTeamsQuery groupByPlayerId() Group by the player_id column
  * @method     ChildTeamsQuery groupByTeam() Group by the team column
+ * @method     ChildTeamsQuery groupByWeek() Group by the week column
  *
  * @method     ChildTeamsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildTeamsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -66,7 +68,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTeams findOneById(int $id) Return the first ChildTeams filtered by the id column
  * @method     ChildTeams findOneByRoundId(int $round_id) Return the first ChildTeams filtered by the round_id column
  * @method     ChildTeams findOneByPlayerId(int $player_id) Return the first ChildTeams filtered by the player_id column
- * @method     ChildTeams findOneByTeam(string $team) Return the first ChildTeams filtered by the team column *
+ * @method     ChildTeams findOneByTeam(string $team) Return the first ChildTeams filtered by the team column
+ * @method     ChildTeams findOneByWeek(string $week) Return the first ChildTeams filtered by the week column *
 
  * @method     ChildTeams requirePk($key, ConnectionInterface $con = null) Return the ChildTeams by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeams requireOne(ConnectionInterface $con = null) Return the first ChildTeams matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -75,12 +78,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTeams requireOneByRoundId(int $round_id) Return the first ChildTeams filtered by the round_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeams requireOneByPlayerId(int $player_id) Return the first ChildTeams filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeams requireOneByTeam(string $team) Return the first ChildTeams filtered by the team column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTeams requireOneByWeek(string $week) Return the first ChildTeams filtered by the week column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildTeams[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildTeams objects based on current ModelCriteria
  * @method     ChildTeams[]|ObjectCollection findById(int $id) Return ChildTeams objects filtered by the id column
  * @method     ChildTeams[]|ObjectCollection findByRoundId(int $round_id) Return ChildTeams objects filtered by the round_id column
  * @method     ChildTeams[]|ObjectCollection findByPlayerId(int $player_id) Return ChildTeams objects filtered by the player_id column
  * @method     ChildTeams[]|ObjectCollection findByTeam(string $team) Return ChildTeams objects filtered by the team column
+ * @method     ChildTeams[]|ObjectCollection findByWeek(string $week) Return ChildTeams objects filtered by the week column
  * @method     ChildTeams[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -179,7 +184,7 @@ abstract class TeamsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, round_id, player_id, team FROM teams WHERE id = :p0';
+        $sql = 'SELECT id, round_id, player_id, team, week FROM teams WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -419,6 +424,31 @@ abstract class TeamsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(TeamsTableMap::COL_TEAM, $team, $comparison);
+    }
+
+    /**
+     * Filter the query on the week column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWeek('fooValue');   // WHERE week = 'fooValue'
+     * $query->filterByWeek('%fooValue%', Criteria::LIKE); // WHERE week LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $week The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildTeamsQuery The current query, for fluid interface
+     */
+    public function filterByWeek($week = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($week)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(TeamsTableMap::COL_WEEK, $week, $comparison);
     }
 
     /**

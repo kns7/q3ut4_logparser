@@ -92,6 +92,13 @@ abstract class Teams implements ActiveRecordInterface
     protected $team;
 
     /**
+     * The value for the week field.
+     *
+     * @var        string
+     */
+    protected $week;
+
+    /**
      * @var        ChildPlayers
      */
     protected $aPlayers;
@@ -375,6 +382,16 @@ abstract class Teams implements ActiveRecordInterface
     }
 
     /**
+     * Get the [week] column value.
+     *
+     * @return string
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -463,6 +480,26 @@ abstract class Teams implements ActiveRecordInterface
     } // setTeam()
 
     /**
+     * Set the value of [week] column.
+     *
+     * @param string $v new value
+     * @return $this|\Teams The current object (for fluent API support)
+     */
+    public function setWeek($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->week !== $v) {
+            $this->week = $v;
+            $this->modifiedColumns[TeamsTableMap::COL_WEEK] = true;
+        }
+
+        return $this;
+    } // setWeek()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -509,6 +546,9 @@ abstract class Teams implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : TeamsTableMap::translateFieldName('Team', TableMap::TYPE_PHPNAME, $indexType)];
             $this->team = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : TeamsTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->week = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -517,7 +557,7 @@ abstract class Teams implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = TeamsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = TeamsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Teams'), 0, $e);
@@ -757,6 +797,9 @@ abstract class Teams implements ActiveRecordInterface
         if ($this->isColumnModified(TeamsTableMap::COL_TEAM)) {
             $modifiedColumns[':p' . $index++]  = 'team';
         }
+        if ($this->isColumnModified(TeamsTableMap::COL_WEEK)) {
+            $modifiedColumns[':p' . $index++]  = 'week';
+        }
 
         $sql = sprintf(
             'INSERT INTO teams (%s) VALUES (%s)',
@@ -779,6 +822,9 @@ abstract class Teams implements ActiveRecordInterface
                         break;
                     case 'team':
                         $stmt->bindValue($identifier, $this->team, PDO::PARAM_STR);
+                        break;
+                    case 'week':
+                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -854,6 +900,9 @@ abstract class Teams implements ActiveRecordInterface
             case 3:
                 return $this->getTeam();
                 break;
+            case 4:
+                return $this->getWeek();
+                break;
             default:
                 return null;
                 break;
@@ -888,6 +937,7 @@ abstract class Teams implements ActiveRecordInterface
             $keys[1] => $this->getRoundId(),
             $keys[2] => $this->getPlayerId(),
             $keys[3] => $this->getTeam(),
+            $keys[4] => $this->getWeek(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -971,6 +1021,9 @@ abstract class Teams implements ActiveRecordInterface
             case 3:
                 $this->setTeam($value);
                 break;
+            case 4:
+                $this->setWeek($value);
+                break;
         } // switch()
 
         return $this;
@@ -1008,6 +1061,9 @@ abstract class Teams implements ActiveRecordInterface
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setTeam($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setWeek($arr[$keys[4]]);
         }
     }
 
@@ -1061,6 +1117,9 @@ abstract class Teams implements ActiveRecordInterface
         }
         if ($this->isColumnModified(TeamsTableMap::COL_TEAM)) {
             $criteria->add(TeamsTableMap::COL_TEAM, $this->team);
+        }
+        if ($this->isColumnModified(TeamsTableMap::COL_WEEK)) {
+            $criteria->add(TeamsTableMap::COL_WEEK, $this->week);
         }
 
         return $criteria;
@@ -1151,6 +1210,7 @@ abstract class Teams implements ActiveRecordInterface
         $copyObj->setRoundId($this->getRoundId());
         $copyObj->setPlayerId($this->getPlayerId());
         $copyObj->setTeam($this->getTeam());
+        $copyObj->setWeek($this->getWeek());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1298,6 +1358,7 @@ abstract class Teams implements ActiveRecordInterface
         $this->round_id = null;
         $this->player_id = null;
         $this->team = null;
+        $this->week = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

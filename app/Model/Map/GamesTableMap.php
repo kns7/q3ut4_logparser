@@ -59,7 +59,7 @@ class GamesTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class GamesTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the id field
@@ -92,6 +92,11 @@ class GamesTableMap extends TableMap
     const COL_STOP = 'games.stop';
 
     /**
+     * the column name for the week field
+     */
+    const COL_WEEK = 'games.week';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -103,11 +108,11 @@ class GamesTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Start', 'Stop', ),
-        self::TYPE_CAMELNAME     => array('id', 'playerId', 'start', 'stop', ),
-        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID, GamesTableMap::COL_PLAYER_ID, GamesTableMap::COL_START, GamesTableMap::COL_STOP, ),
-        self::TYPE_FIELDNAME     => array('id', 'player_id', 'start', 'stop', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Start', 'Stop', 'Week', ),
+        self::TYPE_CAMELNAME     => array('id', 'playerId', 'start', 'stop', 'week', ),
+        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID, GamesTableMap::COL_PLAYER_ID, GamesTableMap::COL_START, GamesTableMap::COL_STOP, GamesTableMap::COL_WEEK, ),
+        self::TYPE_FIELDNAME     => array('id', 'player_id', 'start', 'stop', 'week', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -117,11 +122,11 @@ class GamesTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Start' => 2, 'Stop' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'start' => 2, 'stop' => 3, ),
-        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID => 0, GamesTableMap::COL_PLAYER_ID => 1, GamesTableMap::COL_START => 2, GamesTableMap::COL_STOP => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'start' => 2, 'stop' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Start' => 2, 'Stop' => 3, 'Week' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'start' => 2, 'stop' => 3, 'week' => 4, ),
+        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID => 0, GamesTableMap::COL_PLAYER_ID => 1, GamesTableMap::COL_START => 2, GamesTableMap::COL_STOP => 3, GamesTableMap::COL_WEEK => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'start' => 2, 'stop' => 3, 'week' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -145,6 +150,7 @@ class GamesTableMap extends TableMap
         $this->addForeignKey('player_id', 'PlayerId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addColumn('start', 'Start', 'INTEGER', true, null, null);
         $this->addColumn('stop', 'Stop', 'INTEGER', true, null, null);
+        $this->addColumn('week', 'Week', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -306,11 +312,13 @@ class GamesTableMap extends TableMap
             $criteria->addSelectColumn(GamesTableMap::COL_PLAYER_ID);
             $criteria->addSelectColumn(GamesTableMap::COL_START);
             $criteria->addSelectColumn(GamesTableMap::COL_STOP);
+            $criteria->addSelectColumn(GamesTableMap::COL_WEEK);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.player_id');
             $criteria->addSelectColumn($alias . '.start');
             $criteria->addSelectColumn($alias . '.stop');
+            $criteria->addSelectColumn($alias . '.week');
         }
     }
 

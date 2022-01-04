@@ -23,10 +23,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBombsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildBombsQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
  * @method     ChildBombsQuery orderByEvent($order = Criteria::ASC) Order by the event column
+ * @method     ChildBombsQuery orderByWeek($order = Criteria::ASC) Order by the week column
  *
  * @method     ChildBombsQuery groupById() Group by the id column
  * @method     ChildBombsQuery groupByPlayerId() Group by the player_id column
  * @method     ChildBombsQuery groupByEvent() Group by the event column
+ * @method     ChildBombsQuery groupByWeek() Group by the week column
  *
  * @method     ChildBombsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildBombsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,7 +55,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildBombs findOneById(int $id) Return the first ChildBombs filtered by the id column
  * @method     ChildBombs findOneByPlayerId(int $player_id) Return the first ChildBombs filtered by the player_id column
- * @method     ChildBombs findOneByEvent(string $event) Return the first ChildBombs filtered by the event column *
+ * @method     ChildBombs findOneByEvent(string $event) Return the first ChildBombs filtered by the event column
+ * @method     ChildBombs findOneByWeek(string $week) Return the first ChildBombs filtered by the week column *
 
  * @method     ChildBombs requirePk($key, ConnectionInterface $con = null) Return the ChildBombs by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBombs requireOne(ConnectionInterface $con = null) Return the first ChildBombs matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -61,11 +64,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBombs requireOneById(int $id) Return the first ChildBombs filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBombs requireOneByPlayerId(int $player_id) Return the first ChildBombs filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBombs requireOneByEvent(string $event) Return the first ChildBombs filtered by the event column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildBombs requireOneByWeek(string $week) Return the first ChildBombs filtered by the week column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildBombs[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildBombs objects based on current ModelCriteria
  * @method     ChildBombs[]|ObjectCollection findById(int $id) Return ChildBombs objects filtered by the id column
  * @method     ChildBombs[]|ObjectCollection findByPlayerId(int $player_id) Return ChildBombs objects filtered by the player_id column
  * @method     ChildBombs[]|ObjectCollection findByEvent(string $event) Return ChildBombs objects filtered by the event column
+ * @method     ChildBombs[]|ObjectCollection findByWeek(string $week) Return ChildBombs objects filtered by the week column
  * @method     ChildBombs[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -164,7 +169,7 @@ abstract class BombsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, player_id, event FROM bombs WHERE id = :p0';
+        $sql = 'SELECT id, player_id, event, week FROM bombs WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -361,6 +366,31 @@ abstract class BombsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(BombsTableMap::COL_EVENT, $event, $comparison);
+    }
+
+    /**
+     * Filter the query on the week column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWeek('fooValue');   // WHERE week = 'fooValue'
+     * $query->filterByWeek('%fooValue%', Criteria::LIKE); // WHERE week LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $week The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildBombsQuery The current query, for fluid interface
+     */
+    public function filterByWeek($week = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($week)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(BombsTableMap::COL_WEEK, $week, $comparison);
     }
 
     /**
