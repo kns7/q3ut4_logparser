@@ -10,6 +10,7 @@ class LogsController extends Controller {
     private $_playerquits = "/^ *([0-9]+):([0-9]+) ClientDisconnect: ([0-9]+)$/i";
     private $_endgame = "/^ *([0-9]+):([0-9]+) ShutdownGame:$/i";
     private $_initround = "/^ *([0-9]+):([0-9]+) (InitRound|InitGame): (.*)$/i";
+    private $_initgame = "/^ *([0-9]+):([0-9]+) InitGame: (.*)$/i";
     private $_item = "/^ *[0-9]+:[0-9]{2} Item: ([0-9]+) (?!<world>)(.*)$/i";
     private $_flag = "/^ *[0-9]+:[0-9]{2} Flag: ([0-9]+) ([0-9]+): (.*)$/i";
     private $_bomb = "/^ *[0-9]+:[0-9]{2} Bomb was (.*) by ([0-9]+)/i";
@@ -28,6 +29,71 @@ class LogsController extends Controller {
     private $_triggerfreegame = false;
     private $_bomber = null;
     private $_gametype = null;
+
+
+    // New Variables
+    private $gamenb = 0;
+    private $roundnb = 0;
+    private $gametype = null;
+    private $players = [];
+    private $teams = [];
+    private $hits = [];
+    private $frags = [];
+
+
+    public function newParser($log)
+    {
+        $time_start = microtime(true);
+        $this->logOutput("Start parsing Logfile ($log)");
+        $handle = fopen($log, "r");
+        $l = 1;
+        if ($handle) {
+            while (($line = fgets($handle)) !== false) {
+
+                /*
+                ---- Init Game ----
+                    - Get Game Type
+                    - Get Map
+                    - Get Game Parameters (Timelimit + Roundtime)
+                    - Create New Game in DB
+                */
+                preg_match($this->_initgame,$line,$matches);
+                if(count($matches) > 0){
+                    $this->gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[4], "g_gametype"));
+                    $timelimit = $this->getValueFromConnectionString($matches[4], "timelimit");
+                    $roundtime = $this->getValueFromConnectionString($matches[4], "roundtime");
+                    $map = $this->app->Ctrl->Maps->getByFile($this->getValueFromConnectionString($matches[4], "mapname"));
+                    $this->app->Ctrl->Games->add();
+                }
+
+
+
+                /*
+                ---- Init Round ----
+                    -
+                */
+                preg_match($this->_initround,$line,$matches);
+                if(count($matches) > 0){
+
+                }
+
+
+                /*
+                ---- End Game ----
+                    -
+                */
+
+
+
+            }
+            $time_end = microtime(true);
+            $this->logOutput("Execution Time: ".gmdate("H:i:s",($time_end - $time_start)),"","","INFO");
+            $this->logOutput("Script Done","","","INFO");
+        }else{
+            $this->logOutput("Could not open the Logfile","","","ERROR");
+        }
+    }
+
 
     public function parseLog($log)
     {

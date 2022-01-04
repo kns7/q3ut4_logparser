@@ -2,43 +2,41 @@
 
 namespace Base;
 
-use \Games as ChildGames;
 use \GamesQuery as ChildGamesQuery;
 use \Gametypes as ChildGametypes;
 use \GametypesQuery as ChildGametypesQuery;
-use \Rounds as ChildRounds;
-use \RoundsQuery as ChildRoundsQuery;
+use \Maps as ChildMaps;
+use \MapsQuery as ChildMapsQuery;
+use \DateTime;
 use \Exception;
 use \PDO;
 use Map\GamesTableMap;
-use Map\GametypesTableMap;
-use Map\RoundsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'gametypes' table.
+ * Base class that represents a row from the 'games' table.
  *
  *
  *
  * @package    propel.generator..Base
  */
-abstract class Gametypes implements ActiveRecordInterface
+abstract class Games implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\GametypesTableMap';
+    const TABLE_MAP = '\\Map\\GamesTableMap';
 
 
     /**
@@ -75,37 +73,56 @@ abstract class Gametypes implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the code field.
+     * The value for the map_id field.
      *
      * @var        int
      */
-    protected $code;
+    protected $map_id;
 
     /**
-     * The value for the name field.
+     * The value for the gametype_id field.
      *
-     * @var        string
+     * @var        int
      */
-    protected $name;
+    protected $gametype_id;
 
     /**
-     * The value for the description field.
+     * The value for the timelimit field.
      *
-     * @var        string
+     * @var        int
      */
-    protected $description;
+    protected $timelimit;
 
     /**
-     * @var        ObjectCollection|ChildGames[] Collection to store aggregation of ChildGames objects.
+     * The value for the roundtime field.
+     *
+     * @var        int
      */
-    protected $collGames;
-    protected $collGamesPartial;
+    protected $roundtime;
 
     /**
-     * @var        ObjectCollection|ChildRounds[] Collection to store aggregation of ChildRounds objects.
+     * The value for the nbplayers field.
+     *
+     * @var        int
      */
-    protected $collRounds;
-    protected $collRoundsPartial;
+    protected $nbplayers;
+
+    /**
+     * The value for the created field.
+     *
+     * @var        DateTime
+     */
+    protected $created;
+
+    /**
+     * @var        ChildMaps
+     */
+    protected $aMaps;
+
+    /**
+     * @var        ChildGametypes
+     */
+    protected $aGamestypes;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -116,19 +133,7 @@ abstract class Gametypes implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildGames[]
-     */
-    protected $gamesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildRounds[]
-     */
-    protected $roundsScheduledForDeletion = null;
-
-    /**
-     * Initializes internal state of Base\Gametypes object.
+     * Initializes internal state of Base\Games object.
      */
     public function __construct()
     {
@@ -223,9 +228,9 @@ abstract class Gametypes implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Gametypes</code> instance.  If
-     * <code>obj</code> is an instance of <code>Gametypes</code>, delegates to
-     * <code>equals(Gametypes)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Games</code> instance.  If
+     * <code>obj</code> is an instance of <code>Games</code>, delegates to
+     * <code>equals(Games)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -291,7 +296,7 @@ abstract class Gametypes implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Gametypes The current object, for fluid interface
+     * @return $this|Games The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -363,40 +368,80 @@ abstract class Gametypes implements ActiveRecordInterface
     }
 
     /**
-     * Get the [code] column value.
+     * Get the [map_id] column value.
      *
      * @return int
      */
-    public function getCode()
+    public function getMapId()
     {
-        return $this->code;
+        return $this->map_id;
     }
 
     /**
-     * Get the [name] column value.
+     * Get the [gametype_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getName()
+    public function getGametypeId()
     {
-        return $this->name;
+        return $this->gametype_id;
     }
 
     /**
-     * Get the [description] column value.
+     * Get the [timelimit] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getDescription()
+    public function getTimelimit()
     {
-        return $this->description;
+        return $this->timelimit;
+    }
+
+    /**
+     * Get the [roundtime] column value.
+     *
+     * @return int
+     */
+    public function getRoundtime()
+    {
+        return $this->roundtime;
+    }
+
+    /**
+     * Get the [nbplayers] column value.
+     *
+     * @return int
+     */
+    public function getNbplayers()
+    {
+        return $this->nbplayers;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [created] column value.
+     *
+     *
+     * @param      string|null $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getCreated($format = NULL)
+    {
+        if ($format === null) {
+            return $this->created;
+        } else {
+            return $this->created instanceof \DateTimeInterface ? $this->created->format($format) : null;
+        }
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\Gametypes The current object (for fluent API support)
+     * @return $this|\Games The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -406,71 +451,139 @@ abstract class Gametypes implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[GametypesTableMap::COL_ID] = true;
+            $this->modifiedColumns[GamesTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [code] column.
+     * Set the value of [map_id] column.
      *
      * @param int $v new value
-     * @return $this|\Gametypes The current object (for fluent API support)
+     * @return $this|\Games The current object (for fluent API support)
      */
-    public function setCode($v)
+    public function setMapId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->code !== $v) {
-            $this->code = $v;
-            $this->modifiedColumns[GametypesTableMap::COL_CODE] = true;
+        if ($this->map_id !== $v) {
+            $this->map_id = $v;
+            $this->modifiedColumns[GamesTableMap::COL_MAP_ID] = true;
+        }
+
+        if ($this->aMaps !== null && $this->aMaps->getId() !== $v) {
+            $this->aMaps = null;
         }
 
         return $this;
-    } // setCode()
+    } // setMapId()
 
     /**
-     * Set the value of [name] column.
+     * Set the value of [gametype_id] column.
      *
-     * @param string $v new value
-     * @return $this|\Gametypes The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
      */
-    public function setName($v)
+    public function setGametypeId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[GametypesTableMap::COL_NAME] = true;
+        if ($this->gametype_id !== $v) {
+            $this->gametype_id = $v;
+            $this->modifiedColumns[GamesTableMap::COL_GAMETYPE_ID] = true;
+        }
+
+        if ($this->aGamestypes !== null && $this->aGamestypes->getId() !== $v) {
+            $this->aGamestypes = null;
         }
 
         return $this;
-    } // setName()
+    } // setGametypeId()
 
     /**
-     * Set the value of [description] column.
+     * Set the value of [timelimit] column.
      *
-     * @param string $v new value
-     * @return $this|\Gametypes The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
      */
-    public function setDescription($v)
+    public function setTimelimit($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->description !== $v) {
-            $this->description = $v;
-            $this->modifiedColumns[GametypesTableMap::COL_DESCRIPTION] = true;
+        if ($this->timelimit !== $v) {
+            $this->timelimit = $v;
+            $this->modifiedColumns[GamesTableMap::COL_TIMELIMIT] = true;
         }
 
         return $this;
-    } // setDescription()
+    } // setTimelimit()
+
+    /**
+     * Set the value of [roundtime] column.
+     *
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setRoundtime($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->roundtime !== $v) {
+            $this->roundtime = $v;
+            $this->modifiedColumns[GamesTableMap::COL_ROUNDTIME] = true;
+        }
+
+        return $this;
+    } // setRoundtime()
+
+    /**
+     * Set the value of [nbplayers] column.
+     *
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setNbplayers($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->nbplayers !== $v) {
+            $this->nbplayers = $v;
+            $this->modifiedColumns[GamesTableMap::COL_NBPLAYERS] = true;
+        }
+
+        return $this;
+    } // setNbplayers()
+
+    /**
+     * Sets the value of [created] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setCreated($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->created !== null || $dt !== null) {
+            if ($this->created === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created->format("Y-m-d H:i:s.u")) {
+                $this->created = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[GamesTableMap::COL_CREATED] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setCreated()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -508,17 +621,29 @@ abstract class Gametypes implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GametypesTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GamesTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GametypesTableMap::translateFieldName('Code', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->code = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GamesTableMap::translateFieldName('MapId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->map_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GametypesTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GamesTableMap::translateFieldName('GametypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->gametype_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GametypesTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->description = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GamesTableMap::translateFieldName('Timelimit', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->timelimit = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GamesTableMap::translateFieldName('Roundtime', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->roundtime = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GamesTableMap::translateFieldName('Nbplayers', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->nbplayers = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GamesTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->created = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -527,10 +652,10 @@ abstract class Gametypes implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = GametypesTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = GamesTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Gametypes'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Games'), 0, $e);
         }
     }
 
@@ -549,6 +674,12 @@ abstract class Gametypes implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aMaps !== null && $this->map_id !== $this->aMaps->getId()) {
+            $this->aMaps = null;
+        }
+        if ($this->aGamestypes !== null && $this->gametype_id !== $this->aGamestypes->getId()) {
+            $this->aGamestypes = null;
+        }
     } // ensureConsistency
 
     /**
@@ -572,13 +703,13 @@ abstract class Gametypes implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(GametypesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(GamesTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildGametypesQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildGamesQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -588,10 +719,8 @@ abstract class Gametypes implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collGames = null;
-
-            $this->collRounds = null;
-
+            $this->aMaps = null;
+            $this->aGamestypes = null;
         } // if (deep)
     }
 
@@ -601,8 +730,8 @@ abstract class Gametypes implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Gametypes::setDeleted()
-     * @see Gametypes::isDeleted()
+     * @see Games::setDeleted()
+     * @see Games::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -611,11 +740,11 @@ abstract class Gametypes implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GametypesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GamesTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildGametypesQuery::create()
+            $deleteQuery = ChildGamesQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -650,7 +779,7 @@ abstract class Gametypes implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GametypesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GamesTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -669,7 +798,7 @@ abstract class Gametypes implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                GametypesTableMap::addInstanceToPool($this);
+                GamesTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -695,6 +824,25 @@ abstract class Gametypes implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aMaps !== null) {
+                if ($this->aMaps->isModified() || $this->aMaps->isNew()) {
+                    $affectedRows += $this->aMaps->save($con);
+                }
+                $this->setMaps($this->aMaps);
+            }
+
+            if ($this->aGamestypes !== null) {
+                if ($this->aGamestypes->isModified() || $this->aGamestypes->isNew()) {
+                    $affectedRows += $this->aGamestypes->save($con);
+                }
+                $this->setGamestypes($this->aGamestypes);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -704,40 +852,6 @@ abstract class Gametypes implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->gamesScheduledForDeletion !== null) {
-                if (!$this->gamesScheduledForDeletion->isEmpty()) {
-                    \GamesQuery::create()
-                        ->filterByPrimaryKeys($this->gamesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->gamesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collGames !== null) {
-                foreach ($this->collGames as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->roundsScheduledForDeletion !== null) {
-                if (!$this->roundsScheduledForDeletion->isEmpty()) {
-                    \RoundsQuery::create()
-                        ->filterByPrimaryKeys($this->roundsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->roundsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collRounds !== null) {
-                foreach ($this->collRounds as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -760,27 +874,36 @@ abstract class Gametypes implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[GametypesTableMap::COL_ID] = true;
+        $this->modifiedColumns[GamesTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . GametypesTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . GamesTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(GametypesTableMap::COL_ID)) {
+        if ($this->isColumnModified(GamesTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(GametypesTableMap::COL_CODE)) {
-            $modifiedColumns[':p' . $index++]  = 'code';
+        if ($this->isColumnModified(GamesTableMap::COL_MAP_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'map_id';
         }
-        if ($this->isColumnModified(GametypesTableMap::COL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'name';
+        if ($this->isColumnModified(GamesTableMap::COL_GAMETYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'gametype_id';
         }
-        if ($this->isColumnModified(GametypesTableMap::COL_DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = 'description';
+        if ($this->isColumnModified(GamesTableMap::COL_TIMELIMIT)) {
+            $modifiedColumns[':p' . $index++]  = 'timelimit';
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_ROUNDTIME)) {
+            $modifiedColumns[':p' . $index++]  = 'roundtime';
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
+            $modifiedColumns[':p' . $index++]  = 'nbplayers';
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_CREATED)) {
+            $modifiedColumns[':p' . $index++]  = 'created';
         }
 
         $sql = sprintf(
-            'INSERT INTO gametypes (%s) VALUES (%s)',
+            'INSERT INTO games (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -792,14 +915,23 @@ abstract class Gametypes implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'code':
-                        $stmt->bindValue($identifier, $this->code, PDO::PARAM_INT);
+                    case 'map_id':
+                        $stmt->bindValue($identifier, $this->map_id, PDO::PARAM_INT);
                         break;
-                    case 'name':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                    case 'gametype_id':
+                        $stmt->bindValue($identifier, $this->gametype_id, PDO::PARAM_INT);
                         break;
-                    case 'description':
-                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                    case 'timelimit':
+                        $stmt->bindValue($identifier, $this->timelimit, PDO::PARAM_INT);
+                        break;
+                    case 'roundtime':
+                        $stmt->bindValue($identifier, $this->roundtime, PDO::PARAM_INT);
+                        break;
+                    case 'nbplayers':
+                        $stmt->bindValue($identifier, $this->nbplayers, PDO::PARAM_INT);
+                        break;
+                    case 'created':
+                        $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -847,7 +979,7 @@ abstract class Gametypes implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = GametypesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = GamesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -867,13 +999,22 @@ abstract class Gametypes implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getCode();
+                return $this->getMapId();
                 break;
             case 2:
-                return $this->getName();
+                return $this->getGametypeId();
                 break;
             case 3:
-                return $this->getDescription();
+                return $this->getTimelimit();
+                break;
+            case 4:
+                return $this->getRoundtime();
+                break;
+            case 5:
+                return $this->getNbplayers();
+                break;
+            case 6:
+                return $this->getCreated();
                 break;
             default:
                 return null;
@@ -899,52 +1040,59 @@ abstract class Gametypes implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Gametypes'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Games'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Gametypes'][$this->hashCode()] = true;
-        $keys = GametypesTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Games'][$this->hashCode()] = true;
+        $keys = GamesTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getCode(),
-            $keys[2] => $this->getName(),
-            $keys[3] => $this->getDescription(),
+            $keys[1] => $this->getMapId(),
+            $keys[2] => $this->getGametypeId(),
+            $keys[3] => $this->getTimelimit(),
+            $keys[4] => $this->getRoundtime(),
+            $keys[5] => $this->getNbplayers(),
+            $keys[6] => $this->getCreated(),
         );
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('c');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collGames) {
+            if (null !== $this->aMaps) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'gamess';
+                        $key = 'maps';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'gamess';
+                        $key = 'maps';
                         break;
                     default:
-                        $key = 'Games';
+                        $key = 'Maps';
                 }
 
-                $result[$key] = $this->collGames->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->aMaps->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collRounds) {
+            if (null !== $this->aGamestypes) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'roundss';
+                        $key = 'gametypes';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'roundss';
+                        $key = 'gametypes';
                         break;
                     default:
-                        $key = 'Rounds';
+                        $key = 'Gamestypes';
                 }
 
-                $result[$key] = $this->collRounds->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->aGamestypes->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -960,11 +1108,11 @@ abstract class Gametypes implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Gametypes
+     * @return $this|\Games
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = GametypesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = GamesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -975,7 +1123,7 @@ abstract class Gametypes implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Gametypes
+     * @return $this|\Games
      */
     public function setByPosition($pos, $value)
     {
@@ -984,13 +1132,22 @@ abstract class Gametypes implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setCode($value);
+                $this->setMapId($value);
                 break;
             case 2:
-                $this->setName($value);
+                $this->setGametypeId($value);
                 break;
             case 3:
-                $this->setDescription($value);
+                $this->setTimelimit($value);
+                break;
+            case 4:
+                $this->setRoundtime($value);
+                break;
+            case 5:
+                $this->setNbplayers($value);
+                break;
+            case 6:
+                $this->setCreated($value);
                 break;
         } // switch()
 
@@ -1016,19 +1173,28 @@ abstract class Gametypes implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = GametypesTableMap::getFieldNames($keyType);
+        $keys = GamesTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCode($arr[$keys[1]]);
+            $this->setMapId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setName($arr[$keys[2]]);
+            $this->setGametypeId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setDescription($arr[$keys[3]]);
+            $this->setTimelimit($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setRoundtime($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setNbplayers($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setCreated($arr[$keys[6]]);
         }
     }
 
@@ -1049,7 +1215,7 @@ abstract class Gametypes implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Gametypes The current object, for fluid interface
+     * @return $this|\Games The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1069,19 +1235,28 @@ abstract class Gametypes implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(GametypesTableMap::DATABASE_NAME);
+        $criteria = new Criteria(GamesTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(GametypesTableMap::COL_ID)) {
-            $criteria->add(GametypesTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(GamesTableMap::COL_ID)) {
+            $criteria->add(GamesTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(GametypesTableMap::COL_CODE)) {
-            $criteria->add(GametypesTableMap::COL_CODE, $this->code);
+        if ($this->isColumnModified(GamesTableMap::COL_MAP_ID)) {
+            $criteria->add(GamesTableMap::COL_MAP_ID, $this->map_id);
         }
-        if ($this->isColumnModified(GametypesTableMap::COL_NAME)) {
-            $criteria->add(GametypesTableMap::COL_NAME, $this->name);
+        if ($this->isColumnModified(GamesTableMap::COL_GAMETYPE_ID)) {
+            $criteria->add(GamesTableMap::COL_GAMETYPE_ID, $this->gametype_id);
         }
-        if ($this->isColumnModified(GametypesTableMap::COL_DESCRIPTION)) {
-            $criteria->add(GametypesTableMap::COL_DESCRIPTION, $this->description);
+        if ($this->isColumnModified(GamesTableMap::COL_TIMELIMIT)) {
+            $criteria->add(GamesTableMap::COL_TIMELIMIT, $this->timelimit);
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_ROUNDTIME)) {
+            $criteria->add(GamesTableMap::COL_ROUNDTIME, $this->roundtime);
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
+            $criteria->add(GamesTableMap::COL_NBPLAYERS, $this->nbplayers);
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_CREATED)) {
+            $criteria->add(GamesTableMap::COL_CREATED, $this->created);
         }
 
         return $criteria;
@@ -1099,8 +1274,8 @@ abstract class Gametypes implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildGametypesQuery::create();
-        $criteria->add(GametypesTableMap::COL_ID, $this->id);
+        $criteria = ChildGamesQuery::create();
+        $criteria->add(GamesTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1162,36 +1337,19 @@ abstract class Gametypes implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Gametypes (or compatible) type.
+     * @param      object $copyObj An object of \Games (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setCode($this->getCode());
-        $copyObj->setName($this->getName());
-        $copyObj->setDescription($this->getDescription());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getGames() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGame($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getRounds() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addRound($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
+        $copyObj->setMapId($this->getMapId());
+        $copyObj->setGametypeId($this->getGametypeId());
+        $copyObj->setTimelimit($this->getTimelimit());
+        $copyObj->setRoundtime($this->getRoundtime());
+        $copyObj->setNbplayers($this->getNbplayers());
+        $copyObj->setCreated($this->getCreated());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1207,7 +1365,7 @@ abstract class Gametypes implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Gametypes Clone of current object.
+     * @return \Games Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1220,500 +1378,106 @@ abstract class Gametypes implements ActiveRecordInterface
         return $copyObj;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ChildMaps object.
      *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('Game' == $relationName) {
-            $this->initGames();
-            return;
-        }
-        if ('Round' == $relationName) {
-            $this->initRounds();
-            return;
-        }
-    }
-
-    /**
-     * Clears out the collGames collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addGames()
-     */
-    public function clearGames()
-    {
-        $this->collGames = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collGames collection loaded partially.
-     */
-    public function resetPartialGames($v = true)
-    {
-        $this->collGamesPartial = $v;
-    }
-
-    /**
-     * Initializes the collGames collection.
-     *
-     * By default this just sets the collGames collection to an empty array (like clearcollGames());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initGames($overrideExisting = true)
-    {
-        if (null !== $this->collGames && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = GamesTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collGames = new $collectionClassName;
-        $this->collGames->setModel('\Games');
-    }
-
-    /**
-     * Gets an array of ChildGames objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildGametypes is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildGames[] List of ChildGames objects
+     * @param  ChildMaps $v
+     * @return $this|\Games The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getGames(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function setMaps(ChildMaps $v = null)
     {
-        $partial = $this->collGamesPartial && !$this->isNew();
-        if (null === $this->collGames || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGames) {
-                // return empty collection
-                $this->initGames();
-            } else {
-                $collGames = ChildGamesQuery::create(null, $criteria)
-                    ->filterByGamestypes($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collGamesPartial && count($collGames)) {
-                        $this->initGames(false);
-
-                        foreach ($collGames as $obj) {
-                            if (false == $this->collGames->contains($obj)) {
-                                $this->collGames->append($obj);
-                            }
-                        }
-
-                        $this->collGamesPartial = true;
-                    }
-
-                    return $collGames;
-                }
-
-                if ($partial && $this->collGames) {
-                    foreach ($this->collGames as $obj) {
-                        if ($obj->isNew()) {
-                            $collGames[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collGames = $collGames;
-                $this->collGamesPartial = false;
-            }
+        if ($v === null) {
+            $this->setMapId(NULL);
+        } else {
+            $this->setMapId($v->getId());
         }
 
-        return $this->collGames;
-    }
+        $this->aMaps = $v;
 
-    /**
-     * Sets a collection of ChildGames objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $games A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildGametypes The current object (for fluent API support)
-     */
-    public function setGames(Collection $games, ConnectionInterface $con = null)
-    {
-        /** @var ChildGames[] $gamesToDelete */
-        $gamesToDelete = $this->getGames(new Criteria(), $con)->diff($games);
-
-
-        $this->gamesScheduledForDeletion = $gamesToDelete;
-
-        foreach ($gamesToDelete as $gameRemoved) {
-            $gameRemoved->setGamestypes(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildMaps object, it will not be re-added.
+        if ($v !== null) {
+            $v->addGame($this);
         }
 
-        $this->collGames = null;
-        foreach ($games as $game) {
-            $this->addGame($game);
-        }
-
-        $this->collGames = $games;
-        $this->collGamesPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related Games objects.
+     * Get the associated ChildMaps object
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Games objects.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildMaps The associated ChildMaps object.
      * @throws PropelException
      */
-    public function countGames(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function getMaps(ConnectionInterface $con = null)
     {
-        $partial = $this->collGamesPartial && !$this->isNew();
-        if (null === $this->collGames || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGames) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getGames());
-            }
-
-            $query = ChildGamesQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByGamestypes($this)
-                ->count($con);
+        if ($this->aMaps === null && ($this->map_id != 0)) {
+            $this->aMaps = ChildMapsQuery::create()->findPk($this->map_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aMaps->addGames($this);
+             */
         }
 
-        return count($this->collGames);
+        return $this->aMaps;
     }
 
     /**
-     * Method called to associate a ChildGames object to this object
-     * through the ChildGames foreign key attribute.
+     * Declares an association between this object and a ChildGametypes object.
      *
-     * @param  ChildGames $l ChildGames
-     * @return $this|\Gametypes The current object (for fluent API support)
-     */
-    public function addGame(ChildGames $l)
-    {
-        if ($this->collGames === null) {
-            $this->initGames();
-            $this->collGamesPartial = true;
-        }
-
-        if (!$this->collGames->contains($l)) {
-            $this->doAddGame($l);
-
-            if ($this->gamesScheduledForDeletion and $this->gamesScheduledForDeletion->contains($l)) {
-                $this->gamesScheduledForDeletion->remove($this->gamesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildGames $game The ChildGames object to add.
-     */
-    protected function doAddGame(ChildGames $game)
-    {
-        $this->collGames[]= $game;
-        $game->setGamestypes($this);
-    }
-
-    /**
-     * @param  ChildGames $game The ChildGames object to remove.
-     * @return $this|ChildGametypes The current object (for fluent API support)
-     */
-    public function removeGame(ChildGames $game)
-    {
-        if ($this->getGames()->contains($game)) {
-            $pos = $this->collGames->search($game);
-            $this->collGames->remove($pos);
-            if (null === $this->gamesScheduledForDeletion) {
-                $this->gamesScheduledForDeletion = clone $this->collGames;
-                $this->gamesScheduledForDeletion->clear();
-            }
-            $this->gamesScheduledForDeletion[]= clone $game;
-            $game->setGamestypes(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Gametypes is new, it will return
-     * an empty collection; or if this Gametypes has previously
-     * been saved, it will retrieve related Games from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Gametypes.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildGames[] List of ChildGames objects
-     */
-    public function getGamesJoinMaps(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildGamesQuery::create(null, $criteria);
-        $query->joinWith('Maps', $joinBehavior);
-
-        return $this->getGames($query, $con);
-    }
-
-    /**
-     * Clears out the collRounds collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addRounds()
-     */
-    public function clearRounds()
-    {
-        $this->collRounds = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collRounds collection loaded partially.
-     */
-    public function resetPartialRounds($v = true)
-    {
-        $this->collRoundsPartial = $v;
-    }
-
-    /**
-     * Initializes the collRounds collection.
-     *
-     * By default this just sets the collRounds collection to an empty array (like clearcollRounds());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initRounds($overrideExisting = true)
-    {
-        if (null !== $this->collRounds && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = RoundsTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collRounds = new $collectionClassName;
-        $this->collRounds->setModel('\Rounds');
-    }
-
-    /**
-     * Gets an array of ChildRounds objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildGametypes is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildRounds[] List of ChildRounds objects
+     * @param  ChildGametypes $v
+     * @return $this|\Games The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getRounds(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function setGamestypes(ChildGametypes $v = null)
     {
-        $partial = $this->collRoundsPartial && !$this->isNew();
-        if (null === $this->collRounds || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collRounds) {
-                // return empty collection
-                $this->initRounds();
-            } else {
-                $collRounds = ChildRoundsQuery::create(null, $criteria)
-                    ->filterByGametypes($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collRoundsPartial && count($collRounds)) {
-                        $this->initRounds(false);
-
-                        foreach ($collRounds as $obj) {
-                            if (false == $this->collRounds->contains($obj)) {
-                                $this->collRounds->append($obj);
-                            }
-                        }
-
-                        $this->collRoundsPartial = true;
-                    }
-
-                    return $collRounds;
-                }
-
-                if ($partial && $this->collRounds) {
-                    foreach ($this->collRounds as $obj) {
-                        if ($obj->isNew()) {
-                            $collRounds[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collRounds = $collRounds;
-                $this->collRoundsPartial = false;
-            }
+        if ($v === null) {
+            $this->setGametypeId(NULL);
+        } else {
+            $this->setGametypeId($v->getId());
         }
 
-        return $this->collRounds;
-    }
+        $this->aGamestypes = $v;
 
-    /**
-     * Sets a collection of ChildRounds objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $rounds A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildGametypes The current object (for fluent API support)
-     */
-    public function setRounds(Collection $rounds, ConnectionInterface $con = null)
-    {
-        /** @var ChildRounds[] $roundsToDelete */
-        $roundsToDelete = $this->getRounds(new Criteria(), $con)->diff($rounds);
-
-
-        $this->roundsScheduledForDeletion = $roundsToDelete;
-
-        foreach ($roundsToDelete as $roundRemoved) {
-            $roundRemoved->setGametypes(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildGametypes object, it will not be re-added.
+        if ($v !== null) {
+            $v->addGame($this);
         }
 
-        $this->collRounds = null;
-        foreach ($rounds as $round) {
-            $this->addRound($round);
-        }
-
-        $this->collRounds = $rounds;
-        $this->collRoundsPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related Rounds objects.
+     * Get the associated ChildGametypes object
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Rounds objects.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildGametypes The associated ChildGametypes object.
      * @throws PropelException
      */
-    public function countRounds(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function getGamestypes(ConnectionInterface $con = null)
     {
-        $partial = $this->collRoundsPartial && !$this->isNew();
-        if (null === $this->collRounds || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collRounds) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getRounds());
-            }
-
-            $query = ChildRoundsQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByGametypes($this)
-                ->count($con);
+        if ($this->aGamestypes === null && ($this->gametype_id != 0)) {
+            $this->aGamestypes = ChildGametypesQuery::create()->findPk($this->gametype_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aGamestypes->addGames($this);
+             */
         }
 
-        return count($this->collRounds);
-    }
-
-    /**
-     * Method called to associate a ChildRounds object to this object
-     * through the ChildRounds foreign key attribute.
-     *
-     * @param  ChildRounds $l ChildRounds
-     * @return $this|\Gametypes The current object (for fluent API support)
-     */
-    public function addRound(ChildRounds $l)
-    {
-        if ($this->collRounds === null) {
-            $this->initRounds();
-            $this->collRoundsPartial = true;
-        }
-
-        if (!$this->collRounds->contains($l)) {
-            $this->doAddRound($l);
-
-            if ($this->roundsScheduledForDeletion and $this->roundsScheduledForDeletion->contains($l)) {
-                $this->roundsScheduledForDeletion->remove($this->roundsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildRounds $round The ChildRounds object to add.
-     */
-    protected function doAddRound(ChildRounds $round)
-    {
-        $this->collRounds[]= $round;
-        $round->setGametypes($this);
-    }
-
-    /**
-     * @param  ChildRounds $round The ChildRounds object to remove.
-     * @return $this|ChildGametypes The current object (for fluent API support)
-     */
-    public function removeRound(ChildRounds $round)
-    {
-        if ($this->getRounds()->contains($round)) {
-            $pos = $this->collRounds->search($round);
-            $this->collRounds->remove($pos);
-            if (null === $this->roundsScheduledForDeletion) {
-                $this->roundsScheduledForDeletion = clone $this->collRounds;
-                $this->roundsScheduledForDeletion->clear();
-            }
-            $this->roundsScheduledForDeletion[]= clone $round;
-            $round->setGametypes(null);
-        }
-
-        return $this;
+        return $this->aGamestypes;
     }
 
     /**
@@ -1723,10 +1487,19 @@ abstract class Gametypes implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aMaps) {
+            $this->aMaps->removeGame($this);
+        }
+        if (null !== $this->aGamestypes) {
+            $this->aGamestypes->removeGame($this);
+        }
         $this->id = null;
-        $this->code = null;
-        $this->name = null;
-        $this->description = null;
+        $this->map_id = null;
+        $this->gametype_id = null;
+        $this->timelimit = null;
+        $this->roundtime = null;
+        $this->nbplayers = null;
+        $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1745,20 +1518,10 @@ abstract class Gametypes implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collGames) {
-                foreach ($this->collGames as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collRounds) {
-                foreach ($this->collRounds as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collGames = null;
-        $this->collRounds = null;
+        $this->aMaps = null;
+        $this->aGamestypes = null;
     }
 
     /**
@@ -1768,7 +1531,7 @@ abstract class Gametypes implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(GametypesTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(GamesTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

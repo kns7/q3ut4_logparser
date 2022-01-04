@@ -70,6 +70,26 @@
     </vendor>
   </table>
 
+  <table name="games" idMethod="native" phpName="Games">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="map_id" phpName="MapId" type="INTEGER" required="true"/>
+    <column name="gametype_id" phpName="GametypeId" type="INTEGER" required="true"/>
+    <column name="timelimit" phpName="Timelimit" type="INTEGER" required="true"/>
+    <column name="roundtime" phpName="Roundtime" type="INTEGER" required="true"/>
+    <column name="nbplayers" phpName="Nbplayers" type="INTEGER" required="true"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
+
+    <foreign-key foreignTable="maps" phpName="Maps" refPhpName="Game">
+      <reference local="map_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="gametypes" phpName="Gamestypes" refPhpName="Game">
+      <reference local="gametype_id" foreign="id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
   <table name="gametimes" idMethod="native" phpName="Gametimes">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>

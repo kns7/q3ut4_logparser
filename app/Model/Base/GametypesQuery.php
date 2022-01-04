@@ -38,6 +38,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGametypesQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildGametypesQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildGametypesQuery leftJoinGame($relationAlias = null) Adds a LEFT JOIN clause to the query using the Game relation
+ * @method     ChildGametypesQuery rightJoinGame($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Game relation
+ * @method     ChildGametypesQuery innerJoinGame($relationAlias = null) Adds a INNER JOIN clause to the query using the Game relation
+ *
+ * @method     ChildGametypesQuery joinWithGame($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Game relation
+ *
+ * @method     ChildGametypesQuery leftJoinWithGame() Adds a LEFT JOIN clause and with to the query using the Game relation
+ * @method     ChildGametypesQuery rightJoinWithGame() Adds a RIGHT JOIN clause and with to the query using the Game relation
+ * @method     ChildGametypesQuery innerJoinWithGame() Adds a INNER JOIN clause and with to the query using the Game relation
+ *
  * @method     ChildGametypesQuery leftJoinRound($relationAlias = null) Adds a LEFT JOIN clause to the query using the Round relation
  * @method     ChildGametypesQuery rightJoinRound($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Round relation
  * @method     ChildGametypesQuery innerJoinRound($relationAlias = null) Adds a INNER JOIN clause to the query using the Round relation
@@ -48,7 +58,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGametypesQuery rightJoinWithRound() Adds a RIGHT JOIN clause and with to the query using the Round relation
  * @method     ChildGametypesQuery innerJoinWithRound() Adds a INNER JOIN clause and with to the query using the Round relation
  *
- * @method     \RoundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \GamesQuery|\RoundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildGametypes findOne(ConnectionInterface $con = null) Return the first ChildGametypes matching the query
  * @method     ChildGametypes findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGametypes matching the query, or a new ChildGametypes object populated from the query conditions when no match is found
@@ -389,6 +399,79 @@ abstract class GametypesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(GametypesTableMap::COL_DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Games object
+     *
+     * @param \Games|ObjectCollection $games the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildGametypesQuery The current query, for fluid interface
+     */
+    public function filterByGame($games, $comparison = null)
+    {
+        if ($games instanceof \Games) {
+            return $this
+                ->addUsingAlias(GametypesTableMap::COL_ID, $games->getGametypeId(), $comparison);
+        } elseif ($games instanceof ObjectCollection) {
+            return $this
+                ->useGameQuery()
+                ->filterByPrimaryKeys($games->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByGame() only accepts arguments of type \Games or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Game relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildGametypesQuery The current query, for fluid interface
+     */
+    public function joinGame($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Game');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Game');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Game relation Games object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \GamesQuery A secondary query class using the current class as primary query
+     */
+    public function useGameQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinGame($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Game', '\GamesQuery');
     }
 
     /**

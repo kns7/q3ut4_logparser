@@ -14,5 +14,11 @@ use Base\Gametimes as BaseGametimes;
  */
 class Gametimes extends BaseGametimes
 {
-
+    public function preInsert(\Propel\Runtime\Connection\ConnectionInterface $con = null)
+    {
+        $date = new \DateTime();
+        $date->modify("-1 day");
+        $this->setCreated($date->format("Y-m-d"));
+        return true;
+    }
 }

@@ -164,6 +164,13 @@ class MapsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Game', '\\Games', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':map_id',
+    1 => ':id',
+  ),
+), null, null, 'Games', false);
     } // buildRelations()
 
     /**

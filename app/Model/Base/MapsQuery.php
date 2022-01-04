@@ -10,6 +10,7 @@ use Map\MapsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -40,6 +41,18 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMapsQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildMapsQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildMapsQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
+ * @method     ChildMapsQuery leftJoinGame($relationAlias = null) Adds a LEFT JOIN clause to the query using the Game relation
+ * @method     ChildMapsQuery rightJoinGame($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Game relation
+ * @method     ChildMapsQuery innerJoinGame($relationAlias = null) Adds a INNER JOIN clause to the query using the Game relation
+ *
+ * @method     ChildMapsQuery joinWithGame($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Game relation
+ *
+ * @method     ChildMapsQuery leftJoinWithGame() Adds a LEFT JOIN clause and with to the query using the Game relation
+ * @method     ChildMapsQuery rightJoinWithGame() Adds a RIGHT JOIN clause and with to the query using the Game relation
+ * @method     ChildMapsQuery innerJoinWithGame() Adds a INNER JOIN clause and with to the query using the Game relation
+ *
+ * @method     \GamesQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildMaps findOne(ConnectionInterface $con = null) Return the first ChildMaps matching the query
  * @method     ChildMaps findOneOrCreate(ConnectionInterface $con = null) Return the first ChildMaps matching the query, or a new ChildMaps object populated from the query conditions when no match is found
@@ -420,6 +433,79 @@ abstract class MapsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(MapsTableMap::COL_SIZE, $size, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Games object
+     *
+     * @param \Games|ObjectCollection $games the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildMapsQuery The current query, for fluid interface
+     */
+    public function filterByGame($games, $comparison = null)
+    {
+        if ($games instanceof \Games) {
+            return $this
+                ->addUsingAlias(MapsTableMap::COL_ID, $games->getMapId(), $comparison);
+        } elseif ($games instanceof ObjectCollection) {
+            return $this
+                ->useGameQuery()
+                ->filterByPrimaryKeys($games->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByGame() only accepts arguments of type \Games or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Game relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildMapsQuery The current query, for fluid interface
+     */
+    public function joinGame($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Game');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Game');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Game relation Games object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \GamesQuery A secondary query class using the current class as primary query
+     */
+    public function useGameQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinGame($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Game', '\GamesQuery');
     }
 
     /**
