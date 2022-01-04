@@ -14,5 +14,9 @@ use Base\Games as BaseGames;
  */
 class Games extends BaseGames
 {
-
+    public function preInsert(\Propel\Runtime\Connection\ConnectionInterface $con = null)
+    {
+        $this->setWeek(date("Y-W"));
+        return true;
+    }
 }

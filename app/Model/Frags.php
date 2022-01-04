@@ -14,5 +14,9 @@ use Base\Frags as BaseFrags;
  */
 class Frags extends BaseFrags
 {
-
+    public function preInsert(\Propel\Runtime\Connection\ConnectionInterface $con = null)
+    {
+        $this->setWeek(date("Y-W"));
+        return true;
+    }
 }

@@ -14,5 +14,9 @@ use Base\Rounds as BaseRounds;
  */
 class Rounds extends BaseRounds
 {
-
+    public function preInsert(\Propel\Runtime\Connection\ConnectionInterface $con = null)
+    {
+        $this->setWeek(date("Y-W"));
+        return true;
+    }
 }
