@@ -2,13 +2,13 @@
 
 namespace Base;
 
-use \GamesQuery as ChildGamesQuery;
+use \GametimesQuery as ChildGametimesQuery;
 use \Players as ChildPlayers;
 use \PlayersQuery as ChildPlayersQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
-use Map\GamesTableMap;
+use Map\GametimesTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -23,18 +23,18 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'games' table.
+ * Base class that represents a row from the 'gametimes' table.
  *
  *
  *
  * @package    propel.generator..Base
  */
-abstract class Games implements ActiveRecordInterface
+abstract class Gametimes implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\GamesTableMap';
+    const TABLE_MAP = '\\Map\\GametimesTableMap';
 
 
     /**
@@ -112,7 +112,7 @@ abstract class Games implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Base\Games object.
+     * Initializes internal state of Base\Gametimes object.
      */
     public function __construct()
     {
@@ -207,9 +207,9 @@ abstract class Games implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Games</code> instance.  If
-     * <code>obj</code> is an instance of <code>Games</code>, delegates to
-     * <code>equals(Games)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Gametimes</code> instance.  If
+     * <code>obj</code> is an instance of <code>Gametimes</code>, delegates to
+     * <code>equals(Gametimes)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -275,7 +275,7 @@ abstract class Games implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Games The current object, for fluid interface
+     * @return $this|Gametimes The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -400,7 +400,7 @@ abstract class Games implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\Games The current object (for fluent API support)
+     * @return $this|\Gametimes The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -410,7 +410,7 @@ abstract class Games implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[GamesTableMap::COL_ID] = true;
+            $this->modifiedColumns[GametimesTableMap::COL_ID] = true;
         }
 
         return $this;
@@ -420,7 +420,7 @@ abstract class Games implements ActiveRecordInterface
      * Set the value of [player_id] column.
      *
      * @param int $v new value
-     * @return $this|\Games The current object (for fluent API support)
+     * @return $this|\Gametimes The current object (for fluent API support)
      */
     public function setPlayerId($v)
     {
@@ -430,7 +430,7 @@ abstract class Games implements ActiveRecordInterface
 
         if ($this->player_id !== $v) {
             $this->player_id = $v;
-            $this->modifiedColumns[GamesTableMap::COL_PLAYER_ID] = true;
+            $this->modifiedColumns[GametimesTableMap::COL_PLAYER_ID] = true;
         }
 
         if ($this->aPlayers !== null && $this->aPlayers->getId() !== $v) {
@@ -444,7 +444,7 @@ abstract class Games implements ActiveRecordInterface
      * Set the value of [start] column.
      *
      * @param int $v new value
-     * @return $this|\Games The current object (for fluent API support)
+     * @return $this|\Gametimes The current object (for fluent API support)
      */
     public function setStart($v)
     {
@@ -454,7 +454,7 @@ abstract class Games implements ActiveRecordInterface
 
         if ($this->start !== $v) {
             $this->start = $v;
-            $this->modifiedColumns[GamesTableMap::COL_START] = true;
+            $this->modifiedColumns[GametimesTableMap::COL_START] = true;
         }
 
         return $this;
@@ -464,7 +464,7 @@ abstract class Games implements ActiveRecordInterface
      * Set the value of [stop] column.
      *
      * @param int $v new value
-     * @return $this|\Games The current object (for fluent API support)
+     * @return $this|\Gametimes The current object (for fluent API support)
      */
     public function setStop($v)
     {
@@ -474,7 +474,7 @@ abstract class Games implements ActiveRecordInterface
 
         if ($this->stop !== $v) {
             $this->stop = $v;
-            $this->modifiedColumns[GamesTableMap::COL_STOP] = true;
+            $this->modifiedColumns[GametimesTableMap::COL_STOP] = true;
         }
 
         return $this;
@@ -485,7 +485,7 @@ abstract class Games implements ActiveRecordInterface
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Games The current object (for fluent API support)
+     * @return $this|\Gametimes The current object (for fluent API support)
      */
     public function setCreated($v)
     {
@@ -493,7 +493,7 @@ abstract class Games implements ActiveRecordInterface
         if ($this->created !== null || $dt !== null) {
             if ($this->created === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created->format("Y-m-d H:i:s.u")) {
                 $this->created = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[GamesTableMap::COL_CREATED] = true;
+                $this->modifiedColumns[GametimesTableMap::COL_CREATED] = true;
             }
         } // if either are not null
 
@@ -536,19 +536,19 @@ abstract class Games implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GamesTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GametimesTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GamesTableMap::translateFieldName('PlayerId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GametimesTableMap::translateFieldName('PlayerId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->player_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GamesTableMap::translateFieldName('Start', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GametimesTableMap::translateFieldName('Start', TableMap::TYPE_PHPNAME, $indexType)];
             $this->start = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GamesTableMap::translateFieldName('Stop', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GametimesTableMap::translateFieldName('Stop', TableMap::TYPE_PHPNAME, $indexType)];
             $this->stop = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GamesTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GametimesTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -561,10 +561,10 @@ abstract class Games implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = GamesTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = GametimesTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Games'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Gametimes'), 0, $e);
         }
     }
 
@@ -609,13 +609,13 @@ abstract class Games implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(GamesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(GametimesTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildGamesQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildGametimesQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -635,8 +635,8 @@ abstract class Games implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Games::setDeleted()
-     * @see Games::isDeleted()
+     * @see Gametimes::setDeleted()
+     * @see Gametimes::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -645,11 +645,11 @@ abstract class Games implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GamesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GametimesTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildGamesQuery::create()
+            $deleteQuery = ChildGametimesQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -684,7 +684,7 @@ abstract class Games implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GamesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GametimesTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -703,7 +703,7 @@ abstract class Games implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                GamesTableMap::addInstanceToPool($this);
+                GametimesTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -774,24 +774,24 @@ abstract class Games implements ActiveRecordInterface
 
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(GamesTableMap::COL_ID)) {
+        if ($this->isColumnModified(GametimesTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(GamesTableMap::COL_PLAYER_ID)) {
+        if ($this->isColumnModified(GametimesTableMap::COL_PLAYER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'player_id';
         }
-        if ($this->isColumnModified(GamesTableMap::COL_START)) {
+        if ($this->isColumnModified(GametimesTableMap::COL_START)) {
             $modifiedColumns[':p' . $index++]  = 'start';
         }
-        if ($this->isColumnModified(GamesTableMap::COL_STOP)) {
+        if ($this->isColumnModified(GametimesTableMap::COL_STOP)) {
             $modifiedColumns[':p' . $index++]  = 'stop';
         }
-        if ($this->isColumnModified(GamesTableMap::COL_CREATED)) {
+        if ($this->isColumnModified(GametimesTableMap::COL_CREATED)) {
             $modifiedColumns[':p' . $index++]  = 'created';
         }
 
         $sql = sprintf(
-            'INSERT INTO games (%s) VALUES (%s)',
+            'INSERT INTO gametimes (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -854,7 +854,7 @@ abstract class Games implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = GamesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = GametimesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -909,11 +909,11 @@ abstract class Games implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Games'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Gametimes'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Games'][$this->hashCode()] = true;
-        $keys = GamesTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Gametimes'][$this->hashCode()] = true;
+        $keys = GametimesTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPlayerId(),
@@ -960,11 +960,11 @@ abstract class Games implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Games
+     * @return $this|\Gametimes
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = GamesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = GametimesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -975,7 +975,7 @@ abstract class Games implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Games
+     * @return $this|\Gametimes
      */
     public function setByPosition($pos, $value)
     {
@@ -1019,7 +1019,7 @@ abstract class Games implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = GamesTableMap::getFieldNames($keyType);
+        $keys = GametimesTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
@@ -1055,7 +1055,7 @@ abstract class Games implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Games The current object, for fluid interface
+     * @return $this|\Gametimes The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1075,22 +1075,22 @@ abstract class Games implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(GamesTableMap::DATABASE_NAME);
+        $criteria = new Criteria(GametimesTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(GamesTableMap::COL_ID)) {
-            $criteria->add(GamesTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(GametimesTableMap::COL_ID)) {
+            $criteria->add(GametimesTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(GamesTableMap::COL_PLAYER_ID)) {
-            $criteria->add(GamesTableMap::COL_PLAYER_ID, $this->player_id);
+        if ($this->isColumnModified(GametimesTableMap::COL_PLAYER_ID)) {
+            $criteria->add(GametimesTableMap::COL_PLAYER_ID, $this->player_id);
         }
-        if ($this->isColumnModified(GamesTableMap::COL_START)) {
-            $criteria->add(GamesTableMap::COL_START, $this->start);
+        if ($this->isColumnModified(GametimesTableMap::COL_START)) {
+            $criteria->add(GametimesTableMap::COL_START, $this->start);
         }
-        if ($this->isColumnModified(GamesTableMap::COL_STOP)) {
-            $criteria->add(GamesTableMap::COL_STOP, $this->stop);
+        if ($this->isColumnModified(GametimesTableMap::COL_STOP)) {
+            $criteria->add(GametimesTableMap::COL_STOP, $this->stop);
         }
-        if ($this->isColumnModified(GamesTableMap::COL_CREATED)) {
-            $criteria->add(GamesTableMap::COL_CREATED, $this->created);
+        if ($this->isColumnModified(GametimesTableMap::COL_CREATED)) {
+            $criteria->add(GametimesTableMap::COL_CREATED, $this->created);
         }
 
         return $criteria;
@@ -1108,8 +1108,8 @@ abstract class Games implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildGamesQuery::create();
-        $criteria->add(GamesTableMap::COL_ID, $this->id);
+        $criteria = ChildGametimesQuery::create();
+        $criteria->add(GametimesTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1171,7 +1171,7 @@ abstract class Games implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Games (or compatible) type.
+     * @param      object $copyObj An object of \Gametimes (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
@@ -1197,7 +1197,7 @@ abstract class Games implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Games Clone of current object.
+     * @return \Gametimes Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1214,7 +1214,7 @@ abstract class Games implements ActiveRecordInterface
      * Declares an association between this object and a ChildPlayers object.
      *
      * @param  ChildPlayers $v
-     * @return $this|\Games The current object (for fluent API support)
+     * @return $this|\Gametimes The current object (for fluent API support)
      * @throws PropelException
      */
     public function setPlayers(ChildPlayers $v = null)
@@ -1230,7 +1230,7 @@ abstract class Games implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildPlayers object, it will not be re-added.
         if ($v !== null) {
-            $v->addGame($this);
+            $v->addGametime($this);
         }
 
 
@@ -1254,7 +1254,7 @@ abstract class Games implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aPlayers->addGames($this);
+                $this->aPlayers->addGametimes($this);
              */
         }
 
@@ -1269,7 +1269,7 @@ abstract class Games implements ActiveRecordInterface
     public function clear()
     {
         if (null !== $this->aPlayers) {
-            $this->aPlayers->removeGame($this);
+            $this->aPlayers->removeGametime($this);
         }
         $this->id = null;
         $this->player_id = null;
@@ -1306,7 +1306,7 @@ abstract class Games implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(GamesTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(GametimesTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

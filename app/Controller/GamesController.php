@@ -15,7 +15,7 @@ class GamesController extends Controller
 {
     public function add(\Players $player, $start)
     {
-        $game = new \Games();
+        $game = new \Gametimes();
         $game->setPlayers($player)
             ->setStart($start)
             ->setStop("-1");
@@ -30,7 +30,7 @@ class GamesController extends Controller
 
     public function stopGame(\Players $player,$stop)
     {
-        $game = \GamesQuery::create()->filterByPlayers($player)->filterByStop("-1")->orderById("DESC")->findOne();
+        $game = \GametimesQuery::create()->filterByPlayers($player)->filterByStop("-1")->orderById("DESC")->findOne();
         if(!is_null($game)){
             $game->setStop($stop);
             try {

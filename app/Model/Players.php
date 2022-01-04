@@ -71,7 +71,7 @@ class Players extends BasePlayers
 
     public function getPlayingTime()
     {
-        $times = \GamesQuery::create()->filterByPlayerId($this->getId())->filterByStop("-1", \Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("SUM(stop-start)","times")->find();
+        $times = \GametimesQuery::create()->filterByPlayerId($this->getId())->filterByStop("-1", \Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("SUM(stop-start)","times")->find();
         $return = 0;
         foreach($times as $t){
             $return += $t->getTimes();

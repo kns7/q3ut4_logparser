@@ -2,11 +2,11 @@
 
 namespace Base;
 
-use \Games as ChildGames;
-use \GamesQuery as ChildGamesQuery;
+use \Gametimes as ChildGametimes;
+use \GametimesQuery as ChildGametimesQuery;
 use \Exception;
 use \PDO;
-use Map\GamesTableMap;
+use Map\GametimesTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,99 +16,99 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'games' table.
+ * Base class that represents a query for the 'gametimes' table.
  *
  *
  *
- * @method     ChildGamesQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildGamesQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
- * @method     ChildGamesQuery orderByStart($order = Criteria::ASC) Order by the start column
- * @method     ChildGamesQuery orderByStop($order = Criteria::ASC) Order by the stop column
- * @method     ChildGamesQuery orderByCreated($order = Criteria::ASC) Order by the created column
+ * @method     ChildGametimesQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildGametimesQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
+ * @method     ChildGametimesQuery orderByStart($order = Criteria::ASC) Order by the start column
+ * @method     ChildGametimesQuery orderByStop($order = Criteria::ASC) Order by the stop column
+ * @method     ChildGametimesQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
- * @method     ChildGamesQuery groupById() Group by the id column
- * @method     ChildGamesQuery groupByPlayerId() Group by the player_id column
- * @method     ChildGamesQuery groupByStart() Group by the start column
- * @method     ChildGamesQuery groupByStop() Group by the stop column
- * @method     ChildGamesQuery groupByCreated() Group by the created column
+ * @method     ChildGametimesQuery groupById() Group by the id column
+ * @method     ChildGametimesQuery groupByPlayerId() Group by the player_id column
+ * @method     ChildGametimesQuery groupByStart() Group by the start column
+ * @method     ChildGametimesQuery groupByStop() Group by the stop column
+ * @method     ChildGametimesQuery groupByCreated() Group by the created column
  *
- * @method     ChildGamesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildGamesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildGamesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildGametimesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildGametimesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildGametimesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildGamesQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
- * @method     ChildGamesQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
- * @method     ChildGamesQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ * @method     ChildGametimesQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
+ * @method     ChildGametimesQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
+ * @method     ChildGametimesQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildGamesQuery leftJoinPlayers($relationAlias = null) Adds a LEFT JOIN clause to the query using the Players relation
- * @method     ChildGamesQuery rightJoinPlayers($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Players relation
- * @method     ChildGamesQuery innerJoinPlayers($relationAlias = null) Adds a INNER JOIN clause to the query using the Players relation
+ * @method     ChildGametimesQuery leftJoinPlayers($relationAlias = null) Adds a LEFT JOIN clause to the query using the Players relation
+ * @method     ChildGametimesQuery rightJoinPlayers($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Players relation
+ * @method     ChildGametimesQuery innerJoinPlayers($relationAlias = null) Adds a INNER JOIN clause to the query using the Players relation
  *
- * @method     ChildGamesQuery joinWithPlayers($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Players relation
+ * @method     ChildGametimesQuery joinWithPlayers($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Players relation
  *
- * @method     ChildGamesQuery leftJoinWithPlayers() Adds a LEFT JOIN clause and with to the query using the Players relation
- * @method     ChildGamesQuery rightJoinWithPlayers() Adds a RIGHT JOIN clause and with to the query using the Players relation
- * @method     ChildGamesQuery innerJoinWithPlayers() Adds a INNER JOIN clause and with to the query using the Players relation
+ * @method     ChildGametimesQuery leftJoinWithPlayers() Adds a LEFT JOIN clause and with to the query using the Players relation
+ * @method     ChildGametimesQuery rightJoinWithPlayers() Adds a RIGHT JOIN clause and with to the query using the Players relation
+ * @method     ChildGametimesQuery innerJoinWithPlayers() Adds a INNER JOIN clause and with to the query using the Players relation
  *
  * @method     \PlayersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildGames findOne(ConnectionInterface $con = null) Return the first ChildGames matching the query
- * @method     ChildGames findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGames matching the query, or a new ChildGames object populated from the query conditions when no match is found
+ * @method     ChildGametimes findOne(ConnectionInterface $con = null) Return the first ChildGametimes matching the query
+ * @method     ChildGametimes findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGametimes matching the query, or a new ChildGametimes object populated from the query conditions when no match is found
  *
- * @method     ChildGames findOneById(int $id) Return the first ChildGames filtered by the id column
- * @method     ChildGames findOneByPlayerId(int $player_id) Return the first ChildGames filtered by the player_id column
- * @method     ChildGames findOneByStart(int $start) Return the first ChildGames filtered by the start column
- * @method     ChildGames findOneByStop(int $stop) Return the first ChildGames filtered by the stop column
- * @method     ChildGames findOneByCreated(string $created) Return the first ChildGames filtered by the created column *
+ * @method     ChildGametimes findOneById(int $id) Return the first ChildGametimes filtered by the id column
+ * @method     ChildGametimes findOneByPlayerId(int $player_id) Return the first ChildGametimes filtered by the player_id column
+ * @method     ChildGametimes findOneByStart(int $start) Return the first ChildGametimes filtered by the start column
+ * @method     ChildGametimes findOneByStop(int $stop) Return the first ChildGametimes filtered by the stop column
+ * @method     ChildGametimes findOneByCreated(string $created) Return the first ChildGametimes filtered by the created column *
 
- * @method     ChildGames requirePk($key, ConnectionInterface $con = null) Return the ChildGames by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildGames requireOne(ConnectionInterface $con = null) Return the first ChildGames matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGametimes requirePk($key, ConnectionInterface $con = null) Return the ChildGametimes by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGametimes requireOne(ConnectionInterface $con = null) Return the first ChildGametimes matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildGames requireOneById(int $id) Return the first ChildGames filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildGames requireOneByPlayerId(int $player_id) Return the first ChildGames filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildGames requireOneByStart(int $start) Return the first ChildGames filtered by the start column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildGames requireOneByStop(int $stop) Return the first ChildGames filtered by the stop column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildGames requireOneByCreated(string $created) Return the first ChildGames filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGametimes requireOneById(int $id) Return the first ChildGametimes filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGametimes requireOneByPlayerId(int $player_id) Return the first ChildGametimes filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGametimes requireOneByStart(int $start) Return the first ChildGametimes filtered by the start column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGametimes requireOneByStop(int $stop) Return the first ChildGametimes filtered by the stop column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGametimes requireOneByCreated(string $created) Return the first ChildGametimes filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildGames[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGames objects based on current ModelCriteria
- * @method     ChildGames[]|ObjectCollection findById(int $id) Return ChildGames objects filtered by the id column
- * @method     ChildGames[]|ObjectCollection findByPlayerId(int $player_id) Return ChildGames objects filtered by the player_id column
- * @method     ChildGames[]|ObjectCollection findByStart(int $start) Return ChildGames objects filtered by the start column
- * @method     ChildGames[]|ObjectCollection findByStop(int $stop) Return ChildGames objects filtered by the stop column
- * @method     ChildGames[]|ObjectCollection findByCreated(string $created) Return ChildGames objects filtered by the created column
- * @method     ChildGames[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildGametimes[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGametimes objects based on current ModelCriteria
+ * @method     ChildGametimes[]|ObjectCollection findById(int $id) Return ChildGametimes objects filtered by the id column
+ * @method     ChildGametimes[]|ObjectCollection findByPlayerId(int $player_id) Return ChildGametimes objects filtered by the player_id column
+ * @method     ChildGametimes[]|ObjectCollection findByStart(int $start) Return ChildGametimes objects filtered by the start column
+ * @method     ChildGametimes[]|ObjectCollection findByStop(int $stop) Return ChildGametimes objects filtered by the stop column
+ * @method     ChildGametimes[]|ObjectCollection findByCreated(string $created) Return ChildGametimes objects filtered by the created column
+ * @method     ChildGametimes[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
-abstract class GamesQuery extends ModelCriteria
+abstract class GametimesQuery extends ModelCriteria
 {
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \Base\GamesQuery object.
+     * Initializes internal state of \Base\GametimesQuery object.
      *
      * @param     string $dbName The database name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Games', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\Gametimes', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildGamesQuery object.
+     * Returns a new ChildGametimesQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildGamesQuery
+     * @return ChildGametimesQuery
      */
     public static function create($modelAlias = null, Criteria $criteria = null)
     {
-        if ($criteria instanceof ChildGamesQuery) {
+        if ($criteria instanceof ChildGametimesQuery) {
             return $criteria;
         }
-        $query = new ChildGamesQuery();
+        $query = new ChildGametimesQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -131,7 +131,7 @@ abstract class GamesQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildGames|array|mixed the result, formatted by the current formatter
+     * @return ChildGametimes|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ConnectionInterface $con = null)
     {
@@ -140,7 +140,7 @@ abstract class GamesQuery extends ModelCriteria
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(GamesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(GametimesTableMap::DATABASE_NAME);
         }
 
         $this->basePreSelect($con);
@@ -153,7 +153,7 @@ abstract class GamesQuery extends ModelCriteria
             return $this->findPkComplex($key, $con);
         }
 
-        if ((null !== ($obj = GamesTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
+        if ((null !== ($obj = GametimesTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
             // the object is already in the instance pool
             return $obj;
         }
@@ -170,11 +170,11 @@ abstract class GamesQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildGames A model object, or null if the key is not found
+     * @return ChildGametimes A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, player_id, start, stop, created FROM games WHERE id = :p0';
+        $sql = 'SELECT id, player_id, start, stop, created FROM gametimes WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -185,10 +185,10 @@ abstract class GamesQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildGames $obj */
-            $obj = new ChildGames();
+            /** @var ChildGametimes $obj */
+            $obj = new ChildGametimes();
             $obj->hydrate($row);
-            GamesTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
+            GametimesTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
         }
         $stmt->closeCursor();
 
@@ -201,7 +201,7 @@ abstract class GamesQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildGames|array|mixed the result, formatted by the current formatter
+     * @return ChildGametimes|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -243,12 +243,12 @@ abstract class GamesQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(GamesTableMap::COL_ID, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(GametimesTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -256,12 +256,12 @@ abstract class GamesQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(GamesTableMap::COL_ID, $keys, Criteria::IN);
+        return $this->addUsingAlias(GametimesTableMap::COL_ID, $keys, Criteria::IN);
     }
 
     /**
@@ -280,18 +280,18 @@ abstract class GamesQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function filterById($id = null, $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(GamesTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(GamesTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -302,7 +302,7 @@ abstract class GamesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GamesTableMap::COL_ID, $id, $comparison);
+        return $this->addUsingAlias(GametimesTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -323,18 +323,18 @@ abstract class GamesQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function filterByPlayerId($playerId = null, $comparison = null)
     {
         if (is_array($playerId)) {
             $useMinMax = false;
             if (isset($playerId['min'])) {
-                $this->addUsingAlias(GamesTableMap::COL_PLAYER_ID, $playerId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_PLAYER_ID, $playerId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($playerId['max'])) {
-                $this->addUsingAlias(GamesTableMap::COL_PLAYER_ID, $playerId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_PLAYER_ID, $playerId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -345,7 +345,7 @@ abstract class GamesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GamesTableMap::COL_PLAYER_ID, $playerId, $comparison);
+        return $this->addUsingAlias(GametimesTableMap::COL_PLAYER_ID, $playerId, $comparison);
     }
 
     /**
@@ -364,18 +364,18 @@ abstract class GamesQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function filterByStart($start = null, $comparison = null)
     {
         if (is_array($start)) {
             $useMinMax = false;
             if (isset($start['min'])) {
-                $this->addUsingAlias(GamesTableMap::COL_START, $start['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_START, $start['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($start['max'])) {
-                $this->addUsingAlias(GamesTableMap::COL_START, $start['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_START, $start['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -386,7 +386,7 @@ abstract class GamesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GamesTableMap::COL_START, $start, $comparison);
+        return $this->addUsingAlias(GametimesTableMap::COL_START, $start, $comparison);
     }
 
     /**
@@ -405,18 +405,18 @@ abstract class GamesQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function filterByStop($stop = null, $comparison = null)
     {
         if (is_array($stop)) {
             $useMinMax = false;
             if (isset($stop['min'])) {
-                $this->addUsingAlias(GamesTableMap::COL_STOP, $stop['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_STOP, $stop['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($stop['max'])) {
-                $this->addUsingAlias(GamesTableMap::COL_STOP, $stop['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_STOP, $stop['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -427,7 +427,7 @@ abstract class GamesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GamesTableMap::COL_STOP, $stop, $comparison);
+        return $this->addUsingAlias(GametimesTableMap::COL_STOP, $stop, $comparison);
     }
 
     /**
@@ -448,18 +448,18 @@ abstract class GamesQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function filterByCreated($created = null, $comparison = null)
     {
         if (is_array($created)) {
             $useMinMax = false;
             if (isset($created['min'])) {
-                $this->addUsingAlias(GamesTableMap::COL_CREATED, $created['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_CREATED, $created['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($created['max'])) {
-                $this->addUsingAlias(GamesTableMap::COL_CREATED, $created['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(GametimesTableMap::COL_CREATED, $created['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -470,7 +470,7 @@ abstract class GamesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GamesTableMap::COL_CREATED, $created, $comparison);
+        return $this->addUsingAlias(GametimesTableMap::COL_CREATED, $created, $comparison);
     }
 
     /**
@@ -481,20 +481,20 @@ abstract class GamesQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildGamesQuery The current query, for fluid interface
+     * @return ChildGametimesQuery The current query, for fluid interface
      */
     public function filterByPlayers($players, $comparison = null)
     {
         if ($players instanceof \Players) {
             return $this
-                ->addUsingAlias(GamesTableMap::COL_PLAYER_ID, $players->getId(), $comparison);
+                ->addUsingAlias(GametimesTableMap::COL_PLAYER_ID, $players->getId(), $comparison);
         } elseif ($players instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(GamesTableMap::COL_PLAYER_ID, $players->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(GametimesTableMap::COL_PLAYER_ID, $players->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByPlayers() only accepts arguments of type \Players or Collection');
         }
@@ -506,7 +506,7 @@ abstract class GamesQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
     public function joinPlayers($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
@@ -553,21 +553,21 @@ abstract class GamesQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param   ChildGames $games Object to remove from the list of results
+     * @param   ChildGametimes $gametimes Object to remove from the list of results
      *
-     * @return $this|ChildGamesQuery The current query, for fluid interface
+     * @return $this|ChildGametimesQuery The current query, for fluid interface
      */
-    public function prune($games = null)
+    public function prune($gametimes = null)
     {
-        if ($games) {
-            $this->addUsingAlias(GamesTableMap::COL_ID, $games->getId(), Criteria::NOT_EQUAL);
+        if ($gametimes) {
+            $this->addUsingAlias(GametimesTableMap::COL_ID, $gametimes->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
     }
 
     /**
-     * Deletes all rows from the games table.
+     * Deletes all rows from the gametimes table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
@@ -575,7 +575,7 @@ abstract class GamesQuery extends ModelCriteria
     public function doDeleteAll(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GamesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GametimesTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -586,8 +586,8 @@ abstract class GamesQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            GamesTableMap::clearInstancePool();
-            GamesTableMap::clearRelatedInstancePool();
+            GametimesTableMap::clearInstancePool();
+            GametimesTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -605,26 +605,26 @@ abstract class GamesQuery extends ModelCriteria
     public function delete(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(GamesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GametimesTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(GamesTableMap::DATABASE_NAME);
+        $criteria->setDbName(GametimesTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            GamesTableMap::removeInstanceFromPool($criteria);
+            GametimesTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            GamesTableMap::clearRelatedInstancePool();
+            GametimesTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
     }
 
-} // GamesQuery
+} // GametimesQuery

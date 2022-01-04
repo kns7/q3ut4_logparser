@@ -70,14 +70,14 @@
     </vendor>
   </table>
 
-  <table name="games" idMethod="native" phpName="Games">
+  <table name="gametimes" idMethod="native" phpName="Gametimes">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
     <column name="start" phpName="Start" type="INTEGER" required="true"/>
     <column name="stop" phpName="Stop" type="INTEGER" required="true"/>
     <column name="created" phpName="Created" type="TIMESTAMP"/>
 
-    <foreign-key foreignTable="players" phpName="Players" refPhpName="Game">
+    <foreign-key foreignTable="players" phpName="Players" refPhpName="Gametime">
       <reference local="player_id" foreign="id"/>
     </foreign-key>
     <vendor type="mysql">

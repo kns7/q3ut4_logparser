@@ -8,8 +8,8 @@ use \Flags as ChildFlags;
 use \FlagsQuery as ChildFlagsQuery;
 use \Frags as ChildFrags;
 use \FragsQuery as ChildFragsQuery;
-use \Games as ChildGames;
-use \GamesQuery as ChildGamesQuery;
+use \Gametimes as ChildGametimes;
+use \GametimesQuery as ChildGametimesQuery;
 use \Hits as ChildHits;
 use \HitsQuery as ChildHitsQuery;
 use \Players as ChildPlayers;
@@ -23,7 +23,7 @@ use \PDO;
 use Map\BombsTableMap;
 use Map\FlagsTableMap;
 use Map\FragsTableMap;
-use Map\GamesTableMap;
+use Map\GametimesTableMap;
 use Map\HitsTableMap;
 use Map\PlayersTableMap;
 use Map\ScoresTableMap;
@@ -128,10 +128,10 @@ abstract class Players implements ActiveRecordInterface
     protected $collFraggedPlayersPartial;
 
     /**
-     * @var        ObjectCollection|ChildGames[] Collection to store aggregation of ChildGames objects.
+     * @var        ObjectCollection|ChildGametimes[] Collection to store aggregation of ChildGametimes objects.
      */
-    protected $collGames;
-    protected $collGamesPartial;
+    protected $collGametimes;
+    protected $collGametimesPartial;
 
     /**
      * @var        ObjectCollection|ChildHits[] Collection to store aggregation of ChildHits objects.
@@ -191,9 +191,9 @@ abstract class Players implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildGames[]
+     * @var ObjectCollection|ChildGametimes[]
      */
-    protected $gamesScheduledForDeletion = null;
+    protected $gametimesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -655,7 +655,7 @@ abstract class Players implements ActiveRecordInterface
 
             $this->collFraggedPlayers = null;
 
-            $this->collGames = null;
+            $this->collGametimes = null;
 
             $this->collHitterPlayers = null;
 
@@ -847,17 +847,17 @@ abstract class Players implements ActiveRecordInterface
                 }
             }
 
-            if ($this->gamesScheduledForDeletion !== null) {
-                if (!$this->gamesScheduledForDeletion->isEmpty()) {
-                    \GamesQuery::create()
-                        ->filterByPrimaryKeys($this->gamesScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->gametimesScheduledForDeletion !== null) {
+                if (!$this->gametimesScheduledForDeletion->isEmpty()) {
+                    \GametimesQuery::create()
+                        ->filterByPrimaryKeys($this->gametimesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->gamesScheduledForDeletion = null;
+                    $this->gametimesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collGames !== null) {
-                foreach ($this->collGames as $referrerFK) {
+            if ($this->collGametimes !== null) {
+                foreach ($this->collGametimes as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1158,20 +1158,20 @@ abstract class Players implements ActiveRecordInterface
 
                 $result[$key] = $this->collFraggedPlayers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collGames) {
+            if (null !== $this->collGametimes) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'gamess';
+                        $key = 'gametimess';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'gamess';
+                        $key = 'gametimess';
                         break;
                     default:
-                        $key = 'Games';
+                        $key = 'Gametimes';
                 }
 
-                $result[$key] = $this->collGames->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collGametimes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collHitterPlayers) {
 
@@ -1479,9 +1479,9 @@ abstract class Players implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getGames() as $relObj) {
+            foreach ($this->getGametimes() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGame($relObj->copy($deepCopy));
+                    $copyObj->addGametime($relObj->copy($deepCopy));
                 }
             }
 
@@ -1566,8 +1566,8 @@ abstract class Players implements ActiveRecordInterface
             $this->initFraggedPlayers();
             return;
         }
-        if ('Game' == $relationName) {
-            $this->initGames();
+        if ('Gametime' == $relationName) {
+            $this->initGametimes();
             return;
         }
         if ('HitterPlayer' == $relationName) {
@@ -2539,31 +2539,31 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collGames collection
+     * Clears out the collGametimes collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addGames()
+     * @see        addGametimes()
      */
-    public function clearGames()
+    public function clearGametimes()
     {
-        $this->collGames = null; // important to set this to NULL since that means it is uninitialized
+        $this->collGametimes = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collGames collection loaded partially.
+     * Reset is the collGametimes collection loaded partially.
      */
-    public function resetPartialGames($v = true)
+    public function resetPartialGametimes($v = true)
     {
-        $this->collGamesPartial = $v;
+        $this->collGametimesPartial = $v;
     }
 
     /**
-     * Initializes the collGames collection.
+     * Initializes the collGametimes collection.
      *
-     * By default this just sets the collGames collection to an empty array (like clearcollGames());
+     * By default this just sets the collGametimes collection to an empty array (like clearcollGametimes());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2572,20 +2572,20 @@ abstract class Players implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initGames($overrideExisting = true)
+    public function initGametimes($overrideExisting = true)
     {
-        if (null !== $this->collGames && !$overrideExisting) {
+        if (null !== $this->collGametimes && !$overrideExisting) {
             return;
         }
 
-        $collectionClassName = GamesTableMap::getTableMap()->getCollectionClassName();
+        $collectionClassName = GametimesTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collGames = new $collectionClassName;
-        $this->collGames->setModel('\Games');
+        $this->collGametimes = new $collectionClassName;
+        $this->collGametimes->setModel('\Gametimes');
     }
 
     /**
-     * Gets an array of ChildGames objects which contain a foreign key that references this object.
+     * Gets an array of ChildGametimes objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2595,108 +2595,108 @@ abstract class Players implements ActiveRecordInterface
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildGames[] List of ChildGames objects
+     * @return ObjectCollection|ChildGametimes[] List of ChildGametimes objects
      * @throws PropelException
      */
-    public function getGames(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getGametimes(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collGamesPartial && !$this->isNew();
-        if (null === $this->collGames || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGames) {
+        $partial = $this->collGametimesPartial && !$this->isNew();
+        if (null === $this->collGametimes || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collGametimes) {
                 // return empty collection
-                $this->initGames();
+                $this->initGametimes();
             } else {
-                $collGames = ChildGamesQuery::create(null, $criteria)
+                $collGametimes = ChildGametimesQuery::create(null, $criteria)
                     ->filterByPlayers($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collGamesPartial && count($collGames)) {
-                        $this->initGames(false);
+                    if (false !== $this->collGametimesPartial && count($collGametimes)) {
+                        $this->initGametimes(false);
 
-                        foreach ($collGames as $obj) {
-                            if (false == $this->collGames->contains($obj)) {
-                                $this->collGames->append($obj);
+                        foreach ($collGametimes as $obj) {
+                            if (false == $this->collGametimes->contains($obj)) {
+                                $this->collGametimes->append($obj);
                             }
                         }
 
-                        $this->collGamesPartial = true;
+                        $this->collGametimesPartial = true;
                     }
 
-                    return $collGames;
+                    return $collGametimes;
                 }
 
-                if ($partial && $this->collGames) {
-                    foreach ($this->collGames as $obj) {
+                if ($partial && $this->collGametimes) {
+                    foreach ($this->collGametimes as $obj) {
                         if ($obj->isNew()) {
-                            $collGames[] = $obj;
+                            $collGametimes[] = $obj;
                         }
                     }
                 }
 
-                $this->collGames = $collGames;
-                $this->collGamesPartial = false;
+                $this->collGametimes = $collGametimes;
+                $this->collGametimesPartial = false;
             }
         }
 
-        return $this->collGames;
+        return $this->collGametimes;
     }
 
     /**
-     * Sets a collection of ChildGames objects related by a one-to-many relationship
+     * Sets a collection of ChildGametimes objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $games A Propel collection.
+     * @param      Collection $gametimes A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildPlayers The current object (for fluent API support)
      */
-    public function setGames(Collection $games, ConnectionInterface $con = null)
+    public function setGametimes(Collection $gametimes, ConnectionInterface $con = null)
     {
-        /** @var ChildGames[] $gamesToDelete */
-        $gamesToDelete = $this->getGames(new Criteria(), $con)->diff($games);
+        /** @var ChildGametimes[] $gametimesToDelete */
+        $gametimesToDelete = $this->getGametimes(new Criteria(), $con)->diff($gametimes);
 
 
-        $this->gamesScheduledForDeletion = $gamesToDelete;
+        $this->gametimesScheduledForDeletion = $gametimesToDelete;
 
-        foreach ($gamesToDelete as $gameRemoved) {
-            $gameRemoved->setPlayers(null);
+        foreach ($gametimesToDelete as $gametimeRemoved) {
+            $gametimeRemoved->setPlayers(null);
         }
 
-        $this->collGames = null;
-        foreach ($games as $game) {
-            $this->addGame($game);
+        $this->collGametimes = null;
+        foreach ($gametimes as $gametime) {
+            $this->addGametime($gametime);
         }
 
-        $this->collGames = $games;
-        $this->collGamesPartial = false;
+        $this->collGametimes = $gametimes;
+        $this->collGametimesPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Games objects.
+     * Returns the number of related Gametimes objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related Games objects.
+     * @return int             Count of related Gametimes objects.
      * @throws PropelException
      */
-    public function countGames(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countGametimes(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collGamesPartial && !$this->isNew();
-        if (null === $this->collGames || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGames) {
+        $partial = $this->collGametimesPartial && !$this->isNew();
+        if (null === $this->collGametimes || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collGametimes) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getGames());
+                return count($this->getGametimes());
             }
 
-            $query = ChildGamesQuery::create(null, $criteria);
+            $query = ChildGametimesQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -2706,28 +2706,28 @@ abstract class Players implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collGames);
+        return count($this->collGametimes);
     }
 
     /**
-     * Method called to associate a ChildGames object to this object
-     * through the ChildGames foreign key attribute.
+     * Method called to associate a ChildGametimes object to this object
+     * through the ChildGametimes foreign key attribute.
      *
-     * @param  ChildGames $l ChildGames
+     * @param  ChildGametimes $l ChildGametimes
      * @return $this|\Players The current object (for fluent API support)
      */
-    public function addGame(ChildGames $l)
+    public function addGametime(ChildGametimes $l)
     {
-        if ($this->collGames === null) {
-            $this->initGames();
-            $this->collGamesPartial = true;
+        if ($this->collGametimes === null) {
+            $this->initGametimes();
+            $this->collGametimesPartial = true;
         }
 
-        if (!$this->collGames->contains($l)) {
-            $this->doAddGame($l);
+        if (!$this->collGametimes->contains($l)) {
+            $this->doAddGametime($l);
 
-            if ($this->gamesScheduledForDeletion and $this->gamesScheduledForDeletion->contains($l)) {
-                $this->gamesScheduledForDeletion->remove($this->gamesScheduledForDeletion->search($l));
+            if ($this->gametimesScheduledForDeletion and $this->gametimesScheduledForDeletion->contains($l)) {
+                $this->gametimesScheduledForDeletion->remove($this->gametimesScheduledForDeletion->search($l));
             }
         }
 
@@ -2735,29 +2735,29 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildGames $game The ChildGames object to add.
+     * @param ChildGametimes $gametime The ChildGametimes object to add.
      */
-    protected function doAddGame(ChildGames $game)
+    protected function doAddGametime(ChildGametimes $gametime)
     {
-        $this->collGames[]= $game;
-        $game->setPlayers($this);
+        $this->collGametimes[]= $gametime;
+        $gametime->setPlayers($this);
     }
 
     /**
-     * @param  ChildGames $game The ChildGames object to remove.
+     * @param  ChildGametimes $gametime The ChildGametimes object to remove.
      * @return $this|ChildPlayers The current object (for fluent API support)
      */
-    public function removeGame(ChildGames $game)
+    public function removeGametime(ChildGametimes $gametime)
     {
-        if ($this->getGames()->contains($game)) {
-            $pos = $this->collGames->search($game);
-            $this->collGames->remove($pos);
-            if (null === $this->gamesScheduledForDeletion) {
-                $this->gamesScheduledForDeletion = clone $this->collGames;
-                $this->gamesScheduledForDeletion->clear();
+        if ($this->getGametimes()->contains($gametime)) {
+            $pos = $this->collGametimes->search($gametime);
+            $this->collGametimes->remove($pos);
+            if (null === $this->gametimesScheduledForDeletion) {
+                $this->gametimesScheduledForDeletion = clone $this->collGametimes;
+                $this->gametimesScheduledForDeletion->clear();
             }
-            $this->gamesScheduledForDeletion[]= clone $game;
-            $game->setPlayers(null);
+            $this->gametimesScheduledForDeletion[]= clone $gametime;
+            $gametime->setPlayers(null);
         }
 
         return $this;
@@ -3786,8 +3786,8 @@ abstract class Players implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collGames) {
-                foreach ($this->collGames as $o) {
+            if ($this->collGametimes) {
+                foreach ($this->collGametimes as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3817,7 +3817,7 @@ abstract class Players implements ActiveRecordInterface
         $this->collFlags = null;
         $this->collFraggerPlayers = null;
         $this->collFraggedPlayers = null;
-        $this->collGames = null;
+        $this->collGametimes = null;
         $this->collHitterPlayers = null;
         $this->collHittedPlayers = null;
         $this->collScores = null;

@@ -1,9 +1,9 @@
 <?php
 
-use Base\GamesQuery as BaseGamesQuery;
+use Base\GametimesQuery as BaseGametimesQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'games' table.
+ * Skeleton subclass for performing query and update operations on the 'gametimes' table.
  *
  *
  *
@@ -12,7 +12,7 @@ use Base\GamesQuery as BaseGamesQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class GamesQuery extends BaseGamesQuery
+class GametimesQuery extends BaseGametimesQuery
 {
 
 }
