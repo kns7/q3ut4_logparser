@@ -18,7 +18,7 @@ class Controller
 
     public function clearDBTests()
     {
-        foreach(["bombs","flags","frags","games","hits","teams","rounds","scores"] as $table) {
+        foreach(["bombs","flags","frags","gametimes","hits","teams","rounds","scores"] as $table) {
             $conn = Propel::getConnection();
             $stmt = $conn->prepare("DELETE FROM $table");
             $stmt->execute();
