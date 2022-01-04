@@ -59,7 +59,7 @@ class BombsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class BombsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the id field
@@ -85,6 +85,11 @@ class BombsTableMap extends TableMap
      * the column name for the event field
      */
     const COL_EVENT = 'bombs.event';
+
+    /**
+     * the column name for the round_id field
+     */
+    const COL_ROUND_ID = 'bombs.round_id';
 
     /**
      * the column name for the created field
@@ -103,11 +108,11 @@ class BombsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Event', 'Created', ),
-        self::TYPE_CAMELNAME     => array('id', 'playerId', 'event', 'created', ),
-        self::TYPE_COLNAME       => array(BombsTableMap::COL_ID, BombsTableMap::COL_PLAYER_ID, BombsTableMap::COL_EVENT, BombsTableMap::COL_CREATED, ),
-        self::TYPE_FIELDNAME     => array('id', 'player_id', 'event', 'created', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Event', 'RoundId', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'playerId', 'event', 'roundId', 'created', ),
+        self::TYPE_COLNAME       => array(BombsTableMap::COL_ID, BombsTableMap::COL_PLAYER_ID, BombsTableMap::COL_EVENT, BombsTableMap::COL_ROUND_ID, BombsTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'player_id', 'event', 'round_id', 'created', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -117,11 +122,11 @@ class BombsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Event' => 2, 'Created' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'event' => 2, 'created' => 3, ),
-        self::TYPE_COLNAME       => array(BombsTableMap::COL_ID => 0, BombsTableMap::COL_PLAYER_ID => 1, BombsTableMap::COL_EVENT => 2, BombsTableMap::COL_CREATED => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'event' => 2, 'created' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Event' => 2, 'RoundId' => 3, 'Created' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'event' => 2, 'roundId' => 3, 'created' => 4, ),
+        self::TYPE_COLNAME       => array(BombsTableMap::COL_ID => 0, BombsTableMap::COL_PLAYER_ID => 1, BombsTableMap::COL_EVENT => 2, BombsTableMap::COL_ROUND_ID => 3, BombsTableMap::COL_CREATED => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'event' => 2, 'round_id' => 3, 'created' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -144,6 +149,7 @@ class BombsTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('player_id', 'PlayerId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addColumn('event', 'Event', 'VARCHAR', true, 255, null);
+        $this->addForeignKey('round_id', 'RoundId', 'INTEGER', 'gamerounds', 'id', true, null, null);
         $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
 
@@ -156,6 +162,13 @@ class BombsTableMap extends TableMap
   0 =>
   array (
     0 => ':player_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Rounds', '\\Gamerounds', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':round_id',
     1 => ':id',
   ),
 ), null, null, null, false);
@@ -305,11 +318,13 @@ class BombsTableMap extends TableMap
             $criteria->addSelectColumn(BombsTableMap::COL_ID);
             $criteria->addSelectColumn(BombsTableMap::COL_PLAYER_ID);
             $criteria->addSelectColumn(BombsTableMap::COL_EVENT);
+            $criteria->addSelectColumn(BombsTableMap::COL_ROUND_ID);
             $criteria->addSelectColumn(BombsTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.player_id');
             $criteria->addSelectColumn($alias . '.event');
+            $criteria->addSelectColumn($alias . '.round_id');
             $criteria->addSelectColumn($alias . '.created');
         }
     }

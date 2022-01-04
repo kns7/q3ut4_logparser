@@ -24,12 +24,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFragsQuery orderByFraggerId($order = Criteria::ASC) Order by the fragger_id column
  * @method     ChildFragsQuery orderByFraggedId($order = Criteria::ASC) Order by the fragged_id column
  * @method     ChildFragsQuery orderByWeaponId($order = Criteria::ASC) Order by the weapon_id column
+ * @method     ChildFragsQuery orderByRoundId($order = Criteria::ASC) Order by the round_id column
  * @method     ChildFragsQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
  * @method     ChildFragsQuery groupById() Group by the id column
  * @method     ChildFragsQuery groupByFraggerId() Group by the fragger_id column
  * @method     ChildFragsQuery groupByFraggedId() Group by the fragged_id column
  * @method     ChildFragsQuery groupByWeaponId() Group by the weapon_id column
+ * @method     ChildFragsQuery groupByRoundId() Group by the round_id column
  * @method     ChildFragsQuery groupByCreated() Group by the created column
  *
  * @method     ChildFragsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -70,7 +72,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFragsQuery rightJoinWithWeapons() Adds a RIGHT JOIN clause and with to the query using the Weapons relation
  * @method     ChildFragsQuery innerJoinWithWeapons() Adds a INNER JOIN clause and with to the query using the Weapons relation
  *
- * @method     \PlayersQuery|\WeaponsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildFragsQuery leftJoinRounds($relationAlias = null) Adds a LEFT JOIN clause to the query using the Rounds relation
+ * @method     ChildFragsQuery rightJoinRounds($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Rounds relation
+ * @method     ChildFragsQuery innerJoinRounds($relationAlias = null) Adds a INNER JOIN clause to the query using the Rounds relation
+ *
+ * @method     ChildFragsQuery joinWithRounds($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Rounds relation
+ *
+ * @method     ChildFragsQuery leftJoinWithRounds() Adds a LEFT JOIN clause and with to the query using the Rounds relation
+ * @method     ChildFragsQuery rightJoinWithRounds() Adds a RIGHT JOIN clause and with to the query using the Rounds relation
+ * @method     ChildFragsQuery innerJoinWithRounds() Adds a INNER JOIN clause and with to the query using the Rounds relation
+ *
+ * @method     \PlayersQuery|\WeaponsQuery|\GameroundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildFrags findOne(ConnectionInterface $con = null) Return the first ChildFrags matching the query
  * @method     ChildFrags findOneOrCreate(ConnectionInterface $con = null) Return the first ChildFrags matching the query, or a new ChildFrags object populated from the query conditions when no match is found
@@ -79,6 +91,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFrags findOneByFraggerId(int $fragger_id) Return the first ChildFrags filtered by the fragger_id column
  * @method     ChildFrags findOneByFraggedId(int $fragged_id) Return the first ChildFrags filtered by the fragged_id column
  * @method     ChildFrags findOneByWeaponId(int $weapon_id) Return the first ChildFrags filtered by the weapon_id column
+ * @method     ChildFrags findOneByRoundId(int $round_id) Return the first ChildFrags filtered by the round_id column
  * @method     ChildFrags findOneByCreated(string $created) Return the first ChildFrags filtered by the created column *
 
  * @method     ChildFrags requirePk($key, ConnectionInterface $con = null) Return the ChildFrags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -88,6 +101,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFrags requireOneByFraggerId(int $fragger_id) Return the first ChildFrags filtered by the fragger_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFrags requireOneByFraggedId(int $fragged_id) Return the first ChildFrags filtered by the fragged_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFrags requireOneByWeaponId(int $weapon_id) Return the first ChildFrags filtered by the weapon_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildFrags requireOneByRoundId(int $round_id) Return the first ChildFrags filtered by the round_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFrags requireOneByCreated(string $created) Return the first ChildFrags filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildFrags[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildFrags objects based on current ModelCriteria
@@ -95,6 +109,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFrags[]|ObjectCollection findByFraggerId(int $fragger_id) Return ChildFrags objects filtered by the fragger_id column
  * @method     ChildFrags[]|ObjectCollection findByFraggedId(int $fragged_id) Return ChildFrags objects filtered by the fragged_id column
  * @method     ChildFrags[]|ObjectCollection findByWeaponId(int $weapon_id) Return ChildFrags objects filtered by the weapon_id column
+ * @method     ChildFrags[]|ObjectCollection findByRoundId(int $round_id) Return ChildFrags objects filtered by the round_id column
  * @method     ChildFrags[]|ObjectCollection findByCreated(string $created) Return ChildFrags objects filtered by the created column
  * @method     ChildFrags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -194,7 +209,7 @@ abstract class FragsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, fragger_id, fragged_id, weapon_id, created FROM frags WHERE id = :p0';
+        $sql = 'SELECT id, fragger_id, fragged_id, weapon_id, round_id, created FROM frags WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -452,6 +467,49 @@ abstract class FragsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(FragsTableMap::COL_WEAPON_ID, $weaponId, $comparison);
+    }
+
+    /**
+     * Filter the query on the round_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRoundId(1234); // WHERE round_id = 1234
+     * $query->filterByRoundId(array(12, 34)); // WHERE round_id IN (12, 34)
+     * $query->filterByRoundId(array('min' => 12)); // WHERE round_id > 12
+     * </code>
+     *
+     * @see       filterByRounds()
+     *
+     * @param     mixed $roundId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildFragsQuery The current query, for fluid interface
+     */
+    public function filterByRoundId($roundId = null, $comparison = null)
+    {
+        if (is_array($roundId)) {
+            $useMinMax = false;
+            if (isset($roundId['min'])) {
+                $this->addUsingAlias(FragsTableMap::COL_ROUND_ID, $roundId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($roundId['max'])) {
+                $this->addUsingAlias(FragsTableMap::COL_ROUND_ID, $roundId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(FragsTableMap::COL_ROUND_ID, $roundId, $comparison);
     }
 
     /**
@@ -726,6 +784,83 @@ abstract class FragsQuery extends ModelCriteria
         return $this
             ->joinWeapons($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Weapons', '\WeaponsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Gamerounds object
+     *
+     * @param \Gamerounds|ObjectCollection $gamerounds The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildFragsQuery The current query, for fluid interface
+     */
+    public function filterByRounds($gamerounds, $comparison = null)
+    {
+        if ($gamerounds instanceof \Gamerounds) {
+            return $this
+                ->addUsingAlias(FragsTableMap::COL_ROUND_ID, $gamerounds->getId(), $comparison);
+        } elseif ($gamerounds instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(FragsTableMap::COL_ROUND_ID, $gamerounds->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByRounds() only accepts arguments of type \Gamerounds or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Rounds relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildFragsQuery The current query, for fluid interface
+     */
+    public function joinRounds($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Rounds');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Rounds');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Rounds relation Gamerounds object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \GameroundsQuery A secondary query class using the current class as primary query
+     */
+    public function useRoundsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinRounds($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Rounds', '\GameroundsQuery');
     }
 
     /**

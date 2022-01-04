@@ -1,9 +1,9 @@
 <?php
 
-use Base\Games as BaseGames;
+use Base\Gamerounds as BaseGamerounds;
 
 /**
- * Skeleton subclass for representing a row from the 'games' table.
+ * Skeleton subclass for representing a row from the 'gamerounds' table.
  *
  *
  *
@@ -12,7 +12,7 @@ use Base\Games as BaseGames;
  * long as it does not already exist in the output directory.
  *
  */
-class Games extends BaseGames
+class Gamerounds extends BaseGamerounds
 {
     public function preInsert(\Propel\Runtime\Connection\ConnectionInterface $con = null)
     {

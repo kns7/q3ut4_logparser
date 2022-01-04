@@ -59,7 +59,7 @@ class GamesTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -69,12 +69,17 @@ class GamesTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the id field
      */
     const COL_ID = 'games.id';
+
+    /**
+     * the column name for the gamenb field
+     */
+    const COL_GAMENB = 'games.gamenb';
 
     /**
      * the column name for the map_id field
@@ -95,6 +100,16 @@ class GamesTableMap extends TableMap
      * the column name for the roundtime field
      */
     const COL_ROUNDTIME = 'games.roundtime';
+
+    /**
+     * the column name for the redscore field
+     */
+    const COL_REDSCORE = 'games.redscore';
+
+    /**
+     * the column name for the bluescore field
+     */
+    const COL_BLUESCORE = 'games.bluescore';
 
     /**
      * the column name for the nbplayers field
@@ -118,11 +133,11 @@ class GamesTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'MapId', 'GametypeId', 'Timelimit', 'Roundtime', 'Nbplayers', 'Created', ),
-        self::TYPE_CAMELNAME     => array('id', 'mapId', 'gametypeId', 'timelimit', 'roundtime', 'nbplayers', 'created', ),
-        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID, GamesTableMap::COL_MAP_ID, GamesTableMap::COL_GAMETYPE_ID, GamesTableMap::COL_TIMELIMIT, GamesTableMap::COL_ROUNDTIME, GamesTableMap::COL_NBPLAYERS, GamesTableMap::COL_CREATED, ),
-        self::TYPE_FIELDNAME     => array('id', 'map_id', 'gametype_id', 'timelimit', 'roundtime', 'nbplayers', 'created', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'GameNB', 'MapId', 'GametypeId', 'Timelimit', 'Roundtime', 'RedScore', 'BlueScore', 'Nbplayers', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'gameNB', 'mapId', 'gametypeId', 'timelimit', 'roundtime', 'redScore', 'blueScore', 'nbplayers', 'created', ),
+        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID, GamesTableMap::COL_GAMENB, GamesTableMap::COL_MAP_ID, GamesTableMap::COL_GAMETYPE_ID, GamesTableMap::COL_TIMELIMIT, GamesTableMap::COL_ROUNDTIME, GamesTableMap::COL_REDSCORE, GamesTableMap::COL_BLUESCORE, GamesTableMap::COL_NBPLAYERS, GamesTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'gamenb', 'map_id', 'gametype_id', 'timelimit', 'roundtime', 'redscore', 'bluescore', 'nbplayers', 'created', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -132,11 +147,11 @@ class GamesTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'MapId' => 1, 'GametypeId' => 2, 'Timelimit' => 3, 'Roundtime' => 4, 'Nbplayers' => 5, 'Created' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'mapId' => 1, 'gametypeId' => 2, 'timelimit' => 3, 'roundtime' => 4, 'nbplayers' => 5, 'created' => 6, ),
-        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID => 0, GamesTableMap::COL_MAP_ID => 1, GamesTableMap::COL_GAMETYPE_ID => 2, GamesTableMap::COL_TIMELIMIT => 3, GamesTableMap::COL_ROUNDTIME => 4, GamesTableMap::COL_NBPLAYERS => 5, GamesTableMap::COL_CREATED => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'map_id' => 1, 'gametype_id' => 2, 'timelimit' => 3, 'roundtime' => 4, 'nbplayers' => 5, 'created' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'GameNB' => 1, 'MapId' => 2, 'GametypeId' => 3, 'Timelimit' => 4, 'Roundtime' => 5, 'RedScore' => 6, 'BlueScore' => 7, 'Nbplayers' => 8, 'Created' => 9, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'gameNB' => 1, 'mapId' => 2, 'gametypeId' => 3, 'timelimit' => 4, 'roundtime' => 5, 'redScore' => 6, 'blueScore' => 7, 'nbplayers' => 8, 'created' => 9, ),
+        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID => 0, GamesTableMap::COL_GAMENB => 1, GamesTableMap::COL_MAP_ID => 2, GamesTableMap::COL_GAMETYPE_ID => 3, GamesTableMap::COL_TIMELIMIT => 4, GamesTableMap::COL_ROUNDTIME => 5, GamesTableMap::COL_REDSCORE => 6, GamesTableMap::COL_BLUESCORE => 7, GamesTableMap::COL_NBPLAYERS => 8, GamesTableMap::COL_CREATED => 9, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'gamenb' => 1, 'map_id' => 2, 'gametype_id' => 3, 'timelimit' => 4, 'roundtime' => 5, 'redscore' => 6, 'bluescore' => 7, 'nbplayers' => 8, 'created' => 9, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -157,10 +172,13 @@ class GamesTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('gamenb', 'GameNB', 'INTEGER', true, null, null);
         $this->addForeignKey('map_id', 'MapId', 'INTEGER', 'maps', 'id', true, null, null);
         $this->addForeignKey('gametype_id', 'GametypeId', 'INTEGER', 'gametypes', 'id', true, null, null);
         $this->addColumn('timelimit', 'Timelimit', 'INTEGER', true, null, null);
         $this->addColumn('roundtime', 'Roundtime', 'INTEGER', true, null, null);
+        $this->addColumn('redscore', 'RedScore', 'INTEGER', true, null, null);
+        $this->addColumn('bluescore', 'BlueScore', 'INTEGER', true, null, null);
         $this->addColumn('nbplayers', 'Nbplayers', 'INTEGER', true, null, null);
         $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -184,6 +202,20 @@ class GamesTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
+        $this->addRelation('Round', '\\Gamerounds', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':game_id',
+    1 => ':id',
+  ),
+), null, null, 'Rounds', false);
+        $this->addRelation('Score', '\\Gamescores', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':game_id',
+    1 => ':id',
+  ),
+), null, null, 'Scores', false);
     } // buildRelations()
 
     /**
@@ -328,18 +360,24 @@ class GamesTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(GamesTableMap::COL_ID);
+            $criteria->addSelectColumn(GamesTableMap::COL_GAMENB);
             $criteria->addSelectColumn(GamesTableMap::COL_MAP_ID);
             $criteria->addSelectColumn(GamesTableMap::COL_GAMETYPE_ID);
             $criteria->addSelectColumn(GamesTableMap::COL_TIMELIMIT);
             $criteria->addSelectColumn(GamesTableMap::COL_ROUNDTIME);
+            $criteria->addSelectColumn(GamesTableMap::COL_REDSCORE);
+            $criteria->addSelectColumn(GamesTableMap::COL_BLUESCORE);
             $criteria->addSelectColumn(GamesTableMap::COL_NBPLAYERS);
             $criteria->addSelectColumn(GamesTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.gamenb');
             $criteria->addSelectColumn($alias . '.map_id');
             $criteria->addSelectColumn($alias . '.gametype_id');
             $criteria->addSelectColumn($alias . '.timelimit');
             $criteria->addSelectColumn($alias . '.roundtime');
+            $criteria->addSelectColumn($alias . '.redscore');
+            $criteria->addSelectColumn($alias . '.bluescore');
             $criteria->addSelectColumn($alias . '.nbplayers');
             $criteria->addSelectColumn($alias . '.created');
         }

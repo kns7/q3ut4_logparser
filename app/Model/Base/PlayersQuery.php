@@ -76,6 +76,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinWithFraggedPlayer() Adds a RIGHT JOIN clause and with to the query using the FraggedPlayer relation
  * @method     ChildPlayersQuery innerJoinWithFraggedPlayer() Adds a INNER JOIN clause and with to the query using the FraggedPlayer relation
  *
+ * @method     ChildPlayersQuery leftJoinScores($relationAlias = null) Adds a LEFT JOIN clause to the query using the Scores relation
+ * @method     ChildPlayersQuery rightJoinScores($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Scores relation
+ * @method     ChildPlayersQuery innerJoinScores($relationAlias = null) Adds a INNER JOIN clause to the query using the Scores relation
+ *
+ * @method     ChildPlayersQuery joinWithScores($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Scores relation
+ *
+ * @method     ChildPlayersQuery leftJoinWithScores() Adds a LEFT JOIN clause and with to the query using the Scores relation
+ * @method     ChildPlayersQuery rightJoinWithScores() Adds a RIGHT JOIN clause and with to the query using the Scores relation
+ * @method     ChildPlayersQuery innerJoinWithScores() Adds a INNER JOIN clause and with to the query using the Scores relation
+ *
  * @method     ChildPlayersQuery leftJoinGametime($relationAlias = null) Adds a LEFT JOIN clause to the query using the Gametime relation
  * @method     ChildPlayersQuery rightJoinGametime($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Gametime relation
  * @method     ChildPlayersQuery innerJoinGametime($relationAlias = null) Adds a INNER JOIN clause to the query using the Gametime relation
@@ -126,7 +136,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinWithTeam() Adds a RIGHT JOIN clause and with to the query using the Team relation
  * @method     ChildPlayersQuery innerJoinWithTeam() Adds a INNER JOIN clause and with to the query using the Team relation
  *
- * @method     \BombsQuery|\FlagsQuery|\FragsQuery|\GametimesQuery|\HitsQuery|\ScoresQuery|\TeamsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \BombsQuery|\FlagsQuery|\FragsQuery|\GamescoresQuery|\GametimesQuery|\HitsQuery|\ScoresQuery|\TeamsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPlayers findOne(ConnectionInterface $con = null) Return the first ChildPlayers matching the query
  * @method     ChildPlayers findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayers matching the query, or a new ChildPlayers object populated from the query conditions when no match is found
@@ -715,6 +725,79 @@ abstract class PlayersQuery extends ModelCriteria
         return $this
             ->joinFraggedPlayer($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'FraggedPlayer', '\FragsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Gamescores object
+     *
+     * @param \Gamescores|ObjectCollection $gamescores the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPlayersQuery The current query, for fluid interface
+     */
+    public function filterByScores($gamescores, $comparison = null)
+    {
+        if ($gamescores instanceof \Gamescores) {
+            return $this
+                ->addUsingAlias(PlayersTableMap::COL_ID, $gamescores->getPlayerId(), $comparison);
+        } elseif ($gamescores instanceof ObjectCollection) {
+            return $this
+                ->useScoresQuery()
+                ->filterByPrimaryKeys($gamescores->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByScores() only accepts arguments of type \Gamescores or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Scores relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayersQuery The current query, for fluid interface
+     */
+    public function joinScores($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Scores');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Scores');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Scores relation Gamescores object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \GamescoresQuery A secondary query class using the current class as primary query
+     */
+    public function useScoresQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinScores($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Scores', '\GamescoresQuery');
     }
 
     /**

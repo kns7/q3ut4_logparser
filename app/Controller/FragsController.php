@@ -13,11 +13,12 @@ use Propel\Runtime\Exception\PropelException;
 
 class FragsController extends Controller
 {
-    function add(\Players $fragger,\Players $fragged, \Weapons $weapon){
+    function add(\Players $fragger,\Players $fragged, \Weapons $weapon, \Gamerounds $round){
         $frag = new \Frags();
         $frag->setFragger($fragger)
             ->setFragged($fragged)
-            ->setWeapons($weapon);
+            ->setWeapons($weapon)
+            ->setRounds($round);
 
         try {
             $frag->save();
@@ -26,6 +27,4 @@ class FragsController extends Controller
             return false;
         }
     }
-
-
 }

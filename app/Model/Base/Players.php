@@ -8,6 +8,8 @@ use \Flags as ChildFlags;
 use \FlagsQuery as ChildFlagsQuery;
 use \Frags as ChildFrags;
 use \FragsQuery as ChildFragsQuery;
+use \Gamescores as ChildGamescores;
+use \GamescoresQuery as ChildGamescoresQuery;
 use \Gametimes as ChildGametimes;
 use \GametimesQuery as ChildGametimesQuery;
 use \Hits as ChildHits;
@@ -23,6 +25,7 @@ use \PDO;
 use Map\BombsTableMap;
 use Map\FlagsTableMap;
 use Map\FragsTableMap;
+use Map\GamescoresTableMap;
 use Map\GametimesTableMap;
 use Map\HitsTableMap;
 use Map\PlayersTableMap;
@@ -128,6 +131,12 @@ abstract class Players implements ActiveRecordInterface
     protected $collFraggedPlayersPartial;
 
     /**
+     * @var        ObjectCollection|ChildGamescores[] Collection to store aggregation of ChildGamescores objects.
+     */
+    protected $collScoress;
+    protected $collScoressPartial;
+
+    /**
      * @var        ObjectCollection|ChildGametimes[] Collection to store aggregation of ChildGametimes objects.
      */
     protected $collGametimes;
@@ -188,6 +197,12 @@ abstract class Players implements ActiveRecordInterface
      * @var ObjectCollection|ChildFrags[]
      */
     protected $fraggedPlayersScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGamescores[]
+     */
+    protected $scoressScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -655,6 +670,8 @@ abstract class Players implements ActiveRecordInterface
 
             $this->collFraggedPlayers = null;
 
+            $this->collScoress = null;
+
             $this->collGametimes = null;
 
             $this->collHitterPlayers = null;
@@ -841,6 +858,23 @@ abstract class Players implements ActiveRecordInterface
 
             if ($this->collFraggedPlayers !== null) {
                 foreach ($this->collFraggedPlayers as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->scoressScheduledForDeletion !== null) {
+                if (!$this->scoressScheduledForDeletion->isEmpty()) {
+                    \GamescoresQuery::create()
+                        ->filterByPrimaryKeys($this->scoressScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->scoressScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collScoress !== null) {
+                foreach ($this->collScoress as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1157,6 +1191,21 @@ abstract class Players implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collFraggedPlayers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collScoress) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'gamescoress';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'gamescoress';
+                        break;
+                    default:
+                        $key = 'Scoress';
+                }
+
+                $result[$key] = $this->collScoress->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collGametimes) {
 
@@ -1479,6 +1528,12 @@ abstract class Players implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getScoress() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addScores($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getGametimes() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addGametime($relObj->copy($deepCopy));
@@ -1564,6 +1619,10 @@ abstract class Players implements ActiveRecordInterface
         }
         if ('FraggedPlayer' == $relationName) {
             $this->initFraggedPlayers();
+            return;
+        }
+        if ('Scores' == $relationName) {
+            $this->initScoress();
             return;
         }
         if ('Gametime' == $relationName) {
@@ -1813,6 +1872,31 @@ abstract class Players implements ActiveRecordInterface
         return $this;
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related Bombs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildBombs[] List of ChildBombs objects
+     */
+    public function getBombsJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildBombsQuery::create(null, $criteria);
+        $query->joinWith('Rounds', $joinBehavior);
+
+        return $this->getBombs($query, $con);
+    }
+
     /**
      * Clears out the collFlags collection
      *
@@ -2036,6 +2120,31 @@ abstract class Players implements ActiveRecordInterface
         }
 
         return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related Flags from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildFlags[] List of ChildFlags objects
+     */
+    public function getFlagsJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildFlagsQuery::create(null, $criteria);
+        $query->joinWith('Rounds', $joinBehavior);
+
+        return $this->getFlags($query, $con);
     }
 
     /**
@@ -2288,6 +2397,31 @@ abstract class Players implements ActiveRecordInterface
         return $this->getFraggerPlayers($query, $con);
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related FraggerPlayers from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     */
+    public function getFraggerPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildFragsQuery::create(null, $criteria);
+        $query->joinWith('Rounds', $joinBehavior);
+
+        return $this->getFraggerPlayers($query, $con);
+    }
+
     /**
      * Clears out the collFraggedPlayers collection
      *
@@ -2536,6 +2670,281 @@ abstract class Players implements ActiveRecordInterface
         $query->joinWith('Weapons', $joinBehavior);
 
         return $this->getFraggedPlayers($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related FraggedPlayers from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     */
+    public function getFraggedPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildFragsQuery::create(null, $criteria);
+        $query->joinWith('Rounds', $joinBehavior);
+
+        return $this->getFraggedPlayers($query, $con);
+    }
+
+    /**
+     * Clears out the collScoress collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addScoress()
+     */
+    public function clearScoress()
+    {
+        $this->collScoress = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collScoress collection loaded partially.
+     */
+    public function resetPartialScoress($v = true)
+    {
+        $this->collScoressPartial = $v;
+    }
+
+    /**
+     * Initializes the collScoress collection.
+     *
+     * By default this just sets the collScoress collection to an empty array (like clearcollScoress());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initScoress($overrideExisting = true)
+    {
+        if (null !== $this->collScoress && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = GamescoresTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collScoress = new $collectionClassName;
+        $this->collScoress->setModel('\Gamescores');
+    }
+
+    /**
+     * Gets an array of ChildGamescores objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildPlayers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildGamescores[] List of ChildGamescores objects
+     * @throws PropelException
+     */
+    public function getScoress(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collScoressPartial && !$this->isNew();
+        if (null === $this->collScoress || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collScoress) {
+                // return empty collection
+                $this->initScoress();
+            } else {
+                $collScoress = ChildGamescoresQuery::create(null, $criteria)
+                    ->filterByPlayers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collScoressPartial && count($collScoress)) {
+                        $this->initScoress(false);
+
+                        foreach ($collScoress as $obj) {
+                            if (false == $this->collScoress->contains($obj)) {
+                                $this->collScoress->append($obj);
+                            }
+                        }
+
+                        $this->collScoressPartial = true;
+                    }
+
+                    return $collScoress;
+                }
+
+                if ($partial && $this->collScoress) {
+                    foreach ($this->collScoress as $obj) {
+                        if ($obj->isNew()) {
+                            $collScoress[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collScoress = $collScoress;
+                $this->collScoressPartial = false;
+            }
+        }
+
+        return $this->collScoress;
+    }
+
+    /**
+     * Sets a collection of ChildGamescores objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $scoress A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildPlayers The current object (for fluent API support)
+     */
+    public function setScoress(Collection $scoress, ConnectionInterface $con = null)
+    {
+        /** @var ChildGamescores[] $scoressToDelete */
+        $scoressToDelete = $this->getScoress(new Criteria(), $con)->diff($scoress);
+
+
+        $this->scoressScheduledForDeletion = $scoressToDelete;
+
+        foreach ($scoressToDelete as $scoresRemoved) {
+            $scoresRemoved->setPlayers(null);
+        }
+
+        $this->collScoress = null;
+        foreach ($scoress as $scores) {
+            $this->addScores($scores);
+        }
+
+        $this->collScoress = $scoress;
+        $this->collScoressPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Gamescores objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Gamescores objects.
+     * @throws PropelException
+     */
+    public function countScoress(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collScoressPartial && !$this->isNew();
+        if (null === $this->collScoress || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collScoress) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getScoress());
+            }
+
+            $query = ChildGamescoresQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPlayers($this)
+                ->count($con);
+        }
+
+        return count($this->collScoress);
+    }
+
+    /**
+     * Method called to associate a ChildGamescores object to this object
+     * through the ChildGamescores foreign key attribute.
+     *
+     * @param  ChildGamescores $l ChildGamescores
+     * @return $this|\Players The current object (for fluent API support)
+     */
+    public function addScores(ChildGamescores $l)
+    {
+        if ($this->collScoress === null) {
+            $this->initScoress();
+            $this->collScoressPartial = true;
+        }
+
+        if (!$this->collScoress->contains($l)) {
+            $this->doAddScores($l);
+
+            if ($this->scoressScheduledForDeletion and $this->scoressScheduledForDeletion->contains($l)) {
+                $this->scoressScheduledForDeletion->remove($this->scoressScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildGamescores $scores The ChildGamescores object to add.
+     */
+    protected function doAddScores(ChildGamescores $scores)
+    {
+        $this->collScoress[]= $scores;
+        $scores->setPlayers($this);
+    }
+
+    /**
+     * @param  ChildGamescores $scores The ChildGamescores object to remove.
+     * @return $this|ChildPlayers The current object (for fluent API support)
+     */
+    public function removeScores(ChildGamescores $scores)
+    {
+        if ($this->getScoress()->contains($scores)) {
+            $pos = $this->collScoress->search($scores);
+            $this->collScoress->remove($pos);
+            if (null === $this->scoressScheduledForDeletion) {
+                $this->scoressScheduledForDeletion = clone $this->collScoress;
+                $this->scoressScheduledForDeletion->clear();
+            }
+            $this->scoressScheduledForDeletion[]= clone $scores;
+            $scores->setPlayers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related Scoress from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildGamescores[] List of ChildGamescores objects
+     */
+    public function getScoressJoinGames(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildGamescoresQuery::create(null, $criteria);
+        $query->joinWith('Games', $joinBehavior);
+
+        return $this->getScoress($query, $con);
     }
 
     /**
@@ -3013,6 +3422,31 @@ abstract class Players implements ActiveRecordInterface
         return $this->getHitterPlayers($query, $con);
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related HitterPlayers from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     */
+    public function getHitterPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildHitsQuery::create(null, $criteria);
+        $query->joinWith('Rounds', $joinBehavior);
+
+        return $this->getHitterPlayers($query, $con);
+    }
+
     /**
      * Clears out the collHittedPlayers collection
      *
@@ -3259,6 +3693,31 @@ abstract class Players implements ActiveRecordInterface
     {
         $query = ChildHitsQuery::create(null, $criteria);
         $query->joinWith('Bodyparts', $joinBehavior);
+
+        return $this->getHittedPlayers($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related HittedPlayers from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     */
+    public function getHittedPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildHitsQuery::create(null, $criteria);
+        $query->joinWith('Rounds', $joinBehavior);
 
         return $this->getHittedPlayers($query, $con);
     }
@@ -3786,6 +4245,11 @@ abstract class Players implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collScoress) {
+                foreach ($this->collScoress as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collGametimes) {
                 foreach ($this->collGametimes as $o) {
                     $o->clearAllReferences($deep);
@@ -3817,6 +4281,7 @@ abstract class Players implements ActiveRecordInterface
         $this->collFlags = null;
         $this->collFraggerPlayers = null;
         $this->collFraggedPlayers = null;
+        $this->collScoress = null;
         $this->collGametimes = null;
         $this->collHitterPlayers = null;
         $this->collHittedPlayers = null;

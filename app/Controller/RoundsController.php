@@ -44,4 +44,35 @@ class RoundsController extends Controller
             return false;
         }
     }
+
+    public function getNextRoundNB()
+    {
+        $query = \GameroundsQuery::create()->orderByRoundNB("DESC")->findOne();
+        return (is_null($query))? 1: $query->getRoundNB() + 1;
+    }
+
+    public function addRound(\Games $game, $roundnb)
+    {
+        $round = new \Gamerounds();
+        $round->setGames($game)
+            ->setRoundNB($roundnb);
+
+        try {
+            $round->save();
+            $newround = \GameroundsQuery::create()->orderById("DESC")->findOne();
+            return $newround;
+        } catch(PropelException $e){
+            return false;
+        }
+    }
+
+    public function deleteFromGame($gameid)
+    {
+        try {
+            \GameroundsQuery::create()->filterByGameID($gameid)->delete();
+            return true;
+        } catch (PropelException $e){
+            return false;
+        }
+    }
 }

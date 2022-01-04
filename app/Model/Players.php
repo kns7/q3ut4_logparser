@@ -160,4 +160,23 @@ class Players extends BasePlayers
         }
         return $query->count();
     }
+
+    public function getKillsPerGame(\Games $game)
+    {
+        $rounds = \GameroundsQuery::create()->filterByGames($game)->select("id")->find()->toArray();
+        return \FragsQuery::create()
+            ->filterByFraggerId($this->getId())
+            ->filterByRoundId($rounds)
+            ->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)
+            ->count();
+    }
+
+    public function getDeathsPerGame(\Games $game)
+    {
+        $rounds = \GameroundsQuery::create()->filterByGames($game)->select("id")->find()->toArray();
+        return \FragsQuery::create()
+            ->filterByFraggedId($this->getId())
+            ->filterByRoundId($rounds)
+            ->count();
+    }
 }

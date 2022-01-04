@@ -23,11 +23,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFlagsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildFlagsQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
  * @method     ChildFlagsQuery orderByEvent($order = Criteria::ASC) Order by the event column
+ * @method     ChildFlagsQuery orderByRoundId($order = Criteria::ASC) Order by the round_id column
  * @method     ChildFlagsQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
  * @method     ChildFlagsQuery groupById() Group by the id column
  * @method     ChildFlagsQuery groupByPlayerId() Group by the player_id column
  * @method     ChildFlagsQuery groupByEvent() Group by the event column
+ * @method     ChildFlagsQuery groupByRoundId() Group by the round_id column
  * @method     ChildFlagsQuery groupByCreated() Group by the created column
  *
  * @method     ChildFlagsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -48,7 +50,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFlagsQuery rightJoinWithPlayers() Adds a RIGHT JOIN clause and with to the query using the Players relation
  * @method     ChildFlagsQuery innerJoinWithPlayers() Adds a INNER JOIN clause and with to the query using the Players relation
  *
- * @method     \PlayersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildFlagsQuery leftJoinRounds($relationAlias = null) Adds a LEFT JOIN clause to the query using the Rounds relation
+ * @method     ChildFlagsQuery rightJoinRounds($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Rounds relation
+ * @method     ChildFlagsQuery innerJoinRounds($relationAlias = null) Adds a INNER JOIN clause to the query using the Rounds relation
+ *
+ * @method     ChildFlagsQuery joinWithRounds($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Rounds relation
+ *
+ * @method     ChildFlagsQuery leftJoinWithRounds() Adds a LEFT JOIN clause and with to the query using the Rounds relation
+ * @method     ChildFlagsQuery rightJoinWithRounds() Adds a RIGHT JOIN clause and with to the query using the Rounds relation
+ * @method     ChildFlagsQuery innerJoinWithRounds() Adds a INNER JOIN clause and with to the query using the Rounds relation
+ *
+ * @method     \PlayersQuery|\GameroundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildFlags findOne(ConnectionInterface $con = null) Return the first ChildFlags matching the query
  * @method     ChildFlags findOneOrCreate(ConnectionInterface $con = null) Return the first ChildFlags matching the query, or a new ChildFlags object populated from the query conditions when no match is found
@@ -56,6 +68,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFlags findOneById(int $id) Return the first ChildFlags filtered by the id column
  * @method     ChildFlags findOneByPlayerId(int $player_id) Return the first ChildFlags filtered by the player_id column
  * @method     ChildFlags findOneByEvent(string $event) Return the first ChildFlags filtered by the event column
+ * @method     ChildFlags findOneByRoundId(int $round_id) Return the first ChildFlags filtered by the round_id column
  * @method     ChildFlags findOneByCreated(string $created) Return the first ChildFlags filtered by the created column *
 
  * @method     ChildFlags requirePk($key, ConnectionInterface $con = null) Return the ChildFlags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -64,12 +77,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFlags requireOneById(int $id) Return the first ChildFlags filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFlags requireOneByPlayerId(int $player_id) Return the first ChildFlags filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFlags requireOneByEvent(string $event) Return the first ChildFlags filtered by the event column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildFlags requireOneByRoundId(int $round_id) Return the first ChildFlags filtered by the round_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFlags requireOneByCreated(string $created) Return the first ChildFlags filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildFlags[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildFlags objects based on current ModelCriteria
  * @method     ChildFlags[]|ObjectCollection findById(int $id) Return ChildFlags objects filtered by the id column
  * @method     ChildFlags[]|ObjectCollection findByPlayerId(int $player_id) Return ChildFlags objects filtered by the player_id column
  * @method     ChildFlags[]|ObjectCollection findByEvent(string $event) Return ChildFlags objects filtered by the event column
+ * @method     ChildFlags[]|ObjectCollection findByRoundId(int $round_id) Return ChildFlags objects filtered by the round_id column
  * @method     ChildFlags[]|ObjectCollection findByCreated(string $created) Return ChildFlags objects filtered by the created column
  * @method     ChildFlags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -169,7 +184,7 @@ abstract class FlagsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, player_id, event, created FROM flags WHERE id = :p0';
+        $sql = 'SELECT id, player_id, event, round_id, created FROM flags WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -369,6 +384,49 @@ abstract class FlagsQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the round_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRoundId(1234); // WHERE round_id = 1234
+     * $query->filterByRoundId(array(12, 34)); // WHERE round_id IN (12, 34)
+     * $query->filterByRoundId(array('min' => 12)); // WHERE round_id > 12
+     * </code>
+     *
+     * @see       filterByRounds()
+     *
+     * @param     mixed $roundId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildFlagsQuery The current query, for fluid interface
+     */
+    public function filterByRoundId($roundId = null, $comparison = null)
+    {
+        if (is_array($roundId)) {
+            $useMinMax = false;
+            if (isset($roundId['min'])) {
+                $this->addUsingAlias(FlagsTableMap::COL_ROUND_ID, $roundId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($roundId['max'])) {
+                $this->addUsingAlias(FlagsTableMap::COL_ROUND_ID, $roundId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(FlagsTableMap::COL_ROUND_ID, $roundId, $comparison);
+    }
+
+    /**
      * Filter the query on the created column
      *
      * Example usage:
@@ -486,6 +544,83 @@ abstract class FlagsQuery extends ModelCriteria
         return $this
             ->joinPlayers($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Players', '\PlayersQuery');
+    }
+
+    /**
+     * Filter the query by a related \Gamerounds object
+     *
+     * @param \Gamerounds|ObjectCollection $gamerounds The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildFlagsQuery The current query, for fluid interface
+     */
+    public function filterByRounds($gamerounds, $comparison = null)
+    {
+        if ($gamerounds instanceof \Gamerounds) {
+            return $this
+                ->addUsingAlias(FlagsTableMap::COL_ROUND_ID, $gamerounds->getId(), $comparison);
+        } elseif ($gamerounds instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(FlagsTableMap::COL_ROUND_ID, $gamerounds->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByRounds() only accepts arguments of type \Gamerounds or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Rounds relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildFlagsQuery The current query, for fluid interface
+     */
+    public function joinRounds($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Rounds');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Rounds');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Rounds relation Gamerounds object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \GameroundsQuery A secondary query class using the current class as primary query
+     */
+    public function useRoundsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinRounds($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Rounds', '\GameroundsQuery');
     }
 
     /**

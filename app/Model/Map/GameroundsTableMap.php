@@ -2,8 +2,8 @@
 
 namespace Map;
 
-use \Flags;
-use \FlagsQuery;
+use \Gamerounds;
+use \GameroundsQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'flags' table.
+ * This class defines the structure of the 'gamerounds' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class FlagsTableMap extends TableMap
+class GameroundsTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class FlagsTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.FlagsTableMap';
+    const CLASS_NAME = '.Map.GameroundsTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class FlagsTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'flags';
+    const TABLE_NAME = 'gamerounds';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Flags';
+    const OM_CLASS = '\\Gamerounds';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Flags';
+    const CLASS_DEFAULT = 'Gamerounds';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,32 +69,27 @@ class FlagsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'flags.id';
+    const COL_ID = 'gamerounds.id';
 
     /**
-     * the column name for the player_id field
+     * the column name for the roundnb field
      */
-    const COL_PLAYER_ID = 'flags.player_id';
+    const COL_ROUNDNB = 'gamerounds.roundnb';
 
     /**
-     * the column name for the event field
+     * the column name for the game_id field
      */
-    const COL_EVENT = 'flags.event';
-
-    /**
-     * the column name for the round_id field
-     */
-    const COL_ROUND_ID = 'flags.round_id';
+    const COL_GAME_ID = 'gamerounds.game_id';
 
     /**
      * the column name for the created field
      */
-    const COL_CREATED = 'flags.created';
+    const COL_CREATED = 'gamerounds.created';
 
     /**
      * The default string format for model objects of the related table
@@ -108,11 +103,11 @@ class FlagsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Event', 'RoundId', 'Created', ),
-        self::TYPE_CAMELNAME     => array('id', 'playerId', 'event', 'roundId', 'created', ),
-        self::TYPE_COLNAME       => array(FlagsTableMap::COL_ID, FlagsTableMap::COL_PLAYER_ID, FlagsTableMap::COL_EVENT, FlagsTableMap::COL_ROUND_ID, FlagsTableMap::COL_CREATED, ),
-        self::TYPE_FIELDNAME     => array('id', 'player_id', 'event', 'round_id', 'created', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id', 'RoundNB', 'GameID', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'roundNB', 'gameID', 'created', ),
+        self::TYPE_COLNAME       => array(GameroundsTableMap::COL_ID, GameroundsTableMap::COL_ROUNDNB, GameroundsTableMap::COL_GAME_ID, GameroundsTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'roundnb', 'game_id', 'created', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -122,11 +117,11 @@ class FlagsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Event' => 2, 'RoundId' => 3, 'Created' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'event' => 2, 'roundId' => 3, 'created' => 4, ),
-        self::TYPE_COLNAME       => array(FlagsTableMap::COL_ID => 0, FlagsTableMap::COL_PLAYER_ID => 1, FlagsTableMap::COL_EVENT => 2, FlagsTableMap::COL_ROUND_ID => 3, FlagsTableMap::COL_CREATED => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'event' => 2, 'round_id' => 3, 'created' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'RoundNB' => 1, 'GameID' => 2, 'Created' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'roundNB' => 1, 'gameID' => 2, 'created' => 3, ),
+        self::TYPE_COLNAME       => array(GameroundsTableMap::COL_ID => 0, GameroundsTableMap::COL_ROUNDNB => 1, GameroundsTableMap::COL_GAME_ID => 2, GameroundsTableMap::COL_CREATED => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'roundnb' => 1, 'game_id' => 2, 'created' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -139,17 +134,16 @@ class FlagsTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('flags');
-        $this->setPhpName('Flags');
+        $this->setName('gamerounds');
+        $this->setPhpName('Gamerounds');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Flags');
+        $this->setClassName('\\Gamerounds');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('player_id', 'PlayerId', 'INTEGER', 'players', 'id', true, null, null);
-        $this->addColumn('event', 'Event', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('round_id', 'RoundId', 'INTEGER', 'gamerounds', 'id', true, null, null);
+        $this->addColumn('roundnb', 'RoundNB', 'INTEGER', true, null, null);
+        $this->addForeignKey('game_id', 'GameID', 'INTEGER', 'games', 'id', true, null, null);
         $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
 
@@ -158,20 +152,41 @@ class FlagsTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Players', '\\Players', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Games', '\\Games', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':player_id',
+    0 => ':game_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Rounds', '\\Gamerounds', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Bomb', '\\Bombs', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':round_id',
     1 => ':id',
   ),
-), null, null, null, false);
+), null, null, 'Bombs', false);
+        $this->addRelation('Flag', '\\Flags', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':round_id',
+    1 => ':id',
+  ),
+), null, null, 'Flags', false);
+        $this->addRelation('Frag', '\\Frags', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':round_id',
+    1 => ':id',
+  ),
+), null, null, 'Frags', false);
+        $this->addRelation('Hit', '\\Hits', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':round_id',
+    1 => ':id',
+  ),
+), null, null, 'Hits', false);
     } // buildRelations()
 
     /**
@@ -231,7 +246,7 @@ class FlagsTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? FlagsTableMap::CLASS_DEFAULT : FlagsTableMap::OM_CLASS;
+        return $withPrefix ? GameroundsTableMap::CLASS_DEFAULT : GameroundsTableMap::OM_CLASS;
     }
 
     /**
@@ -245,22 +260,22 @@ class FlagsTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Flags object, last column rank)
+     * @return array           (Gamerounds object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = FlagsTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = FlagsTableMap::getInstanceFromPool($key))) {
+        $key = GameroundsTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = GameroundsTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + FlagsTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + GameroundsTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = FlagsTableMap::OM_CLASS;
-            /** @var Flags $obj */
+            $cls = GameroundsTableMap::OM_CLASS;
+            /** @var Gamerounds $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            FlagsTableMap::addInstanceToPool($obj, $key);
+            GameroundsTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -283,18 +298,18 @@ class FlagsTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = FlagsTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = FlagsTableMap::getInstanceFromPool($key))) {
+            $key = GameroundsTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = GameroundsTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Flags $obj */
+                /** @var Gamerounds $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                FlagsTableMap::addInstanceToPool($obj, $key);
+                GameroundsTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -315,16 +330,14 @@ class FlagsTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(FlagsTableMap::COL_ID);
-            $criteria->addSelectColumn(FlagsTableMap::COL_PLAYER_ID);
-            $criteria->addSelectColumn(FlagsTableMap::COL_EVENT);
-            $criteria->addSelectColumn(FlagsTableMap::COL_ROUND_ID);
-            $criteria->addSelectColumn(FlagsTableMap::COL_CREATED);
+            $criteria->addSelectColumn(GameroundsTableMap::COL_ID);
+            $criteria->addSelectColumn(GameroundsTableMap::COL_ROUNDNB);
+            $criteria->addSelectColumn(GameroundsTableMap::COL_GAME_ID);
+            $criteria->addSelectColumn(GameroundsTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.player_id');
-            $criteria->addSelectColumn($alias . '.event');
-            $criteria->addSelectColumn($alias . '.round_id');
+            $criteria->addSelectColumn($alias . '.roundnb');
+            $criteria->addSelectColumn($alias . '.game_id');
             $criteria->addSelectColumn($alias . '.created');
         }
     }
@@ -338,7 +351,7 @@ class FlagsTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(FlagsTableMap::DATABASE_NAME)->getTable(FlagsTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(GameroundsTableMap::DATABASE_NAME)->getTable(GameroundsTableMap::TABLE_NAME);
     }
 
     /**
@@ -346,16 +359,16 @@ class FlagsTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(FlagsTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(FlagsTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new FlagsTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(GameroundsTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(GameroundsTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new GameroundsTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Flags or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Gamerounds or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Flags object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Gamerounds object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -366,27 +379,27 @@ class FlagsTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FlagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GameroundsTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Flags) { // it's a model object
+        } elseif ($values instanceof \Gamerounds) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(FlagsTableMap::DATABASE_NAME);
-            $criteria->add(FlagsTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(GameroundsTableMap::DATABASE_NAME);
+            $criteria->add(GameroundsTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = FlagsQuery::create()->mergeWith($criteria);
+        $query = GameroundsQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            FlagsTableMap::clearInstancePool();
+            GameroundsTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                FlagsTableMap::removeInstanceFromPool($singleval);
+                GameroundsTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -394,20 +407,20 @@ class FlagsTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the flags table.
+     * Deletes all rows from the gamerounds table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return FlagsQuery::create()->doDeleteAll($con);
+        return GameroundsQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Flags or Criteria object.
+     * Performs an INSERT on the database, given a Gamerounds or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Flags object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Gamerounds object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -416,22 +429,22 @@ class FlagsTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FlagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GameroundsTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Flags object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Gamerounds object
         }
 
-        if ($criteria->containsKey(FlagsTableMap::COL_ID) && $criteria->keyContainsValue(FlagsTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.FlagsTableMap::COL_ID.')');
+        if ($criteria->containsKey(GameroundsTableMap::COL_ID) && $criteria->keyContainsValue(GameroundsTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.GameroundsTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = FlagsQuery::create()->mergeWith($criteria);
+        $query = GameroundsQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -440,7 +453,7 @@ class FlagsTableMap extends TableMap
         });
     }
 
-} // FlagsTableMap
+} // GameroundsTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-FlagsTableMap::buildTableMap();
+GameroundsTableMap::buildTableMap();

@@ -2,7 +2,12 @@
 
 namespace Base;
 
+use \Gamerounds as ChildGamerounds;
+use \GameroundsQuery as ChildGameroundsQuery;
+use \Games as ChildGames;
 use \GamesQuery as ChildGamesQuery;
+use \Gamescores as ChildGamescores;
+use \GamescoresQuery as ChildGamescoresQuery;
 use \Gametypes as ChildGametypes;
 use \GametypesQuery as ChildGametypesQuery;
 use \Maps as ChildMaps;
@@ -10,12 +15,15 @@ use \MapsQuery as ChildMapsQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
+use Map\GameroundsTableMap;
 use Map\GamesTableMap;
+use Map\GamescoresTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -73,6 +81,13 @@ abstract class Games implements ActiveRecordInterface
     protected $id;
 
     /**
+     * The value for the gamenb field.
+     *
+     * @var        int
+     */
+    protected $gamenb;
+
+    /**
      * The value for the map_id field.
      *
      * @var        int
@@ -101,6 +116,20 @@ abstract class Games implements ActiveRecordInterface
     protected $roundtime;
 
     /**
+     * The value for the redscore field.
+     *
+     * @var        int
+     */
+    protected $redscore;
+
+    /**
+     * The value for the bluescore field.
+     *
+     * @var        int
+     */
+    protected $bluescore;
+
+    /**
      * The value for the nbplayers field.
      *
      * @var        int
@@ -125,12 +154,36 @@ abstract class Games implements ActiveRecordInterface
     protected $aGamestypes;
 
     /**
+     * @var        ObjectCollection|ChildGamerounds[] Collection to store aggregation of ChildGamerounds objects.
+     */
+    protected $collRounds;
+    protected $collRoundsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildGamescores[] Collection to store aggregation of ChildGamescores objects.
+     */
+    protected $collScores;
+    protected $collScoresPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGamerounds[]
+     */
+    protected $roundsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGamescores[]
+     */
+    protected $scoresScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Games object.
@@ -368,6 +421,16 @@ abstract class Games implements ActiveRecordInterface
     }
 
     /**
+     * Get the [gamenb] column value.
+     *
+     * @return int
+     */
+    public function getGameNB()
+    {
+        return $this->gamenb;
+    }
+
+    /**
      * Get the [map_id] column value.
      *
      * @return int
@@ -405,6 +468,26 @@ abstract class Games implements ActiveRecordInterface
     public function getRoundtime()
     {
         return $this->roundtime;
+    }
+
+    /**
+     * Get the [redscore] column value.
+     *
+     * @return int
+     */
+    public function getRedScore()
+    {
+        return $this->redscore;
+    }
+
+    /**
+     * Get the [bluescore] column value.
+     *
+     * @return int
+     */
+    public function getBlueScore()
+    {
+        return $this->bluescore;
     }
 
     /**
@@ -456,6 +539,26 @@ abstract class Games implements ActiveRecordInterface
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [gamenb] column.
+     *
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setGameNB($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->gamenb !== $v) {
+            $this->gamenb = $v;
+            $this->modifiedColumns[GamesTableMap::COL_GAMENB] = true;
+        }
+
+        return $this;
+    } // setGameNB()
 
     /**
      * Set the value of [map_id] column.
@@ -546,6 +649,46 @@ abstract class Games implements ActiveRecordInterface
     } // setRoundtime()
 
     /**
+     * Set the value of [redscore] column.
+     *
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setRedScore($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->redscore !== $v) {
+            $this->redscore = $v;
+            $this->modifiedColumns[GamesTableMap::COL_REDSCORE] = true;
+        }
+
+        return $this;
+    } // setRedScore()
+
+    /**
+     * Set the value of [bluescore] column.
+     *
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setBlueScore($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->bluescore !== $v) {
+            $this->bluescore = $v;
+            $this->modifiedColumns[GamesTableMap::COL_BLUESCORE] = true;
+        }
+
+        return $this;
+    } // setBlueScore()
+
+    /**
      * Set the value of [nbplayers] column.
      *
      * @param int $v new value
@@ -624,22 +767,31 @@ abstract class Games implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GamesTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GamesTableMap::translateFieldName('MapId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GamesTableMap::translateFieldName('GameNB', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->gamenb = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GamesTableMap::translateFieldName('MapId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->map_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GamesTableMap::translateFieldName('GametypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GamesTableMap::translateFieldName('GametypeId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->gametype_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GamesTableMap::translateFieldName('Timelimit', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GamesTableMap::translateFieldName('Timelimit', TableMap::TYPE_PHPNAME, $indexType)];
             $this->timelimit = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GamesTableMap::translateFieldName('Roundtime', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GamesTableMap::translateFieldName('Roundtime', TableMap::TYPE_PHPNAME, $indexType)];
             $this->roundtime = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GamesTableMap::translateFieldName('Nbplayers', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GamesTableMap::translateFieldName('RedScore', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->redscore = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GamesTableMap::translateFieldName('BlueScore', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->bluescore = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GamesTableMap::translateFieldName('Nbplayers', TableMap::TYPE_PHPNAME, $indexType)];
             $this->nbplayers = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GamesTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : GamesTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -652,7 +804,7 @@ abstract class Games implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = GamesTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = GamesTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Games'), 0, $e);
@@ -721,6 +873,10 @@ abstract class Games implements ActiveRecordInterface
 
             $this->aMaps = null;
             $this->aGamestypes = null;
+            $this->collRounds = null;
+
+            $this->collScores = null;
+
         } // if (deep)
     }
 
@@ -854,6 +1010,40 @@ abstract class Games implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->roundsScheduledForDeletion !== null) {
+                if (!$this->roundsScheduledForDeletion->isEmpty()) {
+                    \GameroundsQuery::create()
+                        ->filterByPrimaryKeys($this->roundsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->roundsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRounds !== null) {
+                foreach ($this->collRounds as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->scoresScheduledForDeletion !== null) {
+                if (!$this->scoresScheduledForDeletion->isEmpty()) {
+                    \GamescoresQuery::create()
+                        ->filterByPrimaryKeys($this->scoresScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->scoresScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collScores !== null) {
+                foreach ($this->collScores as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -883,6 +1073,9 @@ abstract class Games implements ActiveRecordInterface
         if ($this->isColumnModified(GamesTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
+        if ($this->isColumnModified(GamesTableMap::COL_GAMENB)) {
+            $modifiedColumns[':p' . $index++]  = 'gamenb';
+        }
         if ($this->isColumnModified(GamesTableMap::COL_MAP_ID)) {
             $modifiedColumns[':p' . $index++]  = 'map_id';
         }
@@ -894,6 +1087,12 @@ abstract class Games implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GamesTableMap::COL_ROUNDTIME)) {
             $modifiedColumns[':p' . $index++]  = 'roundtime';
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_REDSCORE)) {
+            $modifiedColumns[':p' . $index++]  = 'redscore';
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_BLUESCORE)) {
+            $modifiedColumns[':p' . $index++]  = 'bluescore';
         }
         if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
             $modifiedColumns[':p' . $index++]  = 'nbplayers';
@@ -915,6 +1114,9 @@ abstract class Games implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
+                    case 'gamenb':
+                        $stmt->bindValue($identifier, $this->gamenb, PDO::PARAM_INT);
+                        break;
                     case 'map_id':
                         $stmt->bindValue($identifier, $this->map_id, PDO::PARAM_INT);
                         break;
@@ -926,6 +1128,12 @@ abstract class Games implements ActiveRecordInterface
                         break;
                     case 'roundtime':
                         $stmt->bindValue($identifier, $this->roundtime, PDO::PARAM_INT);
+                        break;
+                    case 'redscore':
+                        $stmt->bindValue($identifier, $this->redscore, PDO::PARAM_INT);
+                        break;
+                    case 'bluescore':
+                        $stmt->bindValue($identifier, $this->bluescore, PDO::PARAM_INT);
                         break;
                     case 'nbplayers':
                         $stmt->bindValue($identifier, $this->nbplayers, PDO::PARAM_INT);
@@ -999,21 +1207,30 @@ abstract class Games implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getMapId();
+                return $this->getGameNB();
                 break;
             case 2:
-                return $this->getGametypeId();
+                return $this->getMapId();
                 break;
             case 3:
-                return $this->getTimelimit();
+                return $this->getGametypeId();
                 break;
             case 4:
-                return $this->getRoundtime();
+                return $this->getTimelimit();
                 break;
             case 5:
-                return $this->getNbplayers();
+                return $this->getRoundtime();
                 break;
             case 6:
+                return $this->getRedScore();
+                break;
+            case 7:
+                return $this->getBlueScore();
+                break;
+            case 8:
+                return $this->getNbplayers();
+                break;
+            case 9:
                 return $this->getCreated();
                 break;
             default:
@@ -1047,15 +1264,18 @@ abstract class Games implements ActiveRecordInterface
         $keys = GamesTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getMapId(),
-            $keys[2] => $this->getGametypeId(),
-            $keys[3] => $this->getTimelimit(),
-            $keys[4] => $this->getRoundtime(),
-            $keys[5] => $this->getNbplayers(),
-            $keys[6] => $this->getCreated(),
+            $keys[1] => $this->getGameNB(),
+            $keys[2] => $this->getMapId(),
+            $keys[3] => $this->getGametypeId(),
+            $keys[4] => $this->getTimelimit(),
+            $keys[5] => $this->getRoundtime(),
+            $keys[6] => $this->getRedScore(),
+            $keys[7] => $this->getBlueScore(),
+            $keys[8] => $this->getNbplayers(),
+            $keys[9] => $this->getCreated(),
         );
-        if ($result[$keys[6]] instanceof \DateTimeInterface) {
-            $result[$keys[6]] = $result[$keys[6]]->format('c');
+        if ($result[$keys[9]] instanceof \DateTimeInterface) {
+            $result[$keys[9]] = $result[$keys[9]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1093,6 +1313,36 @@ abstract class Games implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aGamestypes->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collRounds) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'gameroundss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'gameroundss';
+                        break;
+                    default:
+                        $key = 'Rounds';
+                }
+
+                $result[$key] = $this->collRounds->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collScores) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'gamescoress';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'gamescoress';
+                        break;
+                    default:
+                        $key = 'Scores';
+                }
+
+                $result[$key] = $this->collScores->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1132,21 +1382,30 @@ abstract class Games implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setMapId($value);
+                $this->setGameNB($value);
                 break;
             case 2:
-                $this->setGametypeId($value);
+                $this->setMapId($value);
                 break;
             case 3:
-                $this->setTimelimit($value);
+                $this->setGametypeId($value);
                 break;
             case 4:
-                $this->setRoundtime($value);
+                $this->setTimelimit($value);
                 break;
             case 5:
-                $this->setNbplayers($value);
+                $this->setRoundtime($value);
                 break;
             case 6:
+                $this->setRedScore($value);
+                break;
+            case 7:
+                $this->setBlueScore($value);
+                break;
+            case 8:
+                $this->setNbplayers($value);
+                break;
+            case 9:
                 $this->setCreated($value);
                 break;
         } // switch()
@@ -1179,22 +1438,31 @@ abstract class Games implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setMapId($arr[$keys[1]]);
+            $this->setGameNB($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setGametypeId($arr[$keys[2]]);
+            $this->setMapId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setTimelimit($arr[$keys[3]]);
+            $this->setGametypeId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setRoundtime($arr[$keys[4]]);
+            $this->setTimelimit($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setNbplayers($arr[$keys[5]]);
+            $this->setRoundtime($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setCreated($arr[$keys[6]]);
+            $this->setRedScore($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setBlueScore($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setNbplayers($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setCreated($arr[$keys[9]]);
         }
     }
 
@@ -1240,6 +1508,9 @@ abstract class Games implements ActiveRecordInterface
         if ($this->isColumnModified(GamesTableMap::COL_ID)) {
             $criteria->add(GamesTableMap::COL_ID, $this->id);
         }
+        if ($this->isColumnModified(GamesTableMap::COL_GAMENB)) {
+            $criteria->add(GamesTableMap::COL_GAMENB, $this->gamenb);
+        }
         if ($this->isColumnModified(GamesTableMap::COL_MAP_ID)) {
             $criteria->add(GamesTableMap::COL_MAP_ID, $this->map_id);
         }
@@ -1251,6 +1522,12 @@ abstract class Games implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GamesTableMap::COL_ROUNDTIME)) {
             $criteria->add(GamesTableMap::COL_ROUNDTIME, $this->roundtime);
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_REDSCORE)) {
+            $criteria->add(GamesTableMap::COL_REDSCORE, $this->redscore);
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_BLUESCORE)) {
+            $criteria->add(GamesTableMap::COL_BLUESCORE, $this->bluescore);
         }
         if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
             $criteria->add(GamesTableMap::COL_NBPLAYERS, $this->nbplayers);
@@ -1344,12 +1621,35 @@ abstract class Games implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setGameNB($this->getGameNB());
         $copyObj->setMapId($this->getMapId());
         $copyObj->setGametypeId($this->getGametypeId());
         $copyObj->setTimelimit($this->getTimelimit());
         $copyObj->setRoundtime($this->getRoundtime());
+        $copyObj->setRedScore($this->getRedScore());
+        $copyObj->setBlueScore($this->getBlueScore());
         $copyObj->setNbplayers($this->getNbplayers());
         $copyObj->setCreated($this->getCreated());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getRounds() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRound($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getScores() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addScore($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1480,6 +1780,502 @@ abstract class Games implements ActiveRecordInterface
         return $this->aGamestypes;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Round' == $relationName) {
+            $this->initRounds();
+            return;
+        }
+        if ('Score' == $relationName) {
+            $this->initScores();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collRounds collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addRounds()
+     */
+    public function clearRounds()
+    {
+        $this->collRounds = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collRounds collection loaded partially.
+     */
+    public function resetPartialRounds($v = true)
+    {
+        $this->collRoundsPartial = $v;
+    }
+
+    /**
+     * Initializes the collRounds collection.
+     *
+     * By default this just sets the collRounds collection to an empty array (like clearcollRounds());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRounds($overrideExisting = true)
+    {
+        if (null !== $this->collRounds && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = GameroundsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRounds = new $collectionClassName;
+        $this->collRounds->setModel('\Gamerounds');
+    }
+
+    /**
+     * Gets an array of ChildGamerounds objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGames is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildGamerounds[] List of ChildGamerounds objects
+     * @throws PropelException
+     */
+    public function getRounds(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRoundsPartial && !$this->isNew();
+        if (null === $this->collRounds || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRounds) {
+                // return empty collection
+                $this->initRounds();
+            } else {
+                $collRounds = ChildGameroundsQuery::create(null, $criteria)
+                    ->filterByGames($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collRoundsPartial && count($collRounds)) {
+                        $this->initRounds(false);
+
+                        foreach ($collRounds as $obj) {
+                            if (false == $this->collRounds->contains($obj)) {
+                                $this->collRounds->append($obj);
+                            }
+                        }
+
+                        $this->collRoundsPartial = true;
+                    }
+
+                    return $collRounds;
+                }
+
+                if ($partial && $this->collRounds) {
+                    foreach ($this->collRounds as $obj) {
+                        if ($obj->isNew()) {
+                            $collRounds[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRounds = $collRounds;
+                $this->collRoundsPartial = false;
+            }
+        }
+
+        return $this->collRounds;
+    }
+
+    /**
+     * Sets a collection of ChildGamerounds objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $rounds A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGames The current object (for fluent API support)
+     */
+    public function setRounds(Collection $rounds, ConnectionInterface $con = null)
+    {
+        /** @var ChildGamerounds[] $roundsToDelete */
+        $roundsToDelete = $this->getRounds(new Criteria(), $con)->diff($rounds);
+
+
+        $this->roundsScheduledForDeletion = $roundsToDelete;
+
+        foreach ($roundsToDelete as $roundRemoved) {
+            $roundRemoved->setGames(null);
+        }
+
+        $this->collRounds = null;
+        foreach ($rounds as $round) {
+            $this->addRound($round);
+        }
+
+        $this->collRounds = $rounds;
+        $this->collRoundsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Gamerounds objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Gamerounds objects.
+     * @throws PropelException
+     */
+    public function countRounds(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRoundsPartial && !$this->isNew();
+        if (null === $this->collRounds || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRounds) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getRounds());
+            }
+
+            $query = ChildGameroundsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGames($this)
+                ->count($con);
+        }
+
+        return count($this->collRounds);
+    }
+
+    /**
+     * Method called to associate a ChildGamerounds object to this object
+     * through the ChildGamerounds foreign key attribute.
+     *
+     * @param  ChildGamerounds $l ChildGamerounds
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function addRound(ChildGamerounds $l)
+    {
+        if ($this->collRounds === null) {
+            $this->initRounds();
+            $this->collRoundsPartial = true;
+        }
+
+        if (!$this->collRounds->contains($l)) {
+            $this->doAddRound($l);
+
+            if ($this->roundsScheduledForDeletion and $this->roundsScheduledForDeletion->contains($l)) {
+                $this->roundsScheduledForDeletion->remove($this->roundsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildGamerounds $round The ChildGamerounds object to add.
+     */
+    protected function doAddRound(ChildGamerounds $round)
+    {
+        $this->collRounds[]= $round;
+        $round->setGames($this);
+    }
+
+    /**
+     * @param  ChildGamerounds $round The ChildGamerounds object to remove.
+     * @return $this|ChildGames The current object (for fluent API support)
+     */
+    public function removeRound(ChildGamerounds $round)
+    {
+        if ($this->getRounds()->contains($round)) {
+            $pos = $this->collRounds->search($round);
+            $this->collRounds->remove($pos);
+            if (null === $this->roundsScheduledForDeletion) {
+                $this->roundsScheduledForDeletion = clone $this->collRounds;
+                $this->roundsScheduledForDeletion->clear();
+            }
+            $this->roundsScheduledForDeletion[]= clone $round;
+            $round->setGames(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collScores collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addScores()
+     */
+    public function clearScores()
+    {
+        $this->collScores = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collScores collection loaded partially.
+     */
+    public function resetPartialScores($v = true)
+    {
+        $this->collScoresPartial = $v;
+    }
+
+    /**
+     * Initializes the collScores collection.
+     *
+     * By default this just sets the collScores collection to an empty array (like clearcollScores());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initScores($overrideExisting = true)
+    {
+        if (null !== $this->collScores && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = GamescoresTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collScores = new $collectionClassName;
+        $this->collScores->setModel('\Gamescores');
+    }
+
+    /**
+     * Gets an array of ChildGamescores objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGames is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildGamescores[] List of ChildGamescores objects
+     * @throws PropelException
+     */
+    public function getScores(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collScoresPartial && !$this->isNew();
+        if (null === $this->collScores || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collScores) {
+                // return empty collection
+                $this->initScores();
+            } else {
+                $collScores = ChildGamescoresQuery::create(null, $criteria)
+                    ->filterByGames($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collScoresPartial && count($collScores)) {
+                        $this->initScores(false);
+
+                        foreach ($collScores as $obj) {
+                            if (false == $this->collScores->contains($obj)) {
+                                $this->collScores->append($obj);
+                            }
+                        }
+
+                        $this->collScoresPartial = true;
+                    }
+
+                    return $collScores;
+                }
+
+                if ($partial && $this->collScores) {
+                    foreach ($this->collScores as $obj) {
+                        if ($obj->isNew()) {
+                            $collScores[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collScores = $collScores;
+                $this->collScoresPartial = false;
+            }
+        }
+
+        return $this->collScores;
+    }
+
+    /**
+     * Sets a collection of ChildGamescores objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $scores A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGames The current object (for fluent API support)
+     */
+    public function setScores(Collection $scores, ConnectionInterface $con = null)
+    {
+        /** @var ChildGamescores[] $scoresToDelete */
+        $scoresToDelete = $this->getScores(new Criteria(), $con)->diff($scores);
+
+
+        $this->scoresScheduledForDeletion = $scoresToDelete;
+
+        foreach ($scoresToDelete as $scoreRemoved) {
+            $scoreRemoved->setGames(null);
+        }
+
+        $this->collScores = null;
+        foreach ($scores as $score) {
+            $this->addScore($score);
+        }
+
+        $this->collScores = $scores;
+        $this->collScoresPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Gamescores objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Gamescores objects.
+     * @throws PropelException
+     */
+    public function countScores(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collScoresPartial && !$this->isNew();
+        if (null === $this->collScores || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collScores) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getScores());
+            }
+
+            $query = ChildGamescoresQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGames($this)
+                ->count($con);
+        }
+
+        return count($this->collScores);
+    }
+
+    /**
+     * Method called to associate a ChildGamescores object to this object
+     * through the ChildGamescores foreign key attribute.
+     *
+     * @param  ChildGamescores $l ChildGamescores
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function addScore(ChildGamescores $l)
+    {
+        if ($this->collScores === null) {
+            $this->initScores();
+            $this->collScoresPartial = true;
+        }
+
+        if (!$this->collScores->contains($l)) {
+            $this->doAddScore($l);
+
+            if ($this->scoresScheduledForDeletion and $this->scoresScheduledForDeletion->contains($l)) {
+                $this->scoresScheduledForDeletion->remove($this->scoresScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildGamescores $score The ChildGamescores object to add.
+     */
+    protected function doAddScore(ChildGamescores $score)
+    {
+        $this->collScores[]= $score;
+        $score->setGames($this);
+    }
+
+    /**
+     * @param  ChildGamescores $score The ChildGamescores object to remove.
+     * @return $this|ChildGames The current object (for fluent API support)
+     */
+    public function removeScore(ChildGamescores $score)
+    {
+        if ($this->getScores()->contains($score)) {
+            $pos = $this->collScores->search($score);
+            $this->collScores->remove($pos);
+            if (null === $this->scoresScheduledForDeletion) {
+                $this->scoresScheduledForDeletion = clone $this->collScores;
+                $this->scoresScheduledForDeletion->clear();
+            }
+            $this->scoresScheduledForDeletion[]= clone $score;
+            $score->setGames(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Games is new, it will return
+     * an empty collection; or if this Games has previously
+     * been saved, it will retrieve related Scores from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Games.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildGamescores[] List of ChildGamescores objects
+     */
+    public function getScoresJoinPlayers(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildGamescoresQuery::create(null, $criteria);
+        $query->joinWith('Players', $joinBehavior);
+
+        return $this->getScores($query, $con);
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1494,10 +2290,13 @@ abstract class Games implements ActiveRecordInterface
             $this->aGamestypes->removeGame($this);
         }
         $this->id = null;
+        $this->gamenb = null;
         $this->map_id = null;
         $this->gametype_id = null;
         $this->timelimit = null;
         $this->roundtime = null;
+        $this->redscore = null;
+        $this->bluescore = null;
         $this->nbplayers = null;
         $this->created = null;
         $this->alreadyInSave = false;
@@ -1518,8 +2317,20 @@ abstract class Games implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collRounds) {
+                foreach ($this->collRounds as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collScores) {
+                foreach ($this->collScores as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collRounds = null;
+        $this->collScores = null;
         $this->aMaps = null;
         $this->aGamestypes = null;
     }

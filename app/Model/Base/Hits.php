@@ -4,6 +4,8 @@ namespace Base;
 
 use \Bodyparts as ChildBodyparts;
 use \BodypartsQuery as ChildBodypartsQuery;
+use \Gamerounds as ChildGamerounds;
+use \GameroundsQuery as ChildGameroundsQuery;
 use \HitsQuery as ChildHitsQuery;
 use \Players as ChildPlayers;
 use \PlayersQuery as ChildPlayersQuery;
@@ -94,6 +96,13 @@ abstract class Hits implements ActiveRecordInterface
     protected $bodypart_id;
 
     /**
+     * The value for the round_id field.
+     *
+     * @var        int
+     */
+    protected $round_id;
+
+    /**
      * The value for the created field.
      *
      * @var        DateTime
@@ -114,6 +123,11 @@ abstract class Hits implements ActiveRecordInterface
      * @var        ChildBodyparts
      */
     protected $aBodyparts;
+
+    /**
+     * @var        ChildGamerounds
+     */
+    protected $aRounds;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -389,6 +403,16 @@ abstract class Hits implements ActiveRecordInterface
     }
 
     /**
+     * Get the [round_id] column value.
+     *
+     * @return int
+     */
+    public function getRoundId()
+    {
+        return $this->round_id;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created] column value.
      *
      *
@@ -501,6 +525,30 @@ abstract class Hits implements ActiveRecordInterface
     } // setBodypartId()
 
     /**
+     * Set the value of [round_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\Hits The current object (for fluent API support)
+     */
+    public function setRoundId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->round_id !== $v) {
+            $this->round_id = $v;
+            $this->modifiedColumns[HitsTableMap::COL_ROUND_ID] = true;
+        }
+
+        if ($this->aRounds !== null && $this->aRounds->getId() !== $v) {
+            $this->aRounds = null;
+        }
+
+        return $this;
+    } // setRoundId()
+
+    /**
      * Sets the value of [created] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
@@ -568,7 +616,10 @@ abstract class Hits implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : HitsTableMap::translateFieldName('BodypartId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->bodypart_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : HitsTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : HitsTableMap::translateFieldName('RoundId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->round_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : HitsTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -581,7 +632,7 @@ abstract class Hits implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = HitsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = HitsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Hits'), 0, $e);
@@ -611,6 +662,9 @@ abstract class Hits implements ActiveRecordInterface
         }
         if ($this->aBodyparts !== null && $this->bodypart_id !== $this->aBodyparts->getId()) {
             $this->aBodyparts = null;
+        }
+        if ($this->aRounds !== null && $this->round_id !== $this->aRounds->getId()) {
+            $this->aRounds = null;
         }
     } // ensureConsistency
 
@@ -654,6 +708,7 @@ abstract class Hits implements ActiveRecordInterface
             $this->aHitter = null;
             $this->aHitted = null;
             $this->aBodyparts = null;
+            $this->aRounds = null;
         } // if (deep)
     }
 
@@ -783,6 +838,13 @@ abstract class Hits implements ActiveRecordInterface
                 $this->setBodyparts($this->aBodyparts);
             }
 
+            if ($this->aRounds !== null) {
+                if ($this->aRounds->isModified() || $this->aRounds->isNew()) {
+                    $affectedRows += $this->aRounds->save($con);
+                }
+                $this->setRounds($this->aRounds);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -832,6 +894,9 @@ abstract class Hits implements ActiveRecordInterface
         if ($this->isColumnModified(HitsTableMap::COL_BODYPART_ID)) {
             $modifiedColumns[':p' . $index++]  = 'bodypart_id';
         }
+        if ($this->isColumnModified(HitsTableMap::COL_ROUND_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'round_id';
+        }
         if ($this->isColumnModified(HitsTableMap::COL_CREATED)) {
             $modifiedColumns[':p' . $index++]  = 'created';
         }
@@ -857,6 +922,9 @@ abstract class Hits implements ActiveRecordInterface
                         break;
                     case 'bodypart_id':
                         $stmt->bindValue($identifier, $this->bodypart_id, PDO::PARAM_INT);
+                        break;
+                    case 'round_id':
+                        $stmt->bindValue($identifier, $this->round_id, PDO::PARAM_INT);
                         break;
                     case 'created':
                         $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -936,6 +1004,9 @@ abstract class Hits implements ActiveRecordInterface
                 return $this->getBodypartId();
                 break;
             case 4:
+                return $this->getRoundId();
+                break;
+            case 5:
                 return $this->getCreated();
                 break;
             default:
@@ -972,10 +1043,11 @@ abstract class Hits implements ActiveRecordInterface
             $keys[1] => $this->getHitterId(),
             $keys[2] => $this->getHittedId(),
             $keys[3] => $this->getBodypartId(),
-            $keys[4] => $this->getCreated(),
+            $keys[4] => $this->getRoundId(),
+            $keys[5] => $this->getCreated(),
         );
-        if ($result[$keys[4]] instanceof \DateTimeInterface) {
-            $result[$keys[4]] = $result[$keys[4]]->format('c');
+        if ($result[$keys[5]] instanceof \DateTimeInterface) {
+            $result[$keys[5]] = $result[$keys[5]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1029,6 +1101,21 @@ abstract class Hits implements ActiveRecordInterface
 
                 $result[$key] = $this->aBodyparts->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
+            if (null !== $this->aRounds) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'gamerounds';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'gamerounds';
+                        break;
+                    default:
+                        $key = 'Rounds';
+                }
+
+                $result[$key] = $this->aRounds->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
         }
 
         return $result;
@@ -1076,6 +1163,9 @@ abstract class Hits implements ActiveRecordInterface
                 $this->setBodypartId($value);
                 break;
             case 4:
+                $this->setRoundId($value);
+                break;
+            case 5:
                 $this->setCreated($value);
                 break;
         } // switch()
@@ -1117,7 +1207,10 @@ abstract class Hits implements ActiveRecordInterface
             $this->setBodypartId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCreated($arr[$keys[4]]);
+            $this->setRoundId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setCreated($arr[$keys[5]]);
         }
     }
 
@@ -1171,6 +1264,9 @@ abstract class Hits implements ActiveRecordInterface
         }
         if ($this->isColumnModified(HitsTableMap::COL_BODYPART_ID)) {
             $criteria->add(HitsTableMap::COL_BODYPART_ID, $this->bodypart_id);
+        }
+        if ($this->isColumnModified(HitsTableMap::COL_ROUND_ID)) {
+            $criteria->add(HitsTableMap::COL_ROUND_ID, $this->round_id);
         }
         if ($this->isColumnModified(HitsTableMap::COL_CREATED)) {
             $criteria->add(HitsTableMap::COL_CREATED, $this->created);
@@ -1264,6 +1360,7 @@ abstract class Hits implements ActiveRecordInterface
         $copyObj->setHitterId($this->getHitterId());
         $copyObj->setHittedId($this->getHittedId());
         $copyObj->setBodypartId($this->getBodypartId());
+        $copyObj->setRoundId($this->getRoundId());
         $copyObj->setCreated($this->getCreated());
         if ($makeNew) {
             $copyObj->setNew(true);
@@ -1447,6 +1544,57 @@ abstract class Hits implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildGamerounds object.
+     *
+     * @param  ChildGamerounds $v
+     * @return $this|\Hits The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setRounds(ChildGamerounds $v = null)
+    {
+        if ($v === null) {
+            $this->setRoundId(NULL);
+        } else {
+            $this->setRoundId($v->getId());
+        }
+
+        $this->aRounds = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildGamerounds object, it will not be re-added.
+        if ($v !== null) {
+            $v->addHit($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildGamerounds object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildGamerounds The associated ChildGamerounds object.
+     * @throws PropelException
+     */
+    public function getRounds(ConnectionInterface $con = null)
+    {
+        if ($this->aRounds === null && ($this->round_id != 0)) {
+            $this->aRounds = ChildGameroundsQuery::create()->findPk($this->round_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aRounds->addHits($this);
+             */
+        }
+
+        return $this->aRounds;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1462,10 +1610,14 @@ abstract class Hits implements ActiveRecordInterface
         if (null !== $this->aBodyparts) {
             $this->aBodyparts->removeHit($this);
         }
+        if (null !== $this->aRounds) {
+            $this->aRounds->removeHit($this);
+        }
         $this->id = null;
         $this->hitter_id = null;
         $this->hitted_id = null;
         $this->bodypart_id = null;
+        $this->round_id = null;
         $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1490,6 +1642,7 @@ abstract class Hits implements ActiveRecordInterface
         $this->aHitter = null;
         $this->aHitted = null;
         $this->aBodyparts = null;
+        $this->aRounds = null;
     }
 
     /**

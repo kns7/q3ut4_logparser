@@ -24,12 +24,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHitsQuery orderByHitterId($order = Criteria::ASC) Order by the hitter_id column
  * @method     ChildHitsQuery orderByHittedId($order = Criteria::ASC) Order by the hitted_id column
  * @method     ChildHitsQuery orderByBodypartId($order = Criteria::ASC) Order by the bodypart_id column
+ * @method     ChildHitsQuery orderByRoundId($order = Criteria::ASC) Order by the round_id column
  * @method     ChildHitsQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
  * @method     ChildHitsQuery groupById() Group by the id column
  * @method     ChildHitsQuery groupByHitterId() Group by the hitter_id column
  * @method     ChildHitsQuery groupByHittedId() Group by the hitted_id column
  * @method     ChildHitsQuery groupByBodypartId() Group by the bodypart_id column
+ * @method     ChildHitsQuery groupByRoundId() Group by the round_id column
  * @method     ChildHitsQuery groupByCreated() Group by the created column
  *
  * @method     ChildHitsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -70,7 +72,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHitsQuery rightJoinWithBodyparts() Adds a RIGHT JOIN clause and with to the query using the Bodyparts relation
  * @method     ChildHitsQuery innerJoinWithBodyparts() Adds a INNER JOIN clause and with to the query using the Bodyparts relation
  *
- * @method     \PlayersQuery|\BodypartsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildHitsQuery leftJoinRounds($relationAlias = null) Adds a LEFT JOIN clause to the query using the Rounds relation
+ * @method     ChildHitsQuery rightJoinRounds($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Rounds relation
+ * @method     ChildHitsQuery innerJoinRounds($relationAlias = null) Adds a INNER JOIN clause to the query using the Rounds relation
+ *
+ * @method     ChildHitsQuery joinWithRounds($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Rounds relation
+ *
+ * @method     ChildHitsQuery leftJoinWithRounds() Adds a LEFT JOIN clause and with to the query using the Rounds relation
+ * @method     ChildHitsQuery rightJoinWithRounds() Adds a RIGHT JOIN clause and with to the query using the Rounds relation
+ * @method     ChildHitsQuery innerJoinWithRounds() Adds a INNER JOIN clause and with to the query using the Rounds relation
+ *
+ * @method     \PlayersQuery|\BodypartsQuery|\GameroundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildHits findOne(ConnectionInterface $con = null) Return the first ChildHits matching the query
  * @method     ChildHits findOneOrCreate(ConnectionInterface $con = null) Return the first ChildHits matching the query, or a new ChildHits object populated from the query conditions when no match is found
@@ -79,6 +91,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHits findOneByHitterId(int $hitter_id) Return the first ChildHits filtered by the hitter_id column
  * @method     ChildHits findOneByHittedId(int $hitted_id) Return the first ChildHits filtered by the hitted_id column
  * @method     ChildHits findOneByBodypartId(int $bodypart_id) Return the first ChildHits filtered by the bodypart_id column
+ * @method     ChildHits findOneByRoundId(int $round_id) Return the first ChildHits filtered by the round_id column
  * @method     ChildHits findOneByCreated(string $created) Return the first ChildHits filtered by the created column *
 
  * @method     ChildHits requirePk($key, ConnectionInterface $con = null) Return the ChildHits by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -88,6 +101,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHits requireOneByHitterId(int $hitter_id) Return the first ChildHits filtered by the hitter_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHits requireOneByHittedId(int $hitted_id) Return the first ChildHits filtered by the hitted_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHits requireOneByBodypartId(int $bodypart_id) Return the first ChildHits filtered by the bodypart_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHits requireOneByRoundId(int $round_id) Return the first ChildHits filtered by the round_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHits requireOneByCreated(string $created) Return the first ChildHits filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildHits[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildHits objects based on current ModelCriteria
@@ -95,6 +109,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHits[]|ObjectCollection findByHitterId(int $hitter_id) Return ChildHits objects filtered by the hitter_id column
  * @method     ChildHits[]|ObjectCollection findByHittedId(int $hitted_id) Return ChildHits objects filtered by the hitted_id column
  * @method     ChildHits[]|ObjectCollection findByBodypartId(int $bodypart_id) Return ChildHits objects filtered by the bodypart_id column
+ * @method     ChildHits[]|ObjectCollection findByRoundId(int $round_id) Return ChildHits objects filtered by the round_id column
  * @method     ChildHits[]|ObjectCollection findByCreated(string $created) Return ChildHits objects filtered by the created column
  * @method     ChildHits[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -194,7 +209,7 @@ abstract class HitsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, hitter_id, hitted_id, bodypart_id, created FROM hits WHERE id = :p0';
+        $sql = 'SELECT id, hitter_id, hitted_id, bodypart_id, round_id, created FROM hits WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -452,6 +467,49 @@ abstract class HitsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(HitsTableMap::COL_BODYPART_ID, $bodypartId, $comparison);
+    }
+
+    /**
+     * Filter the query on the round_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRoundId(1234); // WHERE round_id = 1234
+     * $query->filterByRoundId(array(12, 34)); // WHERE round_id IN (12, 34)
+     * $query->filterByRoundId(array('min' => 12)); // WHERE round_id > 12
+     * </code>
+     *
+     * @see       filterByRounds()
+     *
+     * @param     mixed $roundId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildHitsQuery The current query, for fluid interface
+     */
+    public function filterByRoundId($roundId = null, $comparison = null)
+    {
+        if (is_array($roundId)) {
+            $useMinMax = false;
+            if (isset($roundId['min'])) {
+                $this->addUsingAlias(HitsTableMap::COL_ROUND_ID, $roundId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($roundId['max'])) {
+                $this->addUsingAlias(HitsTableMap::COL_ROUND_ID, $roundId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(HitsTableMap::COL_ROUND_ID, $roundId, $comparison);
     }
 
     /**
@@ -726,6 +784,83 @@ abstract class HitsQuery extends ModelCriteria
         return $this
             ->joinBodyparts($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Bodyparts', '\BodypartsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Gamerounds object
+     *
+     * @param \Gamerounds|ObjectCollection $gamerounds The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildHitsQuery The current query, for fluid interface
+     */
+    public function filterByRounds($gamerounds, $comparison = null)
+    {
+        if ($gamerounds instanceof \Gamerounds) {
+            return $this
+                ->addUsingAlias(HitsTableMap::COL_ROUND_ID, $gamerounds->getId(), $comparison);
+        } elseif ($gamerounds instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(HitsTableMap::COL_ROUND_ID, $gamerounds->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByRounds() only accepts arguments of type \Gamerounds or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Rounds relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildHitsQuery The current query, for fluid interface
+     */
+    public function joinRounds($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Rounds');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Rounds');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Rounds relation Gamerounds object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \GameroundsQuery A secondary query class using the current class as primary query
+     */
+    public function useRoundsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinRounds($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Rounds', '\GameroundsQuery');
     }
 
     /**

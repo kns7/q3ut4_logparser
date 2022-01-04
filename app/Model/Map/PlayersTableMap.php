@@ -174,6 +174,13 @@ class PlayersTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'FraggedPlayers', false);
+        $this->addRelation('Scores', '\\Gamescores', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':player_id',
+    1 => ':id',
+  ),
+), null, null, 'Scoress', false);
         $this->addRelation('Gametime', '\\Gametimes', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

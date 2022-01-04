@@ -55,10 +55,12 @@ $app->container->singleton('Ctrl',function() use ($app){
         'Bombs' => new \App\Controller\BombsController($app),
         'Flags' => new \App\Controller\FlagsController($app),
         'Frags' => new \App\Controller\FragsController($app),
+        'Games' => new \App\Controller\GamesController($app),
         'Gametimes' => new \App\Controller\GametimesController($app),
         'Gametypes' => new \App\Controller\GametypesController($app),
         'Hits' => new \App\Controller\HitsController($app),
         'Logs' => new LogsController($app),
+        'Maps' => new \App\Controller\MapsController($app),
         'Players' => new PlayersController($app),
         'Rounds' => new \App\Controller\RoundsController($app),
         'Scores' => new \App\Controller\ScoresController($app),
@@ -370,6 +372,15 @@ if($_SERVER['SITE_MODE'] == "development"){
             echo "<pre>";
             print_r($newround);
             echo '</pre>';
+       });
+       $app->get('/frags/:player/:game',function($player,$game) use($app){
+           $player = $app->Ctrl->Players->get($player);
+           $game = $app->Ctrl->Games->get($game);
+           echo "<pre>";
+           print_r(\GameroundsQuery::create()->filterByGames($game)->select("id")->find()->toArray());
+           print_r($app->Ctrl->Frags->getFragsPerPlayerPerGame($player, $game));
+           echo '</pre>';
+
        });
        $app->get('/connectionstring',function() use($app){
             $string = '\ip\146.199.115.89:27960\snaps\20\name\Manics69\password\marchelle\racered\3\raceblue\3\racefree\0\rate\25000\ut_timenudge\0\cg_rgb\128 128 128\cg_physics\1\cg_ghost\1\cg_autopickup\-1\sex\male\handicap\100\color2\5\color1\4\gear\GZAORWA\authc\0\cl_guid\83BCF5AF7EC2318AE35629B4830449D7\weapmodes\0000011022000002000200000000';

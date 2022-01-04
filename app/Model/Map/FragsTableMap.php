@@ -59,7 +59,7 @@ class FragsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class FragsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the id field
@@ -92,6 +92,11 @@ class FragsTableMap extends TableMap
     const COL_WEAPON_ID = 'frags.weapon_id';
 
     /**
+     * the column name for the round_id field
+     */
+    const COL_ROUND_ID = 'frags.round_id';
+
+    /**
      * the column name for the created field
      */
     const COL_CREATED = 'frags.created';
@@ -108,11 +113,11 @@ class FragsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'FraggerId', 'FraggedId', 'WeaponId', 'Created', ),
-        self::TYPE_CAMELNAME     => array('id', 'fraggerId', 'fraggedId', 'weaponId', 'created', ),
-        self::TYPE_COLNAME       => array(FragsTableMap::COL_ID, FragsTableMap::COL_FRAGGER_ID, FragsTableMap::COL_FRAGGED_ID, FragsTableMap::COL_WEAPON_ID, FragsTableMap::COL_CREATED, ),
-        self::TYPE_FIELDNAME     => array('id', 'fragger_id', 'fragged_id', 'weapon_id', 'created', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id', 'FraggerId', 'FraggedId', 'WeaponId', 'RoundId', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'fraggerId', 'fraggedId', 'weaponId', 'roundId', 'created', ),
+        self::TYPE_COLNAME       => array(FragsTableMap::COL_ID, FragsTableMap::COL_FRAGGER_ID, FragsTableMap::COL_FRAGGED_ID, FragsTableMap::COL_WEAPON_ID, FragsTableMap::COL_ROUND_ID, FragsTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'fragger_id', 'fragged_id', 'weapon_id', 'round_id', 'created', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -122,11 +127,11 @@ class FragsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'FraggerId' => 1, 'FraggedId' => 2, 'WeaponId' => 3, 'Created' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'fraggerId' => 1, 'fraggedId' => 2, 'weaponId' => 3, 'created' => 4, ),
-        self::TYPE_COLNAME       => array(FragsTableMap::COL_ID => 0, FragsTableMap::COL_FRAGGER_ID => 1, FragsTableMap::COL_FRAGGED_ID => 2, FragsTableMap::COL_WEAPON_ID => 3, FragsTableMap::COL_CREATED => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'fragger_id' => 1, 'fragged_id' => 2, 'weapon_id' => 3, 'created' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'FraggerId' => 1, 'FraggedId' => 2, 'WeaponId' => 3, 'RoundId' => 4, 'Created' => 5, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'fraggerId' => 1, 'fraggedId' => 2, 'weaponId' => 3, 'roundId' => 4, 'created' => 5, ),
+        self::TYPE_COLNAME       => array(FragsTableMap::COL_ID => 0, FragsTableMap::COL_FRAGGER_ID => 1, FragsTableMap::COL_FRAGGED_ID => 2, FragsTableMap::COL_WEAPON_ID => 3, FragsTableMap::COL_ROUND_ID => 4, FragsTableMap::COL_CREATED => 5, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'fragger_id' => 1, 'fragged_id' => 2, 'weapon_id' => 3, 'round_id' => 4, 'created' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -150,6 +155,7 @@ class FragsTableMap extends TableMap
         $this->addForeignKey('fragger_id', 'FraggerId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addForeignKey('fragged_id', 'FraggedId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addForeignKey('weapon_id', 'WeaponId', 'INTEGER', 'weapons', 'id', true, null, null);
+        $this->addForeignKey('round_id', 'RoundId', 'INTEGER', 'gamerounds', 'id', true, null, null);
         $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
 
@@ -176,6 +182,13 @@ class FragsTableMap extends TableMap
   0 =>
   array (
     0 => ':weapon_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Rounds', '\\Gamerounds', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':round_id',
     1 => ':id',
   ),
 ), null, null, null, false);
@@ -326,12 +339,14 @@ class FragsTableMap extends TableMap
             $criteria->addSelectColumn(FragsTableMap::COL_FRAGGER_ID);
             $criteria->addSelectColumn(FragsTableMap::COL_FRAGGED_ID);
             $criteria->addSelectColumn(FragsTableMap::COL_WEAPON_ID);
+            $criteria->addSelectColumn(FragsTableMap::COL_ROUND_ID);
             $criteria->addSelectColumn(FragsTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.fragger_id');
             $criteria->addSelectColumn($alias . '.fragged_id');
             $criteria->addSelectColumn($alias . '.weapon_id');
+            $criteria->addSelectColumn($alias . '.round_id');
             $criteria->addSelectColumn($alias . '.created');
         }
     }

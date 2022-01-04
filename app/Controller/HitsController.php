@@ -11,11 +11,12 @@ namespace App\Controller;
 
 class HitsController extends Controller
 {
-    function add(\Players $hitter,\Players $hitted, \Bodyparts $part){
+    function add(\Players $hitter,\Players $hitted, \Bodyparts $part, \Gamerounds $round){
         $hit = new \Hits();
         $hit->setHitter($hitter)
             ->setHitted($hitted)
-            ->setBodyparts($part);
+            ->setBodyparts($part)
+            ->setRounds($round);
 
         try {
             $hit->save();

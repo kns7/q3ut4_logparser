@@ -2,15 +2,15 @@
 
 namespace Base;
 
-use \FlagsQuery as ChildFlagsQuery;
-use \Gamerounds as ChildGamerounds;
-use \GameroundsQuery as ChildGameroundsQuery;
+use \Games as ChildGames;
+use \GamesQuery as ChildGamesQuery;
+use \GamescoresQuery as ChildGamescoresQuery;
 use \Players as ChildPlayers;
 use \PlayersQuery as ChildPlayersQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
-use Map\FlagsTableMap;
+use Map\GamescoresTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -25,18 +25,18 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'flags' table.
+ * Base class that represents a row from the 'gamescores' table.
  *
  *
  *
  * @package    propel.generator..Base
  */
-abstract class Flags implements ActiveRecordInterface
+abstract class Gamescores implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\FlagsTableMap';
+    const TABLE_MAP = '\\Map\\GamescoresTableMap';
 
 
     /**
@@ -73,6 +73,13 @@ abstract class Flags implements ActiveRecordInterface
     protected $id;
 
     /**
+     * The value for the game_id field.
+     *
+     * @var        int
+     */
+    protected $game_id;
+
+    /**
      * The value for the player_id field.
      *
      * @var        int
@@ -80,18 +87,46 @@ abstract class Flags implements ActiveRecordInterface
     protected $player_id;
 
     /**
-     * The value for the event field.
-     *
-     * @var        string
-     */
-    protected $event;
-
-    /**
-     * The value for the round_id field.
+     * The value for the kills field.
      *
      * @var        int
      */
-    protected $round_id;
+    protected $kills;
+
+    /**
+     * The value for the deaths field.
+     *
+     * @var        int
+     */
+    protected $deaths;
+
+    /**
+     * The value for the score field.
+     *
+     * @var        int
+     */
+    protected $score;
+
+    /**
+     * The value for the ping field.
+     *
+     * @var        int
+     */
+    protected $ping;
+
+    /**
+     * The value for the winner field.
+     *
+     * @var        boolean
+     */
+    protected $winner;
+
+    /**
+     * The value for the team field.
+     *
+     * @var        int
+     */
+    protected $team;
 
     /**
      * The value for the created field.
@@ -101,14 +136,14 @@ abstract class Flags implements ActiveRecordInterface
     protected $created;
 
     /**
+     * @var        ChildGames
+     */
+    protected $aGames;
+
+    /**
      * @var        ChildPlayers
      */
     protected $aPlayers;
-
-    /**
-     * @var        ChildGamerounds
-     */
-    protected $aRounds;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -119,7 +154,7 @@ abstract class Flags implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Base\Flags object.
+     * Initializes internal state of Base\Gamescores object.
      */
     public function __construct()
     {
@@ -214,9 +249,9 @@ abstract class Flags implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Flags</code> instance.  If
-     * <code>obj</code> is an instance of <code>Flags</code>, delegates to
-     * <code>equals(Flags)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Gamescores</code> instance.  If
+     * <code>obj</code> is an instance of <code>Gamescores</code>, delegates to
+     * <code>equals(Gamescores)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -282,7 +317,7 @@ abstract class Flags implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Flags The current object, for fluid interface
+     * @return $this|Gamescores The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -354,6 +389,16 @@ abstract class Flags implements ActiveRecordInterface
     }
 
     /**
+     * Get the [game_id] column value.
+     *
+     * @return int
+     */
+    public function getGameID()
+    {
+        return $this->game_id;
+    }
+
+    /**
      * Get the [player_id] column value.
      *
      * @return int
@@ -364,23 +409,73 @@ abstract class Flags implements ActiveRecordInterface
     }
 
     /**
-     * Get the [event] column value.
-     *
-     * @return string
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * Get the [round_id] column value.
+     * Get the [kills] column value.
      *
      * @return int
      */
-    public function getRoundId()
+    public function getKills()
     {
-        return $this->round_id;
+        return $this->kills;
+    }
+
+    /**
+     * Get the [deaths] column value.
+     *
+     * @return int
+     */
+    public function getDeaths()
+    {
+        return $this->deaths;
+    }
+
+    /**
+     * Get the [score] column value.
+     *
+     * @return int
+     */
+    public function getScore()
+    {
+        return $this->score;
+    }
+
+    /**
+     * Get the [ping] column value.
+     *
+     * @return int
+     */
+    public function getPing()
+    {
+        return $this->ping;
+    }
+
+    /**
+     * Get the [winner] column value.
+     *
+     * @return boolean
+     */
+    public function getWinner()
+    {
+        return $this->winner;
+    }
+
+    /**
+     * Get the [winner] column value.
+     *
+     * @return boolean
+     */
+    public function isWinner()
+    {
+        return $this->getWinner();
+    }
+
+    /**
+     * Get the [team] column value.
+     *
+     * @return int
+     */
+    public function getTeam()
+    {
+        return $this->team;
     }
 
     /**
@@ -407,7 +502,7 @@ abstract class Flags implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\Flags The current object (for fluent API support)
+     * @return $this|\Gamescores The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -417,17 +512,41 @@ abstract class Flags implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[FlagsTableMap::COL_ID] = true;
+            $this->modifiedColumns[GamescoresTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
+     * Set the value of [game_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\Gamescores The current object (for fluent API support)
+     */
+    public function setGameID($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->game_id !== $v) {
+            $this->game_id = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_GAME_ID] = true;
+        }
+
+        if ($this->aGames !== null && $this->aGames->getId() !== $v) {
+            $this->aGames = null;
+        }
+
+        return $this;
+    } // setGameID()
+
+    /**
      * Set the value of [player_id] column.
      *
      * @param int $v new value
-     * @return $this|\Flags The current object (for fluent API support)
+     * @return $this|\Gamescores The current object (for fluent API support)
      */
     public function setPlayerId($v)
     {
@@ -437,7 +556,7 @@ abstract class Flags implements ActiveRecordInterface
 
         if ($this->player_id !== $v) {
             $this->player_id = $v;
-            $this->modifiedColumns[FlagsTableMap::COL_PLAYER_ID] = true;
+            $this->modifiedColumns[GamescoresTableMap::COL_PLAYER_ID] = true;
         }
 
         if ($this->aPlayers !== null && $this->aPlayers->getId() !== $v) {
@@ -448,55 +567,139 @@ abstract class Flags implements ActiveRecordInterface
     } // setPlayerId()
 
     /**
-     * Set the value of [event] column.
-     *
-     * @param string $v new value
-     * @return $this|\Flags The current object (for fluent API support)
-     */
-    public function setEvent($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->event !== $v) {
-            $this->event = $v;
-            $this->modifiedColumns[FlagsTableMap::COL_EVENT] = true;
-        }
-
-        return $this;
-    } // setEvent()
-
-    /**
-     * Set the value of [round_id] column.
+     * Set the value of [kills] column.
      *
      * @param int $v new value
-     * @return $this|\Flags The current object (for fluent API support)
+     * @return $this|\Gamescores The current object (for fluent API support)
      */
-    public function setRoundId($v)
+    public function setKills($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->round_id !== $v) {
-            $this->round_id = $v;
-            $this->modifiedColumns[FlagsTableMap::COL_ROUND_ID] = true;
-        }
-
-        if ($this->aRounds !== null && $this->aRounds->getId() !== $v) {
-            $this->aRounds = null;
+        if ($this->kills !== $v) {
+            $this->kills = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_KILLS] = true;
         }
 
         return $this;
-    } // setRoundId()
+    } // setKills()
+
+    /**
+     * Set the value of [deaths] column.
+     *
+     * @param int $v new value
+     * @return $this|\Gamescores The current object (for fluent API support)
+     */
+    public function setDeaths($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->deaths !== $v) {
+            $this->deaths = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_DEATHS] = true;
+        }
+
+        return $this;
+    } // setDeaths()
+
+    /**
+     * Set the value of [score] column.
+     *
+     * @param int $v new value
+     * @return $this|\Gamescores The current object (for fluent API support)
+     */
+    public function setScore($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->score !== $v) {
+            $this->score = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_SCORE] = true;
+        }
+
+        return $this;
+    } // setScore()
+
+    /**
+     * Set the value of [ping] column.
+     *
+     * @param int $v new value
+     * @return $this|\Gamescores The current object (for fluent API support)
+     */
+    public function setPing($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->ping !== $v) {
+            $this->ping = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_PING] = true;
+        }
+
+        return $this;
+    } // setPing()
+
+    /**
+     * Sets the value of the [winner] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\Gamescores The current object (for fluent API support)
+     */
+    public function setWinner($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->winner !== $v) {
+            $this->winner = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_WINNER] = true;
+        }
+
+        return $this;
+    } // setWinner()
+
+    /**
+     * Set the value of [team] column.
+     *
+     * @param int $v new value
+     * @return $this|\Gamescores The current object (for fluent API support)
+     */
+    public function setTeam($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->team !== $v) {
+            $this->team = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_TEAM] = true;
+        }
+
+        return $this;
+    } // setTeam()
 
     /**
      * Sets the value of [created] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Flags The current object (for fluent API support)
+     * @return $this|\Gamescores The current object (for fluent API support)
      */
     public function setCreated($v)
     {
@@ -504,7 +707,7 @@ abstract class Flags implements ActiveRecordInterface
         if ($this->created !== null || $dt !== null) {
             if ($this->created === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created->format("Y-m-d H:i:s.u")) {
                 $this->created = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[FlagsTableMap::COL_CREATED] = true;
+                $this->modifiedColumns[GamescoresTableMap::COL_CREATED] = true;
             }
         } // if either are not null
 
@@ -547,19 +750,34 @@ abstract class Flags implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : FlagsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GamescoresTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : FlagsTableMap::translateFieldName('PlayerId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GamescoresTableMap::translateFieldName('GameID', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->game_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GamescoresTableMap::translateFieldName('PlayerId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->player_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : FlagsTableMap::translateFieldName('Event', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->event = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GamescoresTableMap::translateFieldName('Kills', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->kills = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : FlagsTableMap::translateFieldName('RoundId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->round_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GamescoresTableMap::translateFieldName('Deaths', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->deaths = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : FlagsTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GamescoresTableMap::translateFieldName('Score', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->score = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GamescoresTableMap::translateFieldName('Ping', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->ping = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GamescoresTableMap::translateFieldName('Winner', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->winner = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GamescoresTableMap::translateFieldName('Team', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->team = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : GamescoresTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -572,10 +790,10 @@ abstract class Flags implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = FlagsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = GamescoresTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Flags'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Gamescores'), 0, $e);
         }
     }
 
@@ -594,11 +812,11 @@ abstract class Flags implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aGames !== null && $this->game_id !== $this->aGames->getId()) {
+            $this->aGames = null;
+        }
         if ($this->aPlayers !== null && $this->player_id !== $this->aPlayers->getId()) {
             $this->aPlayers = null;
-        }
-        if ($this->aRounds !== null && $this->round_id !== $this->aRounds->getId()) {
-            $this->aRounds = null;
         }
     } // ensureConsistency
 
@@ -623,13 +841,13 @@ abstract class Flags implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(FlagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(GamescoresTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildFlagsQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildGamescoresQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -639,8 +857,8 @@ abstract class Flags implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aGames = null;
             $this->aPlayers = null;
-            $this->aRounds = null;
         } // if (deep)
     }
 
@@ -650,8 +868,8 @@ abstract class Flags implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Flags::setDeleted()
-     * @see Flags::isDeleted()
+     * @see Gamescores::setDeleted()
+     * @see Gamescores::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -660,11 +878,11 @@ abstract class Flags implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FlagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GamescoresTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildFlagsQuery::create()
+            $deleteQuery = ChildGamescoresQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -699,7 +917,7 @@ abstract class Flags implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FlagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(GamescoresTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -718,7 +936,7 @@ abstract class Flags implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                FlagsTableMap::addInstanceToPool($this);
+                GamescoresTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -749,18 +967,18 @@ abstract class Flags implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aGames !== null) {
+                if ($this->aGames->isModified() || $this->aGames->isNew()) {
+                    $affectedRows += $this->aGames->save($con);
+                }
+                $this->setGames($this->aGames);
+            }
+
             if ($this->aPlayers !== null) {
                 if ($this->aPlayers->isModified() || $this->aPlayers->isNew()) {
                     $affectedRows += $this->aPlayers->save($con);
                 }
                 $this->setPlayers($this->aPlayers);
-            }
-
-            if ($this->aRounds !== null) {
-                if ($this->aRounds->isModified() || $this->aRounds->isNew()) {
-                    $affectedRows += $this->aRounds->save($con);
-                }
-                $this->setRounds($this->aRounds);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -794,30 +1012,45 @@ abstract class Flags implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[FlagsTableMap::COL_ID] = true;
+        $this->modifiedColumns[GamescoresTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . FlagsTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . GamescoresTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(FlagsTableMap::COL_ID)) {
+        if ($this->isColumnModified(GamescoresTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_PLAYER_ID)) {
+        if ($this->isColumnModified(GamescoresTableMap::COL_GAME_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'game_id';
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_PLAYER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'player_id';
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_EVENT)) {
-            $modifiedColumns[':p' . $index++]  = 'event';
+        if ($this->isColumnModified(GamescoresTableMap::COL_KILLS)) {
+            $modifiedColumns[':p' . $index++]  = 'kills';
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_ROUND_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'round_id';
+        if ($this->isColumnModified(GamescoresTableMap::COL_DEATHS)) {
+            $modifiedColumns[':p' . $index++]  = 'deaths';
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_CREATED)) {
+        if ($this->isColumnModified(GamescoresTableMap::COL_SCORE)) {
+            $modifiedColumns[':p' . $index++]  = 'score';
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_PING)) {
+            $modifiedColumns[':p' . $index++]  = 'ping';
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_WINNER)) {
+            $modifiedColumns[':p' . $index++]  = 'winner';
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_TEAM)) {
+            $modifiedColumns[':p' . $index++]  = 'team';
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_CREATED)) {
             $modifiedColumns[':p' . $index++]  = 'created';
         }
 
         $sql = sprintf(
-            'INSERT INTO flags (%s) VALUES (%s)',
+            'INSERT INTO gamescores (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -829,14 +1062,29 @@ abstract class Flags implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
+                    case 'game_id':
+                        $stmt->bindValue($identifier, $this->game_id, PDO::PARAM_INT);
+                        break;
                     case 'player_id':
                         $stmt->bindValue($identifier, $this->player_id, PDO::PARAM_INT);
                         break;
-                    case 'event':
-                        $stmt->bindValue($identifier, $this->event, PDO::PARAM_STR);
+                    case 'kills':
+                        $stmt->bindValue($identifier, $this->kills, PDO::PARAM_INT);
                         break;
-                    case 'round_id':
-                        $stmt->bindValue($identifier, $this->round_id, PDO::PARAM_INT);
+                    case 'deaths':
+                        $stmt->bindValue($identifier, $this->deaths, PDO::PARAM_INT);
+                        break;
+                    case 'score':
+                        $stmt->bindValue($identifier, $this->score, PDO::PARAM_INT);
+                        break;
+                    case 'ping':
+                        $stmt->bindValue($identifier, $this->ping, PDO::PARAM_INT);
+                        break;
+                    case 'winner':
+                        $stmt->bindValue($identifier, (int) $this->winner, PDO::PARAM_INT);
+                        break;
+                    case 'team':
+                        $stmt->bindValue($identifier, $this->team, PDO::PARAM_INT);
                         break;
                     case 'created':
                         $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -887,7 +1135,7 @@ abstract class Flags implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = FlagsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = GamescoresTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -907,15 +1155,30 @@ abstract class Flags implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getPlayerId();
+                return $this->getGameID();
                 break;
             case 2:
-                return $this->getEvent();
+                return $this->getPlayerId();
                 break;
             case 3:
-                return $this->getRoundId();
+                return $this->getKills();
                 break;
             case 4:
+                return $this->getDeaths();
+                break;
+            case 5:
+                return $this->getScore();
+                break;
+            case 6:
+                return $this->getPing();
+                break;
+            case 7:
+                return $this->getWinner();
+                break;
+            case 8:
+                return $this->getTeam();
+                break;
+            case 9:
                 return $this->getCreated();
                 break;
             default:
@@ -942,20 +1205,25 @@ abstract class Flags implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Flags'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Gamescores'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Flags'][$this->hashCode()] = true;
-        $keys = FlagsTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Gamescores'][$this->hashCode()] = true;
+        $keys = GamescoresTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getPlayerId(),
-            $keys[2] => $this->getEvent(),
-            $keys[3] => $this->getRoundId(),
-            $keys[4] => $this->getCreated(),
+            $keys[1] => $this->getGameID(),
+            $keys[2] => $this->getPlayerId(),
+            $keys[3] => $this->getKills(),
+            $keys[4] => $this->getDeaths(),
+            $keys[5] => $this->getScore(),
+            $keys[6] => $this->getPing(),
+            $keys[7] => $this->getWinner(),
+            $keys[8] => $this->getTeam(),
+            $keys[9] => $this->getCreated(),
         );
-        if ($result[$keys[4]] instanceof \DateTimeInterface) {
-            $result[$keys[4]] = $result[$keys[4]]->format('c');
+        if ($result[$keys[9]] instanceof \DateTimeInterface) {
+            $result[$keys[9]] = $result[$keys[9]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -964,6 +1232,21 @@ abstract class Flags implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aGames) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'games';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'games';
+                        break;
+                    default:
+                        $key = 'Games';
+                }
+
+                $result[$key] = $this->aGames->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aPlayers) {
 
                 switch ($keyType) {
@@ -979,21 +1262,6 @@ abstract class Flags implements ActiveRecordInterface
 
                 $result[$key] = $this->aPlayers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aRounds) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'gamerounds';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'gamerounds';
-                        break;
-                    default:
-                        $key = 'Rounds';
-                }
-
-                $result[$key] = $this->aRounds->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
         }
 
         return $result;
@@ -1008,11 +1276,11 @@ abstract class Flags implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Flags
+     * @return $this|\Gamescores
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = FlagsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = GamescoresTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1023,7 +1291,7 @@ abstract class Flags implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Flags
+     * @return $this|\Gamescores
      */
     public function setByPosition($pos, $value)
     {
@@ -1032,15 +1300,30 @@ abstract class Flags implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setPlayerId($value);
+                $this->setGameID($value);
                 break;
             case 2:
-                $this->setEvent($value);
+                $this->setPlayerId($value);
                 break;
             case 3:
-                $this->setRoundId($value);
+                $this->setKills($value);
                 break;
             case 4:
+                $this->setDeaths($value);
+                break;
+            case 5:
+                $this->setScore($value);
+                break;
+            case 6:
+                $this->setPing($value);
+                break;
+            case 7:
+                $this->setWinner($value);
+                break;
+            case 8:
+                $this->setTeam($value);
+                break;
+            case 9:
                 $this->setCreated($value);
                 break;
         } // switch()
@@ -1067,22 +1350,37 @@ abstract class Flags implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = FlagsTableMap::getFieldNames($keyType);
+        $keys = GamescoresTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setPlayerId($arr[$keys[1]]);
+            $this->setGameID($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setEvent($arr[$keys[2]]);
+            $this->setPlayerId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setRoundId($arr[$keys[3]]);
+            $this->setKills($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCreated($arr[$keys[4]]);
+            $this->setDeaths($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setScore($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setPing($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setWinner($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setTeam($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setCreated($arr[$keys[9]]);
         }
     }
 
@@ -1103,7 +1401,7 @@ abstract class Flags implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Flags The current object, for fluid interface
+     * @return $this|\Gamescores The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1123,22 +1421,37 @@ abstract class Flags implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(FlagsTableMap::DATABASE_NAME);
+        $criteria = new Criteria(GamescoresTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(FlagsTableMap::COL_ID)) {
-            $criteria->add(FlagsTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(GamescoresTableMap::COL_ID)) {
+            $criteria->add(GamescoresTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_PLAYER_ID)) {
-            $criteria->add(FlagsTableMap::COL_PLAYER_ID, $this->player_id);
+        if ($this->isColumnModified(GamescoresTableMap::COL_GAME_ID)) {
+            $criteria->add(GamescoresTableMap::COL_GAME_ID, $this->game_id);
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_EVENT)) {
-            $criteria->add(FlagsTableMap::COL_EVENT, $this->event);
+        if ($this->isColumnModified(GamescoresTableMap::COL_PLAYER_ID)) {
+            $criteria->add(GamescoresTableMap::COL_PLAYER_ID, $this->player_id);
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_ROUND_ID)) {
-            $criteria->add(FlagsTableMap::COL_ROUND_ID, $this->round_id);
+        if ($this->isColumnModified(GamescoresTableMap::COL_KILLS)) {
+            $criteria->add(GamescoresTableMap::COL_KILLS, $this->kills);
         }
-        if ($this->isColumnModified(FlagsTableMap::COL_CREATED)) {
-            $criteria->add(FlagsTableMap::COL_CREATED, $this->created);
+        if ($this->isColumnModified(GamescoresTableMap::COL_DEATHS)) {
+            $criteria->add(GamescoresTableMap::COL_DEATHS, $this->deaths);
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_SCORE)) {
+            $criteria->add(GamescoresTableMap::COL_SCORE, $this->score);
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_PING)) {
+            $criteria->add(GamescoresTableMap::COL_PING, $this->ping);
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_WINNER)) {
+            $criteria->add(GamescoresTableMap::COL_WINNER, $this->winner);
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_TEAM)) {
+            $criteria->add(GamescoresTableMap::COL_TEAM, $this->team);
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_CREATED)) {
+            $criteria->add(GamescoresTableMap::COL_CREATED, $this->created);
         }
 
         return $criteria;
@@ -1156,8 +1469,8 @@ abstract class Flags implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildFlagsQuery::create();
-        $criteria->add(FlagsTableMap::COL_ID, $this->id);
+        $criteria = ChildGamescoresQuery::create();
+        $criteria->add(GamescoresTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1219,16 +1532,21 @@ abstract class Flags implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Flags (or compatible) type.
+     * @param      object $copyObj An object of \Gamescores (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setGameID($this->getGameID());
         $copyObj->setPlayerId($this->getPlayerId());
-        $copyObj->setEvent($this->getEvent());
-        $copyObj->setRoundId($this->getRoundId());
+        $copyObj->setKills($this->getKills());
+        $copyObj->setDeaths($this->getDeaths());
+        $copyObj->setScore($this->getScore());
+        $copyObj->setPing($this->getPing());
+        $copyObj->setWinner($this->getWinner());
+        $copyObj->setTeam($this->getTeam());
         $copyObj->setCreated($this->getCreated());
         if ($makeNew) {
             $copyObj->setNew(true);
@@ -1245,7 +1563,7 @@ abstract class Flags implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Flags Clone of current object.
+     * @return \Gamescores Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1259,10 +1577,61 @@ abstract class Flags implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildGames object.
+     *
+     * @param  ChildGames $v
+     * @return $this|\Gamescores The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setGames(ChildGames $v = null)
+    {
+        if ($v === null) {
+            $this->setGameID(NULL);
+        } else {
+            $this->setGameID($v->getId());
+        }
+
+        $this->aGames = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildGames object, it will not be re-added.
+        if ($v !== null) {
+            $v->addScore($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildGames object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildGames The associated ChildGames object.
+     * @throws PropelException
+     */
+    public function getGames(ConnectionInterface $con = null)
+    {
+        if ($this->aGames === null && ($this->game_id != 0)) {
+            $this->aGames = ChildGamesQuery::create()->findPk($this->game_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aGames->addScores($this);
+             */
+        }
+
+        return $this->aGames;
+    }
+
+    /**
      * Declares an association between this object and a ChildPlayers object.
      *
      * @param  ChildPlayers $v
-     * @return $this|\Flags The current object (for fluent API support)
+     * @return $this|\Gamescores The current object (for fluent API support)
      * @throws PropelException
      */
     public function setPlayers(ChildPlayers $v = null)
@@ -1278,7 +1647,7 @@ abstract class Flags implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildPlayers object, it will not be re-added.
         if ($v !== null) {
-            $v->addFlag($this);
+            $v->addScores($this);
         }
 
 
@@ -1302,62 +1671,11 @@ abstract class Flags implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aPlayers->addFlags($this);
+                $this->aPlayers->addScoress($this);
              */
         }
 
         return $this->aPlayers;
-    }
-
-    /**
-     * Declares an association between this object and a ChildGamerounds object.
-     *
-     * @param  ChildGamerounds $v
-     * @return $this|\Flags The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setRounds(ChildGamerounds $v = null)
-    {
-        if ($v === null) {
-            $this->setRoundId(NULL);
-        } else {
-            $this->setRoundId($v->getId());
-        }
-
-        $this->aRounds = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildGamerounds object, it will not be re-added.
-        if ($v !== null) {
-            $v->addFlag($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildGamerounds object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildGamerounds The associated ChildGamerounds object.
-     * @throws PropelException
-     */
-    public function getRounds(ConnectionInterface $con = null)
-    {
-        if ($this->aRounds === null && ($this->round_id != 0)) {
-            $this->aRounds = ChildGameroundsQuery::create()->findPk($this->round_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aRounds->addFlags($this);
-             */
-        }
-
-        return $this->aRounds;
     }
 
     /**
@@ -1367,16 +1685,21 @@ abstract class Flags implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aPlayers) {
-            $this->aPlayers->removeFlag($this);
+        if (null !== $this->aGames) {
+            $this->aGames->removeScore($this);
         }
-        if (null !== $this->aRounds) {
-            $this->aRounds->removeFlag($this);
+        if (null !== $this->aPlayers) {
+            $this->aPlayers->removeScores($this);
         }
         $this->id = null;
+        $this->game_id = null;
         $this->player_id = null;
-        $this->event = null;
-        $this->round_id = null;
+        $this->kills = null;
+        $this->deaths = null;
+        $this->score = null;
+        $this->ping = null;
+        $this->winner = null;
+        $this->team = null;
         $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1398,8 +1721,8 @@ abstract class Flags implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aGames = null;
         $this->aPlayers = null;
-        $this->aRounds = null;
     }
 
     /**
@@ -1409,7 +1732,7 @@ abstract class Flags implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(FlagsTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(GamescoresTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

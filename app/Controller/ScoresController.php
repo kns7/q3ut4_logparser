@@ -26,4 +26,23 @@ class ScoresController extends Controller
             return false;
         }
     }
+
+    public function addScore(\Players $player, \Games $game, $kills, $deaths, $points, $ping, $winner,$team)
+    {
+        $score = new \Gamescores();
+        $score->setPlayers($player)
+            ->setGames($game)
+            ->setKills($kills)
+            ->setDeaths($deaths)
+            ->setScore($points)
+            ->setPing($ping)
+            ->setWinner($winner)
+            ->setTeam($team);
+        try {
+            $score->save();
+            return $score;
+        } catch (PropelException $e){
+            return false;
+        }
+    }
 }

@@ -29,6 +29,19 @@ class Controller
         }
     }
 
+    public function clearNewDBTests()
+    {
+        foreach(["frags","games","gameplayers","gamerounds","gamescores","hits"] as $table) {
+            $conn = Propel::getConnection();
+            $stmt = $conn->prepare("DELETE FROM $table");
+            $stmt->execute();
+            $stmt = null;
+            $stmt = $conn->prepare("ALTER TABLE $table AUTO_INCREMENT = 1");
+            $stmt->execute();
+            $stmt = null;
+        }
+    }
+
 
     public function logOutput($message, $line = "", $action = "", $level = "INFO")
     {
@@ -43,5 +56,17 @@ class Controller
         $log .= $message;
 
         echo $log."\n";
+    }
+
+    public function getTeamName($id)
+    {
+        switch($id){
+            case "0": $teamname = "Green"; break;
+            case "1": $teamname = "Red"; break;
+            case "2": $teamname = "Blue"; break;
+            case "3": $teamname = "Spectator"; break;
+            default: $teamname = "Unknown"; break;
+        }
+        return $teamname;
     }
 }
