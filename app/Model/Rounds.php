@@ -16,7 +16,9 @@ class Rounds extends BaseRounds
 {
     public function preInsert(\Propel\Runtime\Connection\ConnectionInterface $con = null)
     {
-        $this->setWeek(date("Y-W"));
+        $date = new \DateTime();
+        $date->modify("-1 day");
+        $this->setCreated($date->format("Y-m-d"));
         return true;
     }
 }

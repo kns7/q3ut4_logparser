@@ -102,9 +102,9 @@ class RoundsTableMap extends TableMap
     const COL_NBPLAYERS = 'rounds.nbplayers';
 
     /**
-     * the column name for the week field
+     * the column name for the created field
      */
-    const COL_WEEK = 'rounds.week';
+    const COL_CREATED = 'rounds.created';
 
     /**
      * The default string format for model objects of the related table
@@ -118,10 +118,10 @@ class RoundsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Winner', 'RedScore', 'BlueScore', 'GametypeId', 'Nbplayers', 'Week', ),
-        self::TYPE_CAMELNAME     => array('id', 'winner', 'redScore', 'blueScore', 'gametypeId', 'nbplayers', 'week', ),
-        self::TYPE_COLNAME       => array(RoundsTableMap::COL_ID, RoundsTableMap::COL_WINNER, RoundsTableMap::COL_RED_SCORE, RoundsTableMap::COL_BLUE_SCORE, RoundsTableMap::COL_GAMETYPE_ID, RoundsTableMap::COL_NBPLAYERS, RoundsTableMap::COL_WEEK, ),
-        self::TYPE_FIELDNAME     => array('id', 'winner', 'red_score', 'blue_score', 'gametype_id', 'nbplayers', 'week', ),
+        self::TYPE_PHPNAME       => array('Id', 'Winner', 'RedScore', 'BlueScore', 'GametypeId', 'Nbplayers', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'winner', 'redScore', 'blueScore', 'gametypeId', 'nbplayers', 'created', ),
+        self::TYPE_COLNAME       => array(RoundsTableMap::COL_ID, RoundsTableMap::COL_WINNER, RoundsTableMap::COL_RED_SCORE, RoundsTableMap::COL_BLUE_SCORE, RoundsTableMap::COL_GAMETYPE_ID, RoundsTableMap::COL_NBPLAYERS, RoundsTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'winner', 'red_score', 'blue_score', 'gametype_id', 'nbplayers', 'created', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
@@ -132,10 +132,10 @@ class RoundsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Winner' => 1, 'RedScore' => 2, 'BlueScore' => 3, 'GametypeId' => 4, 'Nbplayers' => 5, 'Week' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'winner' => 1, 'redScore' => 2, 'blueScore' => 3, 'gametypeId' => 4, 'nbplayers' => 5, 'week' => 6, ),
-        self::TYPE_COLNAME       => array(RoundsTableMap::COL_ID => 0, RoundsTableMap::COL_WINNER => 1, RoundsTableMap::COL_RED_SCORE => 2, RoundsTableMap::COL_BLUE_SCORE => 3, RoundsTableMap::COL_GAMETYPE_ID => 4, RoundsTableMap::COL_NBPLAYERS => 5, RoundsTableMap::COL_WEEK => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'winner' => 1, 'red_score' => 2, 'blue_score' => 3, 'gametype_id' => 4, 'nbplayers' => 5, 'week' => 6, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Winner' => 1, 'RedScore' => 2, 'BlueScore' => 3, 'GametypeId' => 4, 'Nbplayers' => 5, 'Created' => 6, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'winner' => 1, 'redScore' => 2, 'blueScore' => 3, 'gametypeId' => 4, 'nbplayers' => 5, 'created' => 6, ),
+        self::TYPE_COLNAME       => array(RoundsTableMap::COL_ID => 0, RoundsTableMap::COL_WINNER => 1, RoundsTableMap::COL_RED_SCORE => 2, RoundsTableMap::COL_BLUE_SCORE => 3, RoundsTableMap::COL_GAMETYPE_ID => 4, RoundsTableMap::COL_NBPLAYERS => 5, RoundsTableMap::COL_CREATED => 6, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'winner' => 1, 'red_score' => 2, 'blue_score' => 3, 'gametype_id' => 4, 'nbplayers' => 5, 'created' => 6, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
@@ -162,7 +162,7 @@ class RoundsTableMap extends TableMap
         $this->addColumn('blue_score', 'BlueScore', 'INTEGER', true, null, null);
         $this->addForeignKey('gametype_id', 'GametypeId', 'INTEGER', 'gametypes', 'id', true, null, null);
         $this->addColumn('nbplayers', 'Nbplayers', 'INTEGER', true, null, null);
-        $this->addColumn('week', 'Week', 'VARCHAR', false, 255, null);
+        $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
 
     /**
@@ -333,7 +333,7 @@ class RoundsTableMap extends TableMap
             $criteria->addSelectColumn(RoundsTableMap::COL_BLUE_SCORE);
             $criteria->addSelectColumn(RoundsTableMap::COL_GAMETYPE_ID);
             $criteria->addSelectColumn(RoundsTableMap::COL_NBPLAYERS);
-            $criteria->addSelectColumn(RoundsTableMap::COL_WEEK);
+            $criteria->addSelectColumn(RoundsTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.winner');
@@ -341,7 +341,7 @@ class RoundsTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.blue_score');
             $criteria->addSelectColumn($alias . '.gametype_id');
             $criteria->addSelectColumn($alias . '.nbplayers');
-            $criteria->addSelectColumn($alias . '.week');
+            $criteria->addSelectColumn($alias . '.created');
         }
     }
 

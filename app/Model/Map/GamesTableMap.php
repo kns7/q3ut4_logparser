@@ -92,9 +92,9 @@ class GamesTableMap extends TableMap
     const COL_STOP = 'games.stop';
 
     /**
-     * the column name for the week field
+     * the column name for the created field
      */
-    const COL_WEEK = 'games.week';
+    const COL_CREATED = 'games.created';
 
     /**
      * The default string format for model objects of the related table
@@ -108,10 +108,10 @@ class GamesTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Start', 'Stop', 'Week', ),
-        self::TYPE_CAMELNAME     => array('id', 'playerId', 'start', 'stop', 'week', ),
-        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID, GamesTableMap::COL_PLAYER_ID, GamesTableMap::COL_START, GamesTableMap::COL_STOP, GamesTableMap::COL_WEEK, ),
-        self::TYPE_FIELDNAME     => array('id', 'player_id', 'start', 'stop', 'week', ),
+        self::TYPE_PHPNAME       => array('Id', 'PlayerId', 'Start', 'Stop', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'playerId', 'start', 'stop', 'created', ),
+        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID, GamesTableMap::COL_PLAYER_ID, GamesTableMap::COL_START, GamesTableMap::COL_STOP, GamesTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'player_id', 'start', 'stop', 'created', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -122,10 +122,10 @@ class GamesTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Start' => 2, 'Stop' => 3, 'Week' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'start' => 2, 'stop' => 3, 'week' => 4, ),
-        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID => 0, GamesTableMap::COL_PLAYER_ID => 1, GamesTableMap::COL_START => 2, GamesTableMap::COL_STOP => 3, GamesTableMap::COL_WEEK => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'start' => 2, 'stop' => 3, 'week' => 4, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PlayerId' => 1, 'Start' => 2, 'Stop' => 3, 'Created' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'playerId' => 1, 'start' => 2, 'stop' => 3, 'created' => 4, ),
+        self::TYPE_COLNAME       => array(GamesTableMap::COL_ID => 0, GamesTableMap::COL_PLAYER_ID => 1, GamesTableMap::COL_START => 2, GamesTableMap::COL_STOP => 3, GamesTableMap::COL_CREATED => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'player_id' => 1, 'start' => 2, 'stop' => 3, 'created' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -150,7 +150,7 @@ class GamesTableMap extends TableMap
         $this->addForeignKey('player_id', 'PlayerId', 'INTEGER', 'players', 'id', true, null, null);
         $this->addColumn('start', 'Start', 'INTEGER', true, null, null);
         $this->addColumn('stop', 'Stop', 'INTEGER', true, null, null);
-        $this->addColumn('week', 'Week', 'VARCHAR', false, 255, null);
+        $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
 
     /**
@@ -312,13 +312,13 @@ class GamesTableMap extends TableMap
             $criteria->addSelectColumn(GamesTableMap::COL_PLAYER_ID);
             $criteria->addSelectColumn(GamesTableMap::COL_START);
             $criteria->addSelectColumn(GamesTableMap::COL_STOP);
-            $criteria->addSelectColumn(GamesTableMap::COL_WEEK);
+            $criteria->addSelectColumn(GamesTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.player_id');
             $criteria->addSelectColumn($alias . '.start');
             $criteria->addSelectColumn($alias . '.stop');
-            $criteria->addSelectColumn($alias . '.week');
+            $criteria->addSelectColumn($alias . '.created');
         }
     }
 

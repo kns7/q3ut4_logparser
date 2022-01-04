@@ -7,6 +7,7 @@ use \Players as ChildPlayers;
 use \PlayersQuery as ChildPlayersQuery;
 use \Weapons as ChildWeapons;
 use \WeaponsQuery as ChildWeaponsQuery;
+use \DateTime;
 use \Exception;
 use \PDO;
 use Map\FragsTableMap;
@@ -21,6 +22,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'frags' table.
@@ -92,11 +94,11 @@ abstract class Frags implements ActiveRecordInterface
     protected $weapon_id;
 
     /**
-     * The value for the week field.
+     * The value for the created field.
      *
-     * @var        string
+     * @var        DateTime
      */
-    protected $week;
+    protected $created;
 
     /**
      * @var        ChildPlayers
@@ -387,13 +389,23 @@ abstract class Frags implements ActiveRecordInterface
     }
 
     /**
-     * Get the [week] column value.
+     * Get the [optionally formatted] temporal [created] column value.
      *
-     * @return string
+     *
+     * @param      string|null $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getWeek()
+    public function getCreated($format = NULL)
     {
-        return $this->week;
+        if ($format === null) {
+            return $this->created;
+        } else {
+            return $this->created instanceof \DateTimeInterface ? $this->created->format($format) : null;
+        }
     }
 
     /**
@@ -489,24 +501,24 @@ abstract class Frags implements ActiveRecordInterface
     } // setWeaponId()
 
     /**
-     * Set the value of [week] column.
+     * Sets the value of [created] column to a normalized version of the date/time value specified.
      *
-     * @param string $v new value
+     * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
      * @return $this|\Frags The current object (for fluent API support)
      */
-    public function setWeek($v)
+    public function setCreated($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->week !== $v) {
-            $this->week = $v;
-            $this->modifiedColumns[FragsTableMap::COL_WEEK] = true;
-        }
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->created !== null || $dt !== null) {
+            if ($this->created === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created->format("Y-m-d H:i:s.u")) {
+                $this->created = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[FragsTableMap::COL_CREATED] = true;
+            }
+        } // if either are not null
 
         return $this;
-    } // setWeek()
+    } // setCreated()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -556,8 +568,11 @@ abstract class Frags implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : FragsTableMap::translateFieldName('WeaponId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->weapon_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : FragsTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->week = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : FragsTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->created = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -817,8 +832,8 @@ abstract class Frags implements ActiveRecordInterface
         if ($this->isColumnModified(FragsTableMap::COL_WEAPON_ID)) {
             $modifiedColumns[':p' . $index++]  = 'weapon_id';
         }
-        if ($this->isColumnModified(FragsTableMap::COL_WEEK)) {
-            $modifiedColumns[':p' . $index++]  = 'week';
+        if ($this->isColumnModified(FragsTableMap::COL_CREATED)) {
+            $modifiedColumns[':p' . $index++]  = 'created';
         }
 
         $sql = sprintf(
@@ -843,8 +858,8 @@ abstract class Frags implements ActiveRecordInterface
                     case 'weapon_id':
                         $stmt->bindValue($identifier, $this->weapon_id, PDO::PARAM_INT);
                         break;
-                    case 'week':
-                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
+                    case 'created':
+                        $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -921,7 +936,7 @@ abstract class Frags implements ActiveRecordInterface
                 return $this->getWeaponId();
                 break;
             case 4:
-                return $this->getWeek();
+                return $this->getCreated();
                 break;
             default:
                 return null;
@@ -957,8 +972,12 @@ abstract class Frags implements ActiveRecordInterface
             $keys[1] => $this->getFraggerId(),
             $keys[2] => $this->getFraggedId(),
             $keys[3] => $this->getWeaponId(),
-            $keys[4] => $this->getWeek(),
+            $keys[4] => $this->getCreated(),
         );
+        if ($result[$keys[4]] instanceof \DateTimeInterface) {
+            $result[$keys[4]] = $result[$keys[4]]->format('c');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1057,7 +1076,7 @@ abstract class Frags implements ActiveRecordInterface
                 $this->setWeaponId($value);
                 break;
             case 4:
-                $this->setWeek($value);
+                $this->setCreated($value);
                 break;
         } // switch()
 
@@ -1098,7 +1117,7 @@ abstract class Frags implements ActiveRecordInterface
             $this->setWeaponId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setWeek($arr[$keys[4]]);
+            $this->setCreated($arr[$keys[4]]);
         }
     }
 
@@ -1153,8 +1172,8 @@ abstract class Frags implements ActiveRecordInterface
         if ($this->isColumnModified(FragsTableMap::COL_WEAPON_ID)) {
             $criteria->add(FragsTableMap::COL_WEAPON_ID, $this->weapon_id);
         }
-        if ($this->isColumnModified(FragsTableMap::COL_WEEK)) {
-            $criteria->add(FragsTableMap::COL_WEEK, $this->week);
+        if ($this->isColumnModified(FragsTableMap::COL_CREATED)) {
+            $criteria->add(FragsTableMap::COL_CREATED, $this->created);
         }
 
         return $criteria;
@@ -1245,7 +1264,7 @@ abstract class Frags implements ActiveRecordInterface
         $copyObj->setFraggerId($this->getFraggerId());
         $copyObj->setFraggedId($this->getFraggedId());
         $copyObj->setWeaponId($this->getWeaponId());
-        $copyObj->setWeek($this->getWeek());
+        $copyObj->setCreated($this->getCreated());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1447,7 +1466,7 @@ abstract class Frags implements ActiveRecordInterface
         $this->fragger_id = null;
         $this->fragged_id = null;
         $this->weapon_id = null;
-        $this->week = null;
+        $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

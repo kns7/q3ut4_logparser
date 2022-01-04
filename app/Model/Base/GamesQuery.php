@@ -24,13 +24,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamesQuery orderByPlayerId($order = Criteria::ASC) Order by the player_id column
  * @method     ChildGamesQuery orderByStart($order = Criteria::ASC) Order by the start column
  * @method     ChildGamesQuery orderByStop($order = Criteria::ASC) Order by the stop column
- * @method     ChildGamesQuery orderByWeek($order = Criteria::ASC) Order by the week column
+ * @method     ChildGamesQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
  * @method     ChildGamesQuery groupById() Group by the id column
  * @method     ChildGamesQuery groupByPlayerId() Group by the player_id column
  * @method     ChildGamesQuery groupByStart() Group by the start column
  * @method     ChildGamesQuery groupByStop() Group by the stop column
- * @method     ChildGamesQuery groupByWeek() Group by the week column
+ * @method     ChildGamesQuery groupByCreated() Group by the created column
  *
  * @method     ChildGamesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildGamesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -59,7 +59,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGames findOneByPlayerId(int $player_id) Return the first ChildGames filtered by the player_id column
  * @method     ChildGames findOneByStart(int $start) Return the first ChildGames filtered by the start column
  * @method     ChildGames findOneByStop(int $stop) Return the first ChildGames filtered by the stop column
- * @method     ChildGames findOneByWeek(string $week) Return the first ChildGames filtered by the week column *
+ * @method     ChildGames findOneByCreated(string $created) Return the first ChildGames filtered by the created column *
 
  * @method     ChildGames requirePk($key, ConnectionInterface $con = null) Return the ChildGames by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOne(ConnectionInterface $con = null) Return the first ChildGames matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -68,14 +68,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGames requireOneByPlayerId(int $player_id) Return the first ChildGames filtered by the player_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOneByStart(int $start) Return the first ChildGames filtered by the start column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOneByStop(int $stop) Return the first ChildGames filtered by the stop column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildGames requireOneByWeek(string $week) Return the first ChildGames filtered by the week column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGames requireOneByCreated(string $created) Return the first ChildGames filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGames[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGames objects based on current ModelCriteria
  * @method     ChildGames[]|ObjectCollection findById(int $id) Return ChildGames objects filtered by the id column
  * @method     ChildGames[]|ObjectCollection findByPlayerId(int $player_id) Return ChildGames objects filtered by the player_id column
  * @method     ChildGames[]|ObjectCollection findByStart(int $start) Return ChildGames objects filtered by the start column
  * @method     ChildGames[]|ObjectCollection findByStop(int $stop) Return ChildGames objects filtered by the stop column
- * @method     ChildGames[]|ObjectCollection findByWeek(string $week) Return ChildGames objects filtered by the week column
+ * @method     ChildGames[]|ObjectCollection findByCreated(string $created) Return ChildGames objects filtered by the created column
  * @method     ChildGames[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -174,7 +174,7 @@ abstract class GamesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, player_id, start, stop, week FROM games WHERE id = :p0';
+        $sql = 'SELECT id, player_id, start, stop, created FROM games WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -431,28 +431,46 @@ abstract class GamesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the week column
+     * Filter the query on the created column
      *
      * Example usage:
      * <code>
-     * $query->filterByWeek('fooValue');   // WHERE week = 'fooValue'
-     * $query->filterByWeek('%fooValue%', Criteria::LIKE); // WHERE week LIKE '%fooValue%'
+     * $query->filterByCreated('2011-03-14'); // WHERE created = '2011-03-14'
+     * $query->filterByCreated('now'); // WHERE created = '2011-03-14'
+     * $query->filterByCreated(array('max' => 'yesterday')); // WHERE created > '2011-03-13'
      * </code>
      *
-     * @param     string $week The value to use as filter.
+     * @param     mixed $created The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildGamesQuery The current query, for fluid interface
      */
-    public function filterByWeek($week = null, $comparison = null)
+    public function filterByCreated($created = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($week)) {
+        if (is_array($created)) {
+            $useMinMax = false;
+            if (isset($created['min'])) {
+                $this->addUsingAlias(GamesTableMap::COL_CREATED, $created['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($created['max'])) {
+                $this->addUsingAlias(GamesTableMap::COL_CREATED, $created['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
         }
 
-        return $this->addUsingAlias(GamesTableMap::COL_WEEK, $week, $comparison);
+        return $this->addUsingAlias(GamesTableMap::COL_CREATED, $created, $comparison);
     }
 
     /**

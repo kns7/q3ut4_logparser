@@ -5,6 +5,7 @@ namespace Base;
 use \Players as ChildPlayers;
 use \PlayersQuery as ChildPlayersQuery;
 use \ScoresQuery as ChildScoresQuery;
+use \DateTime;
 use \Exception;
 use \PDO;
 use Map\ScoresTableMap;
@@ -19,6 +20,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'scores' table.
@@ -83,11 +85,11 @@ abstract class Scores implements ActiveRecordInterface
     protected $score;
 
     /**
-     * The value for the week field.
+     * The value for the created field.
      *
-     * @var        string
+     * @var        DateTime
      */
-    protected $week;
+    protected $created;
 
     /**
      * @var        ChildPlayers
@@ -358,13 +360,23 @@ abstract class Scores implements ActiveRecordInterface
     }
 
     /**
-     * Get the [week] column value.
+     * Get the [optionally formatted] temporal [created] column value.
      *
-     * @return string
+     *
+     * @param      string|null $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getWeek()
+    public function getCreated($format = NULL)
     {
-        return $this->week;
+        if ($format === null) {
+            return $this->created;
+        } else {
+            return $this->created instanceof \DateTimeInterface ? $this->created->format($format) : null;
+        }
     }
 
     /**
@@ -432,24 +444,24 @@ abstract class Scores implements ActiveRecordInterface
     } // setScore()
 
     /**
-     * Set the value of [week] column.
+     * Sets the value of [created] column to a normalized version of the date/time value specified.
      *
-     * @param string $v new value
+     * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
      * @return $this|\Scores The current object (for fluent API support)
      */
-    public function setWeek($v)
+    public function setCreated($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->week !== $v) {
-            $this->week = $v;
-            $this->modifiedColumns[ScoresTableMap::COL_WEEK] = true;
-        }
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->created !== null || $dt !== null) {
+            if ($this->created === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created->format("Y-m-d H:i:s.u")) {
+                $this->created = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[ScoresTableMap::COL_CREATED] = true;
+            }
+        } // if either are not null
 
         return $this;
-    } // setWeek()
+    } // setCreated()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -496,8 +508,11 @@ abstract class Scores implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ScoresTableMap::translateFieldName('Score', TableMap::TYPE_PHPNAME, $indexType)];
             $this->score = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ScoresTableMap::translateFieldName('Week', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->week = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ScoresTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->created = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -732,8 +747,8 @@ abstract class Scores implements ActiveRecordInterface
         if ($this->isColumnModified(ScoresTableMap::COL_SCORE)) {
             $modifiedColumns[':p' . $index++]  = 'score';
         }
-        if ($this->isColumnModified(ScoresTableMap::COL_WEEK)) {
-            $modifiedColumns[':p' . $index++]  = 'week';
+        if ($this->isColumnModified(ScoresTableMap::COL_CREATED)) {
+            $modifiedColumns[':p' . $index++]  = 'created';
         }
 
         $sql = sprintf(
@@ -755,8 +770,8 @@ abstract class Scores implements ActiveRecordInterface
                     case 'score':
                         $stmt->bindValue($identifier, $this->score, PDO::PARAM_INT);
                         break;
-                    case 'week':
-                        $stmt->bindValue($identifier, $this->week, PDO::PARAM_STR);
+                    case 'created':
+                        $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -830,7 +845,7 @@ abstract class Scores implements ActiveRecordInterface
                 return $this->getScore();
                 break;
             case 3:
-                return $this->getWeek();
+                return $this->getCreated();
                 break;
             default:
                 return null;
@@ -865,8 +880,12 @@ abstract class Scores implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPlayerId(),
             $keys[2] => $this->getScore(),
-            $keys[3] => $this->getWeek(),
+            $keys[3] => $this->getCreated(),
         );
+        if ($result[$keys[3]] instanceof \DateTimeInterface) {
+            $result[$keys[3]] = $result[$keys[3]]->format('c');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -932,7 +951,7 @@ abstract class Scores implements ActiveRecordInterface
                 $this->setScore($value);
                 break;
             case 3:
-                $this->setWeek($value);
+                $this->setCreated($value);
                 break;
         } // switch()
 
@@ -970,7 +989,7 @@ abstract class Scores implements ActiveRecordInterface
             $this->setScore($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setWeek($arr[$keys[3]]);
+            $this->setCreated($arr[$keys[3]]);
         }
     }
 
@@ -1022,8 +1041,8 @@ abstract class Scores implements ActiveRecordInterface
         if ($this->isColumnModified(ScoresTableMap::COL_SCORE)) {
             $criteria->add(ScoresTableMap::COL_SCORE, $this->score);
         }
-        if ($this->isColumnModified(ScoresTableMap::COL_WEEK)) {
-            $criteria->add(ScoresTableMap::COL_WEEK, $this->week);
+        if ($this->isColumnModified(ScoresTableMap::COL_CREATED)) {
+            $criteria->add(ScoresTableMap::COL_CREATED, $this->created);
         }
 
         return $criteria;
@@ -1113,7 +1132,7 @@ abstract class Scores implements ActiveRecordInterface
     {
         $copyObj->setPlayerId($this->getPlayerId());
         $copyObj->setScore($this->getScore());
-        $copyObj->setWeek($this->getWeek());
+        $copyObj->setCreated($this->getCreated());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1206,7 +1225,7 @@ abstract class Scores implements ActiveRecordInterface
         $this->id = null;
         $this->player_id = null;
         $this->score = null;
-        $this->week = null;
+        $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

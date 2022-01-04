@@ -15,7 +15,7 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
     <column name="event" phpName="Event" type="VARCHAR" size="255" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="players" phpName="Players" refPhpName="Bomb">
       <reference local="player_id" foreign="id"/>
@@ -38,7 +38,7 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
     <column name="event" phpName="Event" type="VARCHAR" size="255" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="players" phpName="Players" refPhpName="Flag">
       <reference local="player_id" foreign="id"/>
@@ -54,7 +54,7 @@
     <column name="fragger_id" phpName="FraggerId" type="INTEGER" required="true"/>
     <column name="fragged_id" phpName="FraggedId" type="INTEGER" required="true"/>
     <column name="weapon_id" phpName="WeaponId" type="INTEGER" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="players" phpName="Fragger" refPhpName="FraggerPlayer">
       <reference local="fragger_id" foreign="id"/>
@@ -75,7 +75,7 @@
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
     <column name="start" phpName="Start" type="INTEGER" required="true"/>
     <column name="stop" phpName="Stop" type="INTEGER" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="players" phpName="Players" refPhpName="Game">
       <reference local="player_id" foreign="id"/>
@@ -101,7 +101,7 @@
     <column name="hitter_id" phpName="HitterId" type="INTEGER" required="true"/>
     <column name="hitted_id" phpName="HittedId" type="INTEGER" required="true"/>
     <column name="bodypart_id" phpName="BodypartId" type="INTEGER" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="players" phpName="Hitter" refPhpName="HitterPlayer">
       <reference local="hitter_id" foreign="id"/>
@@ -148,7 +148,7 @@
     <column name="blue_score" phpName="BlueScore" type="INTEGER" required="true"/>
     <column name="gametype_id" phpName="GametypeId" type="INTEGER" required="true"/>
     <column name="nbplayers" phpName="Nbplayers" type="INTEGER" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="gametypes" phpName="Gametypes" refPhpName="Round">
       <reference local="gametype_id" foreign="id"/>
@@ -163,7 +163,7 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
     <column name="score" phpName="Score" type="INTEGER" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="players" phpName="Players" refPhpName="Score">
       <reference local="player_id" foreign="id"/>
@@ -179,7 +179,7 @@
     <column name="round_id" phpName="RoundId" type="INTEGER" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
     <column name="team" phpName="Team" type="VARCHAR" size="255" required="true"/>
-    <column name="week" phpName="Week" type="VARCHAR" size="255"/>
+    <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="players" phpName="Players" refPhpName="Team">
       <reference local="player_id" foreign="id"/>
