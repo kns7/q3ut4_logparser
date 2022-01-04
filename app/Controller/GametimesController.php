@@ -11,7 +11,7 @@ namespace App\Controller;
 
 use Propel\Runtime\Exception\PropelException;
 
-class GamesController extends Controller
+class GametimesController extends Controller
 {
     public function add(\Players $player, $start)
     {

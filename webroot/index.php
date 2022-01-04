@@ -55,7 +55,7 @@ $app->container->singleton('Ctrl',function() use ($app){
         'Bombs' => new \App\Controller\BombsController($app),
         'Flags' => new \App\Controller\FlagsController($app),
         'Frags' => new \App\Controller\FragsController($app),
-        'Games' => new \App\Controller\GamesController($app),
+        'Gametimes' => new \App\Controller\GametimesController($app),
         'Gametypes' => new \App\Controller\GametypesController($app),
         'Hits' => new \App\Controller\HitsController($app),
         'Logs' => new LogsController($app),

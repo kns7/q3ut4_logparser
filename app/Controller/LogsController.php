@@ -88,7 +88,7 @@ class LogsController extends Controller {
                             $this->_playersarray[$matches[3]] = $player->getId();
                             $time = $this->countGameTime($matches);
                             $message = $player->getName() . " (" . $matches[3] . ") connected at " . $time . " seconds";
-                            if ($this->app->Ctrl->Games->add($player, $time)) {
+                            if ($this->app->Ctrl->Gametimes->add($player, $time)) {
                                 $level = "INFO";
                             } else {
                                 $level = "ERROR";
@@ -124,7 +124,7 @@ class LogsController extends Controller {
                     $player = $this->getPlayerFromTempArray($matches[3]);
                     if(!is_null($player)) {
                         $message = $player->getName(). " disconnected at ".$time." seconds";
-                        if($this->app->Ctrl->Games->stopGame($player, $time) !== false){
+                        if($this->app->Ctrl->Gametimes->stopGame($player, $time) !== false){
                             $level = "INFO";
                         }else{
                             $level = "ERROR";
@@ -255,7 +255,7 @@ class LogsController extends Controller {
                     $time = $this->countGameTime($matches);
                     foreach($this->_playersarray as $p){
                         $player = $this->app->Ctrl->Players->get($p);
-                        $this->app->Ctrl->Games->stopGame($player,$time);
+                        $this->app->Ctrl->Gametimes->stopGame($player,$time);
                     }
                     //$this->_playersarray = [];
                     $message = "Stopped time for all Players at $time seconds";
