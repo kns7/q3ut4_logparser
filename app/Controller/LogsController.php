@@ -241,13 +241,23 @@ class LogsController extends Controller {
                         // Skipped, because of Server Connection
                         $message = "Skipped, Server connection ($playername)";
                         $level = "INFO";
-                    }else {
+                    }else{
                         $player = $this->app->Ctrl->Players->getORadd($this->getValueFromConnectionString($matches[4], "name"));
-                        $this->players[$matches[3]] = $player->getId();
-                        $time = $this->countGameTime($matches);
-                        $message = $player->getName() . " (" . $matches[3] . ") connected at " . $time . " seconds";
+                        if (array_search($player->getId(), $this->_playersarray) === false) {
+                            $this->players[$matches[3]] = $player->getId();
+                            $time = $this->countGameTime($matches);
+                            if ($this->app->Ctrl->Gametimes->add($player, $time)) {
+                                $level = "INFO";
+                            } else {
+                                $level = "ERROR";
+                            }
+                            $message = $player->getName() . " (" . $matches[3] . ") connected at " . $time . " seconds";
+                        }else{
+                            $message = "Skipped, User ".$player->getName()." already in Game (GameID: ". $matches[3] .", Name: $playername)";
+                            $level = "INFO";
+                        }
                     }
-                    $this->logOutput($message,$l,$action,"INFO");
+                    $this->logOutput($message,$l,$action,$level);
                 }
 
 
@@ -278,7 +288,11 @@ class LogsController extends Controller {
                     $player = $this->getPlayerFromArray($matches[3]);
                     if(!is_null($player)) {
                         $message = $player->getName(). " disconnected at ".$time." seconds";
-                        $level = "INFO";
+                        if($this->app->Ctrl->Gametimes->stopGame($player, $time) !== false){
+                            $level = "INFO";
+                        }else{
+                            $level = "ERROR";
+                        }
                         $this->logOutput($message,$l,$action,"INFO");
                     }
                     try {
