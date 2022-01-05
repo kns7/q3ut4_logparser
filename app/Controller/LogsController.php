@@ -40,6 +40,7 @@ class LogsController extends Controller {
     private $players = [];
     private $currentgame = null;
     private $currentround = null;
+    private $currentmap = null;
     private $winningteam = 0;
 
 
@@ -67,11 +68,11 @@ class LogsController extends Controller {
                     $this->gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[3], "g_gametype"));
                     $timelimit = $this->getValueFromConnectionString($matches[3], "timelimit");
                     $roundtime = $this->getValueFromConnectionString($matches[3], "g_roundtime");
-                    $map = $this->app->Ctrl->Maps->getByFile($this->getValueFromConnectionString($matches[3], "mapname"));
+                    $this->currentmap = $this->app->Ctrl->Maps->getByFile($this->getValueFromConnectionString($matches[3], "mapname"));
                     $this->gamenb = $this->app->Ctrl->Games->getNextGameNB();
-                    $this->currentgame = $this->app->Ctrl->Games->add($this->gamenb,$map,$this->gametype,$timelimit,$roundtime,count($this->players));
+                    $this->currentgame = $this->app->Ctrl->Games->add($this->gamenb,$this->currentmap,$this->gametype,$timelimit,$roundtime,count($this->players));
                     if($this->currentgame !== false ){
-                        $message = "Game (".$this->gamenb."). Map: ".$map->getName().", Gametype: ".$this->gametype->getName().", Timelimit: ".$timelimit.", Roundtime: ". $roundtime." Players: ".count($this->players);
+                        $message = "Game (".$this->gamenb."). Map: ".$this->currentmap->getName().", Gametype: ".$this->gametype->getName().", Timelimit: ".$timelimit.", Roundtime: ". $roundtime." Players: ".count($this->players);
                         $this->logOutput($message,$l,$action,"INFO");
                         switch($this->gametype->getCode()){
                             case 0:
@@ -79,7 +80,7 @@ class LogsController extends Controller {
                                 // No InitRound for FFA & Gun game
                                 $this->roundnb = $this->app->Ctrl->Rounds->getNextRoundNB();
                                 $this->currentround = $this->app->Ctrl->Rounds->addRound($this->currentgame,$this->roundnb);
-                            $message = "Round (".$this->roundnb."). Players: ".count($this->players);
+                                $message = "Round (".$this->roundnb."). Players: ".count($this->players);
                                 $this->logOutput($message,$l,$action,"INFO");
                                 break;
                         }
@@ -96,9 +97,25 @@ class LogsController extends Controller {
                 preg_match($this->_initround,$line,$matches);
                 if(count($matches) > 0){
                     $action = "Init Round";
+                    $newgametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[3], "g_gametype"));
+                    $newmap = $this->app->Ctrl->Maps->getByFile($this->getValueFromConnectionString($matches[3], "mapname"));
                     $this->roundnb = $this->app->Ctrl->Rounds->getNextRoundNB();
                     $this->currentround = $this->app->Ctrl->Rounds->addRound($this->currentgame,$this->roundnb);
                     $message = "Round (".$this->roundnb."). Players: ".count($this->players);
+                    if(!is_null($newgametype)) {
+                        if ($newgametype->getId() != $this->gametype->getId()) {
+                            $message .= ", Update Gametype to " . $newgametype->getName();
+                            $this->gametype = $newgametype;
+                            $this->app->Ctrl->Games->updateGametype($this->currentgame->getId(),$newgametype);
+                        }
+                    }
+                    if(!is_null($newmap)) {
+                        if ($newmap->getId() != $this->currentmap->getId()) {
+                            $message .= ", Update Map to " . $newmap->getName();
+                            $this->currentmap = $newmap;
+                            $this->app->Ctrl->Games->updateMap($this->currentgame->getId(),$this->currentmap);
+                        }
+                    }
                     $this->logOutput($message,$l,$action,"INFO");
                 }
 

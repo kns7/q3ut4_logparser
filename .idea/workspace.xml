@@ -2,52 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="61faa754-bfd1-4a96-abdf-9f9668816131" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Model/Base/Gamerounds.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/Base/GameroundsQuery.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/Base/Gamescores.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/Base/GamescoresQuery.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/Gamerounds.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/GameroundsQuery.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/Gamescores.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/GamescoresQuery.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/Map/GameroundsTableMap.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Model/Map/GamescoresTableMap.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/webroot/newparser.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Controller/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/Controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Controller/FragsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/FragsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Controller/GamesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/GamesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Controller/HitsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/HitsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Controller/LogsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/LogsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Controller/RoundsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/RoundsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Controller/ScoresController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controller/ScoresController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Bodyparts.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Bodyparts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Bombs.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Bombs.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/BombsQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/BombsQuery.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Flags.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Flags.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/FlagsQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/FlagsQuery.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Frags.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Frags.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/FragsQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/FragsQuery.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Games.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Games.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/GamesQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/GamesQuery.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Hits.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Hits.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/HitsQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/HitsQuery.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Players.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Players.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/PlayersQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/PlayersQuery.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Base/Weapons.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Base/Weapons.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Games.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Games.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Map/BombsTableMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Map/BombsTableMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Map/FlagsTableMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Map/FlagsTableMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Map/FragsTableMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Map/FragsTableMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Map/GamesTableMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Map/GamesTableMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Map/HitsTableMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Map/HitsTableMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Map/PlayersTableMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Map/PlayersTableMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Model/Players.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Players.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/schema.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webroot/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/webroot/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webroot/parser.php" beforeDir="false" afterPath="$PROJECT_DIR$/webroot/parser.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -60,20 +17,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webroot/index.php">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="337" column="58" lean-forward="true" selection-start-line="337" selection-start-column="58" selection-end-line="337" selection-end-column="58" />
+            <state relative-caret-position="-3671">
+              <caret line="199" column="57" lean-forward="true" selection-start-line="199" selection-start-column="57" selection-end-line="199" selection-end-column="57" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webroot/newparser.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-735">
-              <caret line="96" column="40" lean-forward="true" selection-start-line="96" selection-start-column="40" selection-end-line="96" selection-end-column="40" />
+            <state relative-caret-position="975">
+              <caret line="68" column="48" selection-start-line="68" selection-start-column="48" selection-end-line="68" selection-end-column="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/config/config.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
             </state>
           </provider>
         </entry>
@@ -82,7 +48,7 @@
         <entry file="file://$PROJECT_DIR$/app/Controller/ScoresController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="75">
-              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
             </state>
           </provider>
         </entry>
@@ -117,8 +83,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Controller/GamesController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1006">
-              <caret line="96" column="28" lean-forward="true" selection-start-line="96" selection-start-column="28" selection-end-line="96" selection-end-column="28" />
+            <state relative-caret-position="701">
+              <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -127,7 +93,7 @@
         <entry file="file://$PROJECT_DIR$/app/Controller/PlayersController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="19" column="5" lean-forward="true" selection-start-line="11" selection-start-column="4" selection-end-line="19" selection-end-column="5" />
+              <caret line="19" column="5" selection-start-line="11" selection-start-column="4" selection-end-line="19" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -136,16 +102,7 @@
         <entry file="file://$PROJECT_DIR$/app/config/schema.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="330">
-              <caret line="103" column="59" lean-forward="true" selection-start-line="103" selection-start-column="59" selection-end-line="103" selection-end-column="59" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Controller/Controller.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="960">
-              <caret line="64" column="47" lean-forward="true" selection-start-line="64" selection-start-column="47" selection-end-line="64" selection-end-column="47" />
+              <caret line="103" column="59" selection-start-line="103" selection-start-column="59" selection-end-line="103" selection-end-column="59" />
             </state>
           </provider>
         </entry>
@@ -215,7 +172,6 @@
         <option value="$PROJECT_DIR$/app/Model/Rounds.php" />
         <option value="$PROJECT_DIR$/app/Model/Scores.php" />
         <option value="$PROJECT_DIR$/app/Model/Teams.php" />
-        <option value="$PROJECT_DIR$/app/config/config.php" />
         <option value="$PROJECT_DIR$/app/Model/Gametimes.php" />
         <option value="$PROJECT_DIR$/app/Controller/MapsController.php" />
         <option value="$PROJECT_DIR$/app/Model/Games.php" />
@@ -227,11 +183,12 @@
         <option value="$PROJECT_DIR$/app/Controller/RoundsController.php" />
         <option value="$PROJECT_DIR$/app/Controller/Controller.php" />
         <option value="$PROJECT_DIR$/webroot/index.php" />
-        <option value="$PROJECT_DIR$/app/Controller/GamesController.php" />
         <option value="$PROJECT_DIR$/app/Model/Players.php" />
         <option value="$PROJECT_DIR$/app/Controller/FragsController.php" />
         <option value="$PROJECT_DIR$/app/config/schema.xml" />
         <option value="$PROJECT_DIR$/app/Controller/ScoresController.php" />
+        <option value="$PROJECT_DIR$/app/config/config.php" />
+        <option value="$PROJECT_DIR$/app/Controller/GamesController.php" />
         <option value="$PROJECT_DIR$/app/Controller/LogsController.php" />
       </list>
     </option>
@@ -257,10 +214,10 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="3181" />
-    <option name="y" value="38" />
-    <option name="width" value="2098" />
-    <option name="height" value="1321" />
+    <option name="x" value="3341" />
+    <option name="y" value="43" />
+    <option name="width" value="2019" />
+    <option name="height" value="1286" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -291,12 +248,6 @@
               <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="Controller" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
-              <item name="q3ut4_logparser" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="Model" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="q3ut4_logparser" type="b2602c69:ProjectViewProjectNode" />
@@ -369,14 +320,7 @@
       <workItem from="1641134769282" duration="43100000" />
       <workItem from="1641218225047" duration="4229000" />
       <workItem from="1641253156381" duration="8610000" />
-      <workItem from="1641323412896" duration="14278000" />
-    </task>
-    <task id="LOCAL-00005" summary="Logging Hits and Frags OK">
-      <created>1641052448683</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1641052448683</updated>
+      <workItem from="1641323412896" duration="18949000" />
     </task>
     <task id="LOCAL-00006" summary="Logparser: Connections infos (Join, Quit)">
       <created>1641065608504</created>
@@ -714,17 +658,24 @@
       <option name="project" value="LOCAL" />
       <updated>1641323503238</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Parselog: Refactoring OK (missing Gametimes)">
+      <created>1641339968911</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1641339968911</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100138000" />
+    <option name="totallyTimeSpent" value="104809000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="3181" y="38" width="2098" height="1321" extended-state="0" />
+    <frame x="3341" y="43" width="2019" height="1286" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18579766" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15680324" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -749,7 +700,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Stats: Game Time" />
     <MESSAGE value="Stats: Weapons use" />
     <MESSAGE value="Stats: Gametypes + Modified Parselog: Changed InitRound only to InitRound + InitGame" />
     <MESSAGE value="Bugfix in empty rounds. Now added to DB, but with Amount of Players as new information (for filtering before stats)" />
@@ -774,7 +724,8 @@
     <MESSAGE value="Parselog: Changed Week Number to Date" />
     <MESSAGE value="Changed table &quot;games&quot; to &quot;gametimes&quot;" />
     <MESSAGE value="Added Games Table" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Games Table" />
+    <MESSAGE value="Parselog: Refactoring OK (missing Gametimes)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Parselog: Refactoring OK (missing Gametimes)" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/webroot/templates/ranking.php">
@@ -983,13 +934,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/config/config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Model/Base/Games.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="415">
@@ -1032,13 +976,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/newparser.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="961">
-          <caret line="68" column="48" selection-start-line="68" selection-start-column="48" selection-end-line="68" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Controller/BombsController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -1070,14 +1007,7 @@
     <entry file="file://$PROJECT_DIR$/app/Controller/PlayersController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
-          <caret line="19" column="5" lean-forward="true" selection-start-line="11" selection-start-column="4" selection-end-line="19" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Controller/GamesController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1006">
-          <caret line="96" column="28" lean-forward="true" selection-start-line="96" selection-start-column="28" selection-end-line="96" selection-end-column="28" />
+          <caret line="19" column="5" selection-start-line="11" selection-start-column="4" selection-end-line="19" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -1091,7 +1021,7 @@
     <entry file="file://$PROJECT_DIR$/app/config/schema.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
-          <caret line="103" column="59" lean-forward="true" selection-start-line="103" selection-start-column="59" selection-end-line="103" selection-end-column="59" />
+          <caret line="103" column="59" selection-start-line="103" selection-start-column="59" selection-end-line="103" selection-end-column="59" />
         </state>
       </provider>
     </entry>
@@ -1112,14 +1042,35 @@
     <entry file="file://$PROJECT_DIR$/app/Controller/ScoresController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/newparser.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="975">
+          <caret line="68" column="48" selection-start-line="68" selection-start-column="48" selection-end-line="68" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Controller/GamesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="701">
+          <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Controller/LogsController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-735">
-          <caret line="96" column="40" lean-forward="true" selection-start-line="96" selection-start-column="40" selection-end-line="96" selection-end-column="40" />
+        <state relative-caret-position="-3671">
+          <caret line="199" column="57" lean-forward="true" selection-start-line="199" selection-start-column="57" selection-end-line="199" selection-end-column="57" />
         </state>
       </provider>
     </entry>

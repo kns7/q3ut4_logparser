@@ -13,15 +13,20 @@ use Propel\Runtime\Exception\PropelException;
 
 class GamesController extends Controller
 {
-    public function add($gamenb, \Maps $map, \Gametypes $gametype, $timelimit, $roundtime,$nbplayers)
+    public function add($gamenb, $map, \Gametypes $gametype, $timelimit, $roundtime,$nbplayers)
     {
         $game = new \Games();
-        $game->setMaps($map)
-            ->setGamestypes($gametype)
+
+        $game->setGamestypes($gametype)
             ->setGameNB($gamenb)
             ->setTimelimit($timelimit)
             ->setRoundtime($roundtime)
             ->setNbplayers($nbplayers);
+        if(!is_null($map)){
+            $game->setMaps($map);
+        }else{
+            $game->setMapId(0);
+        }
 
         try {
             $game->save();
@@ -53,6 +58,41 @@ class GamesController extends Controller
             return $game;
         }else{
             return false;
+        }
+    }
+
+    public function updateGametype($id, $gametype)
+    {
+        $game = \GamesQuery::create()->findPk($id);
+        if(!is_null($game)){
+            if(!is_null($gametype)){
+                $game->setGamestypes($gametype);
+                try {
+                    $game->save();
+                } catch(PropelException $e){
+                    return false;
+                }
+                return $game;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    public function updateMap($id,$map){
+        $game = \GamesQuery::create()->findPk($id);
+        if(!is_null($game)){
+            if(!is_null($map)){
+                $game->setMaps($map);
+                try {
+                    $game->save();
+                } catch(PropelException $e){
+                    return false;
+                }
+                return $game;
+            }else{
+                return false;
+            }
         }
     }
 
