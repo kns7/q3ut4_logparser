@@ -23,6 +23,10 @@ class StatsController extends Controller
                 $query->filterByWeaponId([5,8,9]);
                 break;
 
+            case "sidearm":
+                $query->filterByWeaponId([16,17,18,19,20]);
+                break;
+
             case "grenade":
                 $query->filterByWeaponId(22);
                 break;
@@ -177,6 +181,27 @@ class StatsController extends Controller
         // Array Sort (Total DESC)
         foreach($return as $key => $row){
             $sorting[$key] = $row["total"];
+        }
+        array_multisort($sorting, SORT_DESC, $return);
+
+        return $return;
+    }
+
+    public function getWinsGametypes($gametype)
+    {
+        $return = [];
+        // Get all players
+        $players = $this->app->Ctrl->Players->getList();
+        foreach($players as $p){
+            array_push($return,[
+                "id" => $p->getId(),
+                "name" => $p->getName(),
+                "wins" => $p->getGametypeWins($gametype)
+            ]);
+        }
+        // Array Sort (Total DESC)
+        foreach($return as $key => $row){
+            $sorting[$key] = $row["wins"];
         }
         array_multisort($sorting, SORT_DESC, $return);
 

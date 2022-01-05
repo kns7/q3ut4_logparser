@@ -81,12 +81,12 @@ class Players extends BasePlayers
 
     public function getRoundWins()
     {
-        return \ScoresQuery::create()->filterByPlayerId($this->getId())->filterByScore("1")->count();
+        return \GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByWinner(true)->filterByTeam("1")->_or()->filterByTeam("2")->count();
     }
 
     public function getRoundLooses()
     {
-        return \ScoresQuery::create()->filterByPlayerId($this->getId())->filterByScore("-1")->count();
+        return \GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByWinner(false)->filterByTeam("1")->_or()->filterByTeam("2")->count();
     }
 
     public function getWeaponsRank($type = "")
@@ -136,14 +136,10 @@ class Players extends BasePlayers
         return $query->count();
     }
 
-    public function getGunGameCount()
+    public function getGametypeWins($gametype_id)
     {
-        return \RoundsQuery::create()->filterByGametypeId(11)->filterByWinner($this->getId())->count();
-    }
-
-    public function getFFACount()
-    {
-        return \RoundsQuery::create()->filterByGametypeId(1)->filterByWinner($this->getId())->count();
+        $games = GamesQuery::create()->filterByGametypeId($gametype_id)->select("id")->find()->toArray();
+        return GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByGameID($games)->filterByWinner(true)->count();
     }
 
     public function getCTFCount($type = "all")

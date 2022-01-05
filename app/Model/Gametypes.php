@@ -16,6 +16,6 @@ class Gametypes extends BaseGametypes
 {
     public function getRoundsCount()
     {
-        return \RoundsQuery::create()->filterByGametypeId($this->getId())->filterByNbplayers(0,\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
+        return \GamesQuery::create()->filterByGametypeId($this->getId())->filterByNbplayers(0,\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
     }
 }

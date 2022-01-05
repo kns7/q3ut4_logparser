@@ -85,7 +85,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col-xl-4 col-lg-6">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Snipers</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -112,7 +112,34 @@
             </tbody>
         </table>
     </div>
-    <div class="col-xl-4 col-lg-6">
+    <div class="col-xl-3 col-lg-6">
+        <h2 class="text-center">Pistolets</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr class="bg-dark text-light">
+                <th></th>
+                <th>Joueur</th>
+                <th>Frags</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $i = 1;
+            foreach($sidearms as $f){
+                ?>
+                <tr>
+                    <td>#<?= $i;?></td>
+                    <td><a href="/player#<?=$f->getFragger()->getId();?>"><?= $f->getFragger()->getName();?></a></td>
+                    <td><?= $f->getFrags();?></td>
+                </tr>
+                <?php
+                $i++;
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Grenadiers (Grenades HE)</h2>
         <table class="table table-hover table-striped">
             <thead>
@@ -139,7 +166,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col-xl-4 col-lg-6">
+    <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Charcuteurs (Couteau)</h2>
         <table class="table table-hover table-striped">
             <thead>

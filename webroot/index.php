@@ -101,13 +101,14 @@ $app->group('/views',function() use($app){
         $winlooses = $app->Ctrl->Stats->getRoundsWinLooses();
         $weapons = $app->Ctrl->Stats->getStatsWeapons();
         $snipers = $app->Ctrl->Stats->getFragRanking("sniper");
+        $sidearms = $app->Ctrl->Stats->getFragRanking("sidearm");
         $grenades = $app->Ctrl->Stats->getFragRanking("grenade");
         $knives = $app->Ctrl->Stats->getFragRanking("knife");
         $bombs = $app->Ctrl->Stats->getStatsBombs();
-        $ggame = $app->Ctrl->Stats->getStatsGunGame();
-        $ffa = $app->Ctrl->Stats->getStatsFFA();
+        $ggame = $app->Ctrl->Stats->getWinsGametypes(11);
+        $ffa = $app->Ctrl->Stats->getWinsGametypes(1);
         $ctf = $app->Ctrl->Stats->getStatsCTF();
-        $app->render('partials/home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','grenades','knives', 'bombs', 'ggame', 'ffa', 'ctf'));
+        $app->render('partials/home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','sidearms','grenades','knives', 'bombs', 'ggame', 'ffa', 'ctf'));
     });
     $app->get('/stats/:player',function($player) use($app){
         $player = $app->Ctrl->Players->get($player);
