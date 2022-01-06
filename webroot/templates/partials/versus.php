@@ -4,8 +4,8 @@ $picture2 = (file_exists('img/users/'.$p2->getId().".png"))? "/img/users/".$p2->
 $kills = ['1' => $p1->getKills(), '2' => $p2->getKills()];
 $time = ['1' => $p1->getPlayingTime(), '2' => $p2->getPlayingTime()];
 $ratio = ['1' => $p1->getRatio(), '2' => $p2->getRatio()];
-$ggame = ['1' => $p1->getGunGameCount(), '2' => $p2->getGunGameCount()];
-$ffa = ['1' => $p1->getFFACount(), '2' => $p2->getFFACount()];
+$ggame = ['1' => $p1->getGametypeWins(11), '2' => $p2->getGametypeWins(11)];
+$ffa = ['1' => $p1->getGametypeWins(1), '2' => $p2->getGametypeWins(1)];
 $team = ['wins' => ['1' => $p1->getRoundWins(), '2' => $p2->getRoundWins()],
     'lost' => ['1' => $p1->getRoundLooses(), '2' => $p2->getRoundLooses()]];
 $bomb = ['planted' => ['1' => $p1->getBombsCount("planted"), '2' => $p2->getBombsCount("planted")],

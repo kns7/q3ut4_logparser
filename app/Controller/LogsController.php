@@ -42,6 +42,8 @@ class LogsController extends Controller {
     private $currentround = null;
     private $currentmap = null;
     private $winningteam = 0;
+    private $frags = 0;
+    private $hits = 0;
 
 
     public function newParser($log)
@@ -65,6 +67,8 @@ class LogsController extends Controller {
                 preg_match($this->_initgame,$line,$matches);
                 if(count($matches) > 0){
                     $action = "Init Game";
+                    $this->hits = 0;
+                    $this->frags = 0;
                     $this->gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[3], "g_gametype"));
                     $timelimit = $this->getValueFromConnectionString($matches[3], "timelimit");
                     $roundtime = $this->getValueFromConnectionString($matches[3], "g_roundtime");
@@ -127,7 +131,7 @@ class LogsController extends Controller {
                 preg_match($this->_endgame,$line,$matches);
                 if(count($matches) > 0){
                     $action = "End Game";
-                    if(count($this->players) == 0){
+                    if(count($this->players) == 0 || ($this->frags == 0 && $this->hits == 0)) {
                         $message = "Empty Game... remove it!";
                         $this->app->Ctrl->Games->delete($this->currentgame->getId());
                         $this->app->Ctrl->Rounds->deleteFromGame($this->currentgame->getId());
@@ -147,8 +151,9 @@ class LogsController extends Controller {
                 preg_match($this->_gungameend,$line,$matches);
                 if(count($matches) > 0){
                     $action = "End GunGame";
+                    $this->winningteam = 0;
                     $this->_triggergungame = $matches[1].":".$matches[2];
-                    $message = "Stopped at ".$matches[1].":".$matches[2];
+                    $message = "Stopped at ".$matches[1].":".$matches[2] ."  (GunGame, Gunlimit hit: First Score will be winner)";
                     $level = "INFO";
                     $this->logOutput($message,$l,$action,$level);
                 }
@@ -157,6 +162,7 @@ class LogsController extends Controller {
                 if(count($matches) > 0){
                     $action = "Timelimit";
                     $level = "INFO";
+                    $this->winningteam = 0;
                     if($this->gametype->getCode() == 0) {
                         $this->_triggerfreegame = $matches[1] . ":" . $matches[2];
                         $message = "Stopped at " . $matches[1] . ":" . $matches[2] ." (FreeForAll: First Score will be winner)";
@@ -207,16 +213,19 @@ class LogsController extends Controller {
                     $message = $player->getName()." [".$this->getTeamName($this->_teams[$matches[5]])."] (K:$kills / D:$deaths) Score: ".$matches[3]." Ping: ".$matches[4];
                     // For Gun Game, First is winner if Gunlimit hit
                     if($matches[1].":".$matches[2] == $this->_triggergungame && $this->_triggergungame !== false) {
+                        $message.= " Gungame Trigger";
                         $winner = true;
                         $this->_triggergungame = false;
                     }
                     // For Free For All, First is winner
                     if($matches[1].":".$matches[2] == $this->_triggerfreegame && $this->_triggerfreegame !== false) {
+                        $message.= " Free For All Trigger";
                         $winner = true;
                         $this->_triggerfreegame = false;
                     }
                     // For Team plays: if Player in Winning Team, set winner
                     if($this->winningteam != 0){
+                        $message.= " Team Play Trigger";
                         $winner = ($this->_teams[$matches[5]] == $this->winningteam)?true:false;
                     }
                     $message .= ($winner)?" Winner!":"";
@@ -311,6 +320,7 @@ class LogsController extends Controller {
                 preg_match($this->_frag,$line,$matches);
                 if(count($matches) > 0){
                     $action ="Frag";
+                    $this->frags++;
                     $fragger = $this->app->Ctrl->Players->getORadd($matches[1]);
                     $fragged = $this->app->Ctrl->Players->getORadd($matches[2]);
                     $weapon = $this->app->Ctrl->Weapons->getORadd($matches[3]);
@@ -330,6 +340,7 @@ class LogsController extends Controller {
                 preg_match($this->_hit,$line,$matches);
                 if(count($matches) > 0){
                     $action = "Hit";
+                    $this->hits++;
                     $hitter = $this->app->Ctrl->Players->getORadd($matches[1]);
                     $hitted = $this->app->Ctrl->Players->getORadd($matches[2]);
                     $part = $this->app->Ctrl->Hits->getBodyPart($matches[3]);
@@ -350,7 +361,7 @@ class LogsController extends Controller {
                 if(count($matches) > 0){
                     $event = $matches[1];
                     if($event == "planted" || $event == "defused") {
-                        $player = $this->getPlayerFromTempArray($matches[2]);
+                        $player = $this->getPlayerFromArray($matches[2]);
                         if(!is_null($player)){
                             $action = "Bomb";
                             $message = $player->getName(). " $event bomb";
@@ -390,11 +401,11 @@ class LogsController extends Controller {
                 preg_match($this->_item,$line,$matches);
                 if(count($matches) > 0){
                     if($matches[2] == "team_CTF_redflag" || $matches[2] == "team_CTF_blueflag"){
-                        $player = $this->getPlayerFromTempArray($matches[1]);
+                        $player = $this->getPlayerFromArray($matches[1]);
                         if(!is_null($player)) {
                             $action = "Flag Pickup";
                             $message = $player->getName(). "picked up ".str_replace("team_CTF_","",$matches[2]);
-                            if($this->app->Ctrl->Flags->add($player,"catch")){
+                            if($this->app->Ctrl->Flags->add($player,"catch",$this->currentround)){
                                 $level = "INFO";
                             }else{
                                 $level = "ERROR";
@@ -410,7 +421,7 @@ class LogsController extends Controller {
                 */
                 preg_match($this->_flag,$line,$matches);
                 if(count($matches) > 0){
-                    $player = $this->getPlayerFromTempArray($matches[1]);
+                    $player = $this->getPlayerFromArray($matches[1]);
                     if(!is_null($player)) {
                         switch ($matches[2]){
                             case "0":
@@ -429,7 +440,7 @@ class LogsController extends Controller {
                                 break;
                         }
                         $message = $player->getName(). " $action ".str_replace("team_CTF_","",$matches[3]);
-                        if($this->app->Ctrl->Flags->add($player,$event)){
+                        if($this->app->Ctrl->Flags->add($player,$event,$this->currentround)){
                             $level = "INFO";
                         }else{
                             $level = "ERROR";

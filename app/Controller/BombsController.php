@@ -13,7 +13,7 @@ use Propel\Runtime\Exception\PropelException;
 
 class BombsController extends Controller
 {
-    public function add(\Players $player, $event)
+    public function add(\Players $player, $event, $round)
     {
         $bomb = new \Bombs();
         if(is_null($player)) {
@@ -21,7 +21,8 @@ class BombsController extends Controller
         }else{
             $bomb->setPlayers($player);
         }
-        $bomb->setEvent($event);
+        $bomb->setEvent($event)
+        ->setRounds($round);
 
         try {
             $bomb->save();

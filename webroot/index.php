@@ -100,10 +100,10 @@ $app->group('/views',function() use($app){
         $times = $app->Ctrl->Stats->getPlayingTime();
         $winlooses = $app->Ctrl->Stats->getRoundsWinLooses();
         $weapons = $app->Ctrl->Stats->getStatsWeapons();
-        $snipers = $app->Ctrl->Stats->getFragRanking("sniper");
-        $sidearms = $app->Ctrl->Stats->getFragRanking("sidearm");
-        $grenades = $app->Ctrl->Stats->getFragRanking("grenade");
-        $knives = $app->Ctrl->Stats->getFragRanking("knife");
+        $snipers = $app->Ctrl->Stats->getFragRanking("sniper",true);
+        $sidearms = $app->Ctrl->Stats->getFragRanking("sidearm",true);
+        $grenades = $app->Ctrl->Stats->getFragRanking("grenade",true);
+        $knives = $app->Ctrl->Stats->getFragRanking("knife",true);
         $bombs = $app->Ctrl->Stats->getStatsBombs();
         $ggame = $app->Ctrl->Stats->getWinsGametypes(11);
         $ffa = $app->Ctrl->Stats->getWinsGametypes(1);

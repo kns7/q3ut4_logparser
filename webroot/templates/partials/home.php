@@ -85,6 +85,14 @@
             </tbody>
         </table>
     </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col text-center">
+        <h1>Classement par Type d'armes <small>Sans Gun Game</small></h1>
+    </div>
+</div>
+<div class="row">
     <div class="col-xl-3 col-lg-6">
         <h2 class="text-center">Snipers</h2>
         <table class="table table-hover table-striped">

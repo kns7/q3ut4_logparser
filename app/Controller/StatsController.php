@@ -9,11 +9,20 @@
 namespace App\Controller;
 
 
+use Propel\Runtime\ActiveQuery\Criteria;
+
 class StatsController extends Controller
 {
-    public function getFragRanking($weapons = "")
+    public function getFragRanking($weapons = "",$withoutggame = false)
     {
+
         $query = \FragsQuery::create()->withColumn("COUNT(*)","Frags")->where("Frags.FraggerId <> Frags.FraggedId");
+        if($withoutggame){
+            $games = \GamesQuery::create()->filterByGametypeId(11)->select("id")->find()->toArray();
+            $rounds  = \GameroundsQuery::create()->filterByGameID($games)->select("id")->find()->toArray();
+            $query->filterByRoundId($rounds,Criteria::NOT_IN);
+        }
+
         switch($weapons){
             default:
 
@@ -65,6 +74,29 @@ class StatsController extends Controller
         // Array Sort (Ratios DESC)
         foreach($return as $key => $row){
             $sorting[$key] = $row["ratio"];
+        }
+        array_multisort($sorting, SORT_DESC, $return);
+
+        return $return;
+    }
+
+    public function getGlobalRanking()
+    {
+        $return = [];
+        // Get all players
+        $players = $this->app->Ctrl->Players->getList();
+        foreach($players as $p){
+
+            array_push($return,[
+                "id" => $p->getId(),
+                "name" => $p->getName(),
+                "ratio" => $p->getPlayingTime()
+            ]);
+        }
+
+        // Array Sort (Time DESC)
+        foreach($return as $key => $row){
+            $sorting[$key] = $row["time"];
         }
         array_multisort($sorting, SORT_DESC, $return);
 

@@ -91,7 +91,12 @@ class Players extends BasePlayers
 
     public function getWeaponsRank($type = "")
     {
-        $query = \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","kills");
+        //$rounds = GameroundsQuery::create()->joinWithGames()->where("games.gametype_id = 11")->find()->toArray();
+        $query = \FragsQuery::create()
+            ->filterByFraggerId($this->getId())
+            ->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)
+            //->filterByRoundId($rounds,\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)
+            ->withColumn("COUNT(*)","kills");
         switch($type){
             default:
                 break;
@@ -176,3 +181,4 @@ class Players extends BasePlayers
             ->count();
     }
 }
+

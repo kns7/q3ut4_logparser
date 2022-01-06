@@ -11,11 +11,12 @@ namespace App\Controller;
 
 class FlagsController extends Controller
 {
-    public function add(\Players $player, $event)
+    public function add(\Players $player, $event, $round)
     {
         $flag = new \Flags();
         $flag->setPlayers($player)
-            ->setEvent($event);
+            ->setEvent($event)
+        ->setRounds($round);
         try {
             $flag->save();
             return $flag;

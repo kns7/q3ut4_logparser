@@ -74,6 +74,8 @@ function loadPlayerStats(id){
             console.log("Loaded Chart [" + $(this).attr('id') + "]");
             makeChart(this);
         });
+        // Tooltips
+        $('[data-toggle="tooltip"]').tooltip();
         loader(false);
     });
 }
@@ -90,6 +92,8 @@ function loadVersusStats(id1,id2){
             console.log("Loaded Chart [" + $(this).attr('id') + "]");
             makeChart(this);
         });
+        // Tooltips
+        $('[data-toggle="tooltip"]').tooltip();
         loader(false);
     });
 }
@@ -103,6 +107,8 @@ function loadHome(){
             console.log("Loaded Chart [" + $(this).attr('id') + "]");
             makeChart(this);
         });
+        // Tooltips
+        $('[data-toggle="tooltip"]').tooltip();
         loader(false);
     });
 }
