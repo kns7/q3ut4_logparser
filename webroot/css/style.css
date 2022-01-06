@@ -58,3 +58,20 @@ h2 {
     padding-left: 0px;
     padding-right: 0px;
 }
+.gamesscores {
+    padding: 20px;
+    background: rgba(0,0,0,0.6);
+}
+.score-header {
+    padding: 20px;
+    border: 1px solid #eee;
+    background: #248F2F;
+    color: white;
+    margin: -1px 0px;
+}
+.score-header.green { background: #248F2F; }
+.line-green { color: rgba(65, 254, 76, 0.63); }
+.score-header.blue { background: #211C83; }
+.line-blue { color: #8aaece; }
+.score-header.red { background: #852324; }
+.line-red { color: #e34850; }

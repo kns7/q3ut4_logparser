@@ -21,4 +21,8 @@ class Games extends BaseGames
         $this->setCreated($date->format("Y-m-d"));
         return true;
     }
+
+    public function getTeamsMemberCount($team){
+        return \GamescoresQuery::create()->filterByGameID($this->getId())->filterByTeam($team)->count();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Base\Games;
 use Propel\Runtime\Propel;
 
 class Controller
@@ -68,5 +69,14 @@ class Controller
             default: $teamname = "Unknown"; break;
         }
         return $teamname;
+    }
+
+    public function getLatestParseDate()
+    {
+        return \GamesQuery::create()->orderByCreated("DESC")->findOne()->getCreated()->format("Y-m-d");
+    }
+    public function getParseDates()
+    {
+        return \GamesQuery::create()->orderByCreated("DESC")->groupByCreated()->find();
     }
 }

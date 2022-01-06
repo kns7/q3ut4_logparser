@@ -129,13 +129,23 @@ class GamesController extends Controller
         }
     }
 
-    public function getList()
+    public function getList($date = null)
     {
-        return \GamesQuery::create()->orderByName()->find();
+        $query = \GamesQuery::create();
+        if(!is_null($date)){
+            $query->filterByCreated($date);
+        }
+        return $query->orderByGameNB("DESC")->find();
+
     }
 
     public function get($id)
     {
         return \GamesQuery::create()->findPk($id);
+    }
+
+    public function getScores($id)
+    {
+        return \GamescoresQuery::create()->filterByGameID($id)->orderByTeam("ASC")->orderByScore("DESC")->find();
     }
 }

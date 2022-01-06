@@ -90,6 +90,11 @@ $app->get('/weapon/:id',function($id) use($app){
     $app->render('weapon.php',compact('app','weapon'));
 })->name('weapon');
 
+$app->get('/games',function() use($app){
+    $dates = $app->Ctrl->Stats->getParseDates();
+    $app->render('games.php',compact('app','dates'));
+});
+
 
 
 
@@ -119,6 +124,17 @@ $app->group('/views',function() use($app){
         $p1 = $app->Ctrl->Players->get($player1);
         $p2 = $app->Ctrl->Players->get($player2);
         $app->render('partials/versus.php',compact('app','p1','p2'));
+    });
+
+    $app->get('/games/:date',function($date) use($app){
+        $games = $app->Ctrl->Games->getList($date);
+        $app->render('partials/gameslist.php',compact('app','games'));
+    });
+
+    $app->get('/gamescores/:id',function($id) use($app){
+        $scores = $app->Ctrl->Games->getScores($id);
+        $game = $app->Ctrl->Games->get($id);
+        $app->render('partials/gamescores.php',compact('app','scores','game'));
     });
 });
 

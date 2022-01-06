@@ -43,6 +43,9 @@ if(!is_null($app)){
             <li class="nav-item">
                 <a class="nav-link <?= ($uri[1] == "vs")?"active":"";?>" href="/vs"><i class="fas fa-exchange-alt"></i> Versus</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link <?= ($uri[1] == "games")?"active":"";?>" href="/games"><i class="fas fa-gamepad"></i> Parties</a>
+            </li>
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item">

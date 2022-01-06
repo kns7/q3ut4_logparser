@@ -70,13 +70,7 @@ function loadPlayerStats(id){
     window.location.hash = id;
     $.get("/views/stats/"+id,function(d){
         $(".players-stats").html(d);
-        $(".chart").each(function(){
-            console.log("Loaded Chart [" + $(this).attr('id') + "]");
-            makeChart(this);
-        });
-        // Tooltips
-        $('[data-toggle="tooltip"]').tooltip();
-        loader(false);
+        postLoad();
     });
 }
 
@@ -88,13 +82,7 @@ function loadVersusStats(id1,id2){
     window.location.hash = id1+"-"+id2;
     $.get("/views/vs/"+id1+"/"+id2,function(d){
         $(".versus-stats").html(d);
-        $(".chart").each(function(){
-            console.log("Loaded Chart [" + $(this).attr('id') + "]");
-            makeChart(this);
-        });
-        // Tooltips
-        $('[data-toggle="tooltip"]').tooltip();
-        loader(false);
+        postLoad();
     });
 }
 
@@ -103,13 +91,27 @@ function loadHome(){
     loader(true,true);
     $.get("/views/home",function(d){
         $(".home-stats").html(d);
-        $(".chart").each(function(){
-            console.log("Loaded Chart [" + $(this).attr('id') + "]");
-            makeChart(this);
-        });
-        // Tooltips
-        $('[data-toggle="tooltip"]').tooltip();
-        loader(false);
+        postLoad();
+    });
+}
+
+function loadGamesList(dt){
+    console.log("Load Games List...");
+    console.log(" - Date: "+ dt);
+    loader(true);
+    $.get("/views/games/"+dt,function(d){
+        $(".games-list").html(d);
+        postLoad();
+    });
+}
+
+function loadGameScores(id){
+    console.log("Load Game Score...");
+    console.log(" - GameID: "+id);
+    loader(true,true);
+    $.get("/views/gamescores/"+id,function(d){
+        $(".games-scores").html(d);
+        postLoad();
     });
 }
 
@@ -124,6 +126,16 @@ function loader(status,overlay){
         if($(".overlay").is(":visible")){ $(".overlay").fadeOut(10); }
         $(".loader").fadeOut(200);
     }
+}
+
+function postLoad() {
+    $(".chart").each(function(){
+        console.log("Loaded Chart [" + $(this).attr('id') + "]");
+        makeChart(this);
+    });
+    // Tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+    loader(false);
 }
 
 $(document).ready(function(){
@@ -185,5 +197,17 @@ $(document).ready(function(){
                     loadVersusStats(id1,id2);
                 }
             }
+        })
+        .on("change","#gamesdate",function(e){
+            var dt = $(this).val();
+            if(dt != "0"){
+                loadGamesList(dt);
+            }
+        })
+        .on("click",".btn-gamescores",function(e){
+            var id = $(this).attr('data-id');
+            $(".btn-gamescores").removeClass("active");
+            $(this).addClass("active");
+            loadGameScores(id);
         })
 });
