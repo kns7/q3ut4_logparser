@@ -1,5 +1,5 @@
-<div class="row">
-    <div class="col-6 gamesscores">
+<div class="row justify-content-between">
+    <div class="col-8 gamesscores">
         <?php
         $teamplay = (is_null($game->getRedscore()) && is_null($game->getBluescore()))? false:true;
         if($teamplay) {
