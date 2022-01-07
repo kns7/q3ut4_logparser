@@ -138,8 +138,27 @@ class LogsController extends Controller {
                     }else{
                         $message = "Closing Game, number of players: ".count($this->players);
                         $this->app->Ctrl->Games->update($this->currentgame->getId(),count($this->players));
+                        $this->logOutput($message,$l,$action,"INFO");
                     }
-                    $this->logOutput($message,$l,$action,"INFO");
+                    if(count($this->players) > 0) {
+                        // Disconnect all Players
+                        $time = $this->countGameTime($matches);
+                        foreach ($this->players as $key => $id) {
+                            $player = $this->getPlayerFromArray($key);
+                            if (!is_null($player)) {
+                                $message = "Disconnecting Player " . $player->getName() . " after " . $time ." seconds";
+                                if ($this->app->Ctrl->Gametimes->stopGame($player, $time) !== false) {
+                                    $level = "INFO";
+                                } else {
+                                    $level = "ERROR";
+                                }
+                            } else {
+                                $level = "ERROR";
+                                $message .= " Could not find user for ID '$id' in Array";
+                            }
+                            $this->logOutput($message, $l, $action, $level);
+                        }
+                    }
                 }
 
 
@@ -302,7 +321,9 @@ class LogsController extends Controller {
                         }else{
                             $level = "ERROR";
                         }
-                        $this->logOutput($message,$l,$action,"INFO");
+                    } else {
+                        $level = "ERROR";
+                        $message = "Could not find user for ID '".$matches[3]."' in Array";
                     }
                     try {
                         unset($this->players[$matches[3]]);
@@ -359,12 +380,13 @@ class LogsController extends Controller {
                 */
                 preg_match($this->_bomb,$line,$matches);
                 if(count($matches) > 0){
+                    $action = "Bomb";
                     $event = $matches[1];
+                    $message = "bomb $event ";
                     if($event == "planted" || $event == "defused") {
                         $player = $this->getPlayerFromArray($matches[2]);
                         if(!is_null($player)){
-                            $action = "Bomb";
-                            $message = $player->getName(). " $event bomb";
+                            $message .= "by ".$player->getName();
                             if($event == "planted"){
                                 $this->_bomber  = $player;
                             }elseif($event == "defused"){
@@ -375,8 +397,11 @@ class LogsController extends Controller {
                             }else{
                                 $level = "ERROR";
                             }
-                            $this->logOutput($message,$l,$action,$level);
+                        } else {
+                            $level = "ERROR";
+                            $message .= "Could not find user for ID '".$matches[2]."' in Array";
                         }
+                        $this->logOutput($message,$l,$action,$level);
                     }
                 }
                 preg_match($this->_bombexploded,$line,$matches);
@@ -384,7 +409,6 @@ class LogsController extends Controller {
                     $event = "exploded";
                     $action = "Bomb";
                     $message = "bomb exploded (".$this->_bomber->getName(). ")";
-
                     if($this->app->Ctrl->Bombs->add($this->_bomber, $event, $this->currentround)){
                         $level = "INFO";
                     }else{
@@ -401,17 +425,21 @@ class LogsController extends Controller {
                 preg_match($this->_item,$line,$matches);
                 if(count($matches) > 0){
                     if($matches[2] == "team_CTF_redflag" || $matches[2] == "team_CTF_blueflag"){
+                        $action = "Flag Pickup";
+                        $message = "Pick up ".str_replace("team_CTF_","",$matches[2]);
                         $player = $this->getPlayerFromArray($matches[1]);
                         if(!is_null($player)) {
-                            $action = "Flag Pickup";
-                            $message = $player->getName(). "picked up ".str_replace("team_CTF_","",$matches[2]);
+                            $message .= " by ".$player->getName();
                             if($this->app->Ctrl->Flags->add($player,"catch",$this->currentround)){
                                 $level = "INFO";
                             }else{
                                 $level = "ERROR";
                             }
-                            $this->logOutput($message,$l,$action,$level);
+                        } else {
+                            $level = "ERROR";
+                            $message .= "Could not find user for ID '".$matches[1]."' in Array";
                         }
+                        $this->logOutput($message,$l,$action,$level);
                     }
                 }
 
@@ -421,35 +449,38 @@ class LogsController extends Controller {
                 */
                 preg_match($this->_flag,$line,$matches);
                 if(count($matches) > 0){
+
+                    switch ($matches[2]){
+                        case "0":
+                            $action = "Flag Drop";
+                            $event = "drop";
+                            break;
+
+                        case "1":
+                            $action = "Flag Return";
+                            $event = "return";
+                            break;
+
+                        case "2":
+                            $action = "Flag Capture";
+                            $event = "capture";
+                            break;
+                    }
+                    $message = " $action ".str_replace("team_CTF_","",$matches[3]);
                     $player = $this->getPlayerFromArray($matches[1]);
                     if(!is_null($player)) {
-                        switch ($matches[2]){
-                            case "0":
-                                $action = "Flag Drop";
-                                $event = "drop";
-                                break;
-
-                            case "1":
-                                $action = "Flag Return";
-                                $event = "return";
-                                break;
-
-                            case "2":
-                                $action = "Flag Capture";
-                                $event = "capture";
-                                break;
-                        }
-                        $message = $player->getName(). " $action ".str_replace("team_CTF_","",$matches[3]);
+                        $message .= " by ".$player->getName();
                         if($this->app->Ctrl->Flags->add($player,$event,$this->currentround)){
                             $level = "INFO";
                         }else{
                             $level = "ERROR";
                         }
-                        $this->logOutput($message,$l,$action,$level);
+                    } else {
+                        $level = "ERROR";
+                        $message .= " Could not find user for ID '".$matches[1]."' in Array";
                     }
+                    $this->logOutput($message,$l,$action,$level);
                 }
-
-
                 $l++;
             }
             $time_end = microtime(true);
