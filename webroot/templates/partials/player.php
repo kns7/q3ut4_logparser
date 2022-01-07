@@ -1,11 +1,8 @@
 <?php
-if($player->getWeaponsRank()->count() > 0) {
-    $bestweapon = $player->getWeaponsRank()->getFirst()->getWeapons();
-    $bestsniper = $player->getWeaponsRank("sniper")->getFirst()->getWeapons();
-    $bestsidearm = $player->getWeaponsRank("sidearm")->getFirst()->getWeapons();
-}else{
-    $bestweapon = null;
-}
+$bestweapon = ($player->getWeaponsRank()->count() > 0)? $player->getWeaponsRank()->getFirst()->getWeapons():null;
+$bestsniper = ($player->getWeaponsRank("sniper")->count() > 0)?$player->getWeaponsRank("sniper")->getFirst()->getWeapons():null;
+$bestsidearm = ($player->getWeaponsRank("sidearm")->count() > 0)?$player->getWeaponsRank("sidearm")->getFirst()->getWeapons():null;
+
 $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$player->getId().".png":"/img/user.png";
 ?>
 <div class="col-sm-2">
@@ -20,8 +17,8 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
                 <li class="list-group-item">Nombre de Kills: <strong><?= $player->getKills();?></strong></li>
                 <li class="list-group-item">Kills / Deaths Ratio: <strong><?= number_format(floatval($player->getRatio()),6,',',' ');?></strong> </li>
                 <li class="list-group-item">Arme pr&eacute;f&eacute;r&eacute;e<br/><strong><?= (!is_null($bestweapon))?$bestweapon->getName():"N/A";?></strong></li>
-                <li class="list-group-item">Sniper pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsniper->getName():"N/A";?></strong></li>
-                <li class="list-group-item">Pistolet pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestweapon))?$bestsidearm->getName():"N/A";?></strong></li>
+                <li class="list-group-item">Sniper pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestsniper))?$bestsniper->getName():"N/A";?></strong></li>
+                <li class="list-group-item">Pistolet pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestsidearm))?$bestsidearm->getName():"N/A";?></strong></li>
             </ul>
             <hr/>
             <ul class="list-group list-group-flush">

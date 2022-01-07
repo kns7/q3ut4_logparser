@@ -91,7 +91,6 @@ class Players extends BasePlayers
 
     public function getWeaponsRank($type = "")
     {
-        //$rounds = GameroundsQuery::create()->joinWithGames()->where("games.gametype_id = 11")->find()->toArray();
         $query = \FragsQuery::create()
             ->filterByFraggerId($this->getId())
             ->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)
