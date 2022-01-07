@@ -96,13 +96,17 @@ class GamesController extends Controller
         }
     }
 
-    public function updateScores($id, $redscore, $bluescore)
+    public function updateScores($id, $redscore, $bluescore,$half = 1)
     {
         $game = \GamesQuery::create()->findPk($id);
         if(!is_null($game)){
-
-            $game->setRedScore($redscore)
-            ->setBlueScore($bluescore);
+            if($half == 2){
+                $game->setRedScore2($redscore)
+                    ->setBlueScore2($bluescore);
+            }else {
+                $game->setRedScore($redscore)
+                    ->setBlueScore($bluescore);
+            }
             try {
                 $game->save();
             } catch(PropelException $e){

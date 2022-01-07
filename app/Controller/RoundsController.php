@@ -51,11 +51,12 @@ class RoundsController extends Controller
         return (is_null($query))? 1: $query->getRoundNB() + 1;
     }
 
-    public function addRound(\Games $game, $roundnb)
+    public function addRound(\Games $game, $roundnb,$half = 1)
     {
         $round = new \Gamerounds();
         $round->setGames($game)
-            ->setRoundNB($roundnb);
+            ->setRoundNB($roundnb)
+            ->setHalf($half);
 
         try {
             $round->save();

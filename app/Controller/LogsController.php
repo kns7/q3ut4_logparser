@@ -44,6 +44,8 @@ class LogsController extends Controller {
     private $winningteam = 0;
     private $frags = 0;
     private $hits = 0;
+    private $half = 1;
+    private $triggertimelimit = false;
 
 
     public function newParser($log)
@@ -69,12 +71,15 @@ class LogsController extends Controller {
                     $action = "Init Game";
                     $this->hits = 0;
                     $this->frags = 0;
+                    $this->triggertimelimit = false;
+                    $this->half = 1;
                     $this->gametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[3], "g_gametype"));
                     $timelimit = $this->getValueFromConnectionString($matches[3], "timelimit");
                     $roundtime = $this->getValueFromConnectionString($matches[3], "g_roundtime");
                     $this->currentmap = $this->app->Ctrl->Maps->getByFile($this->getValueFromConnectionString($matches[3], "mapname"));
                     $this->gamenb = $this->app->Ctrl->Games->getNextGameNB();
                     $this->currentgame = $this->app->Ctrl->Games->add($this->gamenb,$this->currentmap,$this->gametype,$timelimit,$roundtime,count($this->players));
+
                     if($this->currentgame !== false ){
                         $message = "Game (".$this->gamenb."). Map: ".$this->currentmap->getName().", Gametype: ".$this->gametype->getName().", Timelimit: ".$timelimit.", Roundtime: ". $roundtime." Players: ".count($this->players);
                         $this->logOutput($message,$l,$action,"INFO");
@@ -104,8 +109,12 @@ class LogsController extends Controller {
                     $newgametype = $this->app->Ctrl->Gametypes->getByCode($this->getValueFromConnectionString($matches[3], "g_gametype"));
                     $newmap = $this->app->Ctrl->Maps->getByFile($this->getValueFromConnectionString($matches[3], "mapname"));
                     $this->roundnb = $this->app->Ctrl->Rounds->getNextRoundNB();
-                    $this->currentround = $this->app->Ctrl->Rounds->addRound($this->currentgame,$this->roundnb);
-                    $message = "Round (".$this->roundnb."). Players: ".count($this->players);
+                    if($this->triggertimelimit){
+                        $this->triggertimelimit = false;
+                        $this->half=2;
+                    }
+                    $message = "Round (".$this->roundnb.") [".$this->half."/2]. Players: ".count($this->players);
+                    $this->currentround = $this->app->Ctrl->Rounds->addRound($this->currentgame,$this->roundnb,$this->half);
                     if(!is_null($newgametype)) {
                         if ($newgametype->getId() != $this->gametype->getId()) {
                             $message .= ", Update Gametype to " . $newgametype->getName();
@@ -176,12 +185,14 @@ class LogsController extends Controller {
                     $level = "INFO";
                     $this->logOutput($message,$l,$action,$level);
                 }
+
                 /* Timelimit hit */
                 preg_match($this->_timelimit,$line,$matches);
                 if(count($matches) > 0){
                     $action = "Timelimit";
                     $level = "INFO";
                     $this->winningteam = 0;
+                    $this->triggertimelimit = true;
                     if($this->gametype->getCode() == 0) {
                         $this->_triggerfreegame = $matches[1] . ":" . $matches[2];
                         $message = "Stopped at " . $matches[1] . ":" . $matches[2] ." (FreeForAll: First Score will be winner)";
@@ -209,7 +220,7 @@ class LogsController extends Controller {
                     if($redscore < $bluescore){
                         $this->winningteam = 2;
                     }
-                    if($this->app->Ctrl->Games->updateScores($this->currentgame->getId(),$redscore,$bluescore) !== false){
+                    if($this->app->Ctrl->Games->updateScores($this->currentgame->getId(),$redscore,$bluescore,$this->half) !== false){
                         $level = "INFO";
                     }else{
                         $level = "ERROR";
@@ -248,7 +259,7 @@ class LogsController extends Controller {
                         $winner = ($this->_teams[$matches[5]] == $this->winningteam)?true:false;
                     }
                     $message .= ($winner)?" Winner!":"";
-                    if($this->app->Ctrl->Scores->addScore($player,$this->currentgame,$kills,$deaths,$matches[3],$matches[4],$winner,$this->_teams[$matches[5]]) !== false){
+                    if($this->app->Ctrl->Scores->addScore($player,$this->currentgame,$kills,$deaths,$matches[3],$matches[4],$winner,$this->_teams[$matches[5]],$this->half) !== false){
                         $level = "INFO";
                     }else{
                         $level = "ERROR";

@@ -22,7 +22,11 @@ class Games extends BaseGames
         return true;
     }
 
-    public function getTeamsMemberCount($team){
-        return \GamescoresQuery::create()->filterByGameID($this->getId())->filterByTeam($team)->count();
+    public function getTeamsMemberCount($team,$half = false){
+        if($half !== false){
+            return \GamescoresQuery::create()->filterByGameID($this->getId())->filterByTeam($team)->filterByHalf($half)->count();
+        }else{
+            return \GamescoresQuery::create()->filterByGameID($this->getId())->filterByTeam($team)->count();
+        }
     }
 }

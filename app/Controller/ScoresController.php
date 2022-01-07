@@ -27,7 +27,7 @@ class ScoresController extends Controller
         }
     }
 
-    public function addScore(\Players $player, \Games $game, $kills, $deaths, $points, $ping, $winner,$team)
+    public function addScore(\Players $player, \Games $game, $kills, $deaths, $points, $ping, $winner,$team, $half = 1)
     {
         $score = new \Gamescores();
         $score->setPlayers($player)
@@ -37,7 +37,8 @@ class ScoresController extends Controller
             ->setScore($points)
             ->setPing($ping)
             ->setWinner($winner)
-            ->setTeam($team);
+            ->setTeam($team)
+            ->setHalf($half);
         try {
             $score->save();
             return $score;
