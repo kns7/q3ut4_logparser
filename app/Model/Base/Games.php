@@ -116,6 +116,13 @@ abstract class Games implements ActiveRecordInterface
     protected $roundtime;
 
     /**
+     * The value for the nbplayers field.
+     *
+     * @var        int
+     */
+    protected $nbplayers;
+
+    /**
      * The value for the redscore field.
      *
      * @var        int
@@ -130,11 +137,18 @@ abstract class Games implements ActiveRecordInterface
     protected $bluescore;
 
     /**
-     * The value for the nbplayers field.
+     * The value for the redscore2 field.
      *
      * @var        int
      */
-    protected $nbplayers;
+    protected $redscore2;
+
+    /**
+     * The value for the bluescore2 field.
+     *
+     * @var        int
+     */
+    protected $bluescore2;
 
     /**
      * The value for the created field.
@@ -471,6 +485,16 @@ abstract class Games implements ActiveRecordInterface
     }
 
     /**
+     * Get the [nbplayers] column value.
+     *
+     * @return int
+     */
+    public function getNbplayers()
+    {
+        return $this->nbplayers;
+    }
+
+    /**
      * Get the [redscore] column value.
      *
      * @return int
@@ -491,13 +515,23 @@ abstract class Games implements ActiveRecordInterface
     }
 
     /**
-     * Get the [nbplayers] column value.
+     * Get the [redscore2] column value.
      *
      * @return int
      */
-    public function getNbplayers()
+    public function getRedScore2()
     {
-        return $this->nbplayers;
+        return $this->redscore2;
+    }
+
+    /**
+     * Get the [bluescore2] column value.
+     *
+     * @return int
+     */
+    public function getBlueScore2()
+    {
+        return $this->bluescore2;
     }
 
     /**
@@ -649,6 +683,26 @@ abstract class Games implements ActiveRecordInterface
     } // setRoundtime()
 
     /**
+     * Set the value of [nbplayers] column.
+     *
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setNbplayers($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->nbplayers !== $v) {
+            $this->nbplayers = $v;
+            $this->modifiedColumns[GamesTableMap::COL_NBPLAYERS] = true;
+        }
+
+        return $this;
+    } // setNbplayers()
+
+    /**
      * Set the value of [redscore] column.
      *
      * @param int $v new value
@@ -689,24 +743,44 @@ abstract class Games implements ActiveRecordInterface
     } // setBlueScore()
 
     /**
-     * Set the value of [nbplayers] column.
+     * Set the value of [redscore2] column.
      *
      * @param int $v new value
      * @return $this|\Games The current object (for fluent API support)
      */
-    public function setNbplayers($v)
+    public function setRedScore2($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->nbplayers !== $v) {
-            $this->nbplayers = $v;
-            $this->modifiedColumns[GamesTableMap::COL_NBPLAYERS] = true;
+        if ($this->redscore2 !== $v) {
+            $this->redscore2 = $v;
+            $this->modifiedColumns[GamesTableMap::COL_REDSCORE2] = true;
         }
 
         return $this;
-    } // setNbplayers()
+    } // setRedScore2()
+
+    /**
+     * Set the value of [bluescore2] column.
+     *
+     * @param int $v new value
+     * @return $this|\Games The current object (for fluent API support)
+     */
+    public function setBlueScore2($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->bluescore2 !== $v) {
+            $this->bluescore2 = $v;
+            $this->modifiedColumns[GamesTableMap::COL_BLUESCORE2] = true;
+        }
+
+        return $this;
+    } // setBlueScore2()
 
     /**
      * Sets the value of [created] column to a normalized version of the date/time value specified.
@@ -782,16 +856,22 @@ abstract class Games implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GamesTableMap::translateFieldName('Roundtime', TableMap::TYPE_PHPNAME, $indexType)];
             $this->roundtime = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GamesTableMap::translateFieldName('RedScore', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->redscore = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GamesTableMap::translateFieldName('BlueScore', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->bluescore = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GamesTableMap::translateFieldName('Nbplayers', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GamesTableMap::translateFieldName('Nbplayers', TableMap::TYPE_PHPNAME, $indexType)];
             $this->nbplayers = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : GamesTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GamesTableMap::translateFieldName('RedScore', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->redscore = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GamesTableMap::translateFieldName('BlueScore', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->bluescore = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : GamesTableMap::translateFieldName('RedScore2', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->redscore2 = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : GamesTableMap::translateFieldName('BlueScore2', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->bluescore2 = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : GamesTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -804,7 +884,7 @@ abstract class Games implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = GamesTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = GamesTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Games'), 0, $e);
@@ -1088,14 +1168,20 @@ abstract class Games implements ActiveRecordInterface
         if ($this->isColumnModified(GamesTableMap::COL_ROUNDTIME)) {
             $modifiedColumns[':p' . $index++]  = 'roundtime';
         }
+        if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
+            $modifiedColumns[':p' . $index++]  = 'nbplayers';
+        }
         if ($this->isColumnModified(GamesTableMap::COL_REDSCORE)) {
             $modifiedColumns[':p' . $index++]  = 'redscore';
         }
         if ($this->isColumnModified(GamesTableMap::COL_BLUESCORE)) {
             $modifiedColumns[':p' . $index++]  = 'bluescore';
         }
-        if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
-            $modifiedColumns[':p' . $index++]  = 'nbplayers';
+        if ($this->isColumnModified(GamesTableMap::COL_REDSCORE2)) {
+            $modifiedColumns[':p' . $index++]  = 'redscore2';
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_BLUESCORE2)) {
+            $modifiedColumns[':p' . $index++]  = 'bluescore2';
         }
         if ($this->isColumnModified(GamesTableMap::COL_CREATED)) {
             $modifiedColumns[':p' . $index++]  = 'created';
@@ -1129,14 +1215,20 @@ abstract class Games implements ActiveRecordInterface
                     case 'roundtime':
                         $stmt->bindValue($identifier, $this->roundtime, PDO::PARAM_INT);
                         break;
+                    case 'nbplayers':
+                        $stmt->bindValue($identifier, $this->nbplayers, PDO::PARAM_INT);
+                        break;
                     case 'redscore':
                         $stmt->bindValue($identifier, $this->redscore, PDO::PARAM_INT);
                         break;
                     case 'bluescore':
                         $stmt->bindValue($identifier, $this->bluescore, PDO::PARAM_INT);
                         break;
-                    case 'nbplayers':
-                        $stmt->bindValue($identifier, $this->nbplayers, PDO::PARAM_INT);
+                    case 'redscore2':
+                        $stmt->bindValue($identifier, $this->redscore2, PDO::PARAM_INT);
+                        break;
+                    case 'bluescore2':
+                        $stmt->bindValue($identifier, $this->bluescore2, PDO::PARAM_INT);
                         break;
                     case 'created':
                         $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -1222,15 +1314,21 @@ abstract class Games implements ActiveRecordInterface
                 return $this->getRoundtime();
                 break;
             case 6:
-                return $this->getRedScore();
-                break;
-            case 7:
-                return $this->getBlueScore();
-                break;
-            case 8:
                 return $this->getNbplayers();
                 break;
+            case 7:
+                return $this->getRedScore();
+                break;
+            case 8:
+                return $this->getBlueScore();
+                break;
             case 9:
+                return $this->getRedScore2();
+                break;
+            case 10:
+                return $this->getBlueScore2();
+                break;
+            case 11:
                 return $this->getCreated();
                 break;
             default:
@@ -1269,13 +1367,15 @@ abstract class Games implements ActiveRecordInterface
             $keys[3] => $this->getGametypeId(),
             $keys[4] => $this->getTimelimit(),
             $keys[5] => $this->getRoundtime(),
-            $keys[6] => $this->getRedScore(),
-            $keys[7] => $this->getBlueScore(),
-            $keys[8] => $this->getNbplayers(),
-            $keys[9] => $this->getCreated(),
+            $keys[6] => $this->getNbplayers(),
+            $keys[7] => $this->getRedScore(),
+            $keys[8] => $this->getBlueScore(),
+            $keys[9] => $this->getRedScore2(),
+            $keys[10] => $this->getBlueScore2(),
+            $keys[11] => $this->getCreated(),
         );
-        if ($result[$keys[9]] instanceof \DateTimeInterface) {
-            $result[$keys[9]] = $result[$keys[9]]->format('c');
+        if ($result[$keys[11]] instanceof \DateTimeInterface) {
+            $result[$keys[11]] = $result[$keys[11]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1397,15 +1497,21 @@ abstract class Games implements ActiveRecordInterface
                 $this->setRoundtime($value);
                 break;
             case 6:
-                $this->setRedScore($value);
-                break;
-            case 7:
-                $this->setBlueScore($value);
-                break;
-            case 8:
                 $this->setNbplayers($value);
                 break;
+            case 7:
+                $this->setRedScore($value);
+                break;
+            case 8:
+                $this->setBlueScore($value);
+                break;
             case 9:
+                $this->setRedScore2($value);
+                break;
+            case 10:
+                $this->setBlueScore2($value);
+                break;
+            case 11:
                 $this->setCreated($value);
                 break;
         } // switch()
@@ -1453,16 +1559,22 @@ abstract class Games implements ActiveRecordInterface
             $this->setRoundtime($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setRedScore($arr[$keys[6]]);
+            $this->setNbplayers($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setBlueScore($arr[$keys[7]]);
+            $this->setRedScore($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setNbplayers($arr[$keys[8]]);
+            $this->setBlueScore($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setCreated($arr[$keys[9]]);
+            $this->setRedScore2($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setBlueScore2($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setCreated($arr[$keys[11]]);
         }
     }
 
@@ -1523,14 +1635,20 @@ abstract class Games implements ActiveRecordInterface
         if ($this->isColumnModified(GamesTableMap::COL_ROUNDTIME)) {
             $criteria->add(GamesTableMap::COL_ROUNDTIME, $this->roundtime);
         }
+        if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
+            $criteria->add(GamesTableMap::COL_NBPLAYERS, $this->nbplayers);
+        }
         if ($this->isColumnModified(GamesTableMap::COL_REDSCORE)) {
             $criteria->add(GamesTableMap::COL_REDSCORE, $this->redscore);
         }
         if ($this->isColumnModified(GamesTableMap::COL_BLUESCORE)) {
             $criteria->add(GamesTableMap::COL_BLUESCORE, $this->bluescore);
         }
-        if ($this->isColumnModified(GamesTableMap::COL_NBPLAYERS)) {
-            $criteria->add(GamesTableMap::COL_NBPLAYERS, $this->nbplayers);
+        if ($this->isColumnModified(GamesTableMap::COL_REDSCORE2)) {
+            $criteria->add(GamesTableMap::COL_REDSCORE2, $this->redscore2);
+        }
+        if ($this->isColumnModified(GamesTableMap::COL_BLUESCORE2)) {
+            $criteria->add(GamesTableMap::COL_BLUESCORE2, $this->bluescore2);
         }
         if ($this->isColumnModified(GamesTableMap::COL_CREATED)) {
             $criteria->add(GamesTableMap::COL_CREATED, $this->created);
@@ -1626,9 +1744,11 @@ abstract class Games implements ActiveRecordInterface
         $copyObj->setGametypeId($this->getGametypeId());
         $copyObj->setTimelimit($this->getTimelimit());
         $copyObj->setRoundtime($this->getRoundtime());
+        $copyObj->setNbplayers($this->getNbplayers());
         $copyObj->setRedScore($this->getRedScore());
         $copyObj->setBlueScore($this->getBlueScore());
-        $copyObj->setNbplayers($this->getNbplayers());
+        $copyObj->setRedScore2($this->getRedScore2());
+        $copyObj->setBlueScore2($this->getBlueScore2());
         $copyObj->setCreated($this->getCreated());
 
         if ($deepCopy) {
@@ -2295,9 +2415,11 @@ abstract class Games implements ActiveRecordInterface
         $this->gametype_id = null;
         $this->timelimit = null;
         $this->roundtime = null;
+        $this->nbplayers = null;
         $this->redscore = null;
         $this->bluescore = null;
-        $this->nbplayers = null;
+        $this->redscore2 = null;
+        $this->bluescore2 = null;
         $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

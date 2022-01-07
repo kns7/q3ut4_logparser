@@ -59,7 +59,7 @@ class GameroundsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class GameroundsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the id field
@@ -85,6 +85,11 @@ class GameroundsTableMap extends TableMap
      * the column name for the game_id field
      */
     const COL_GAME_ID = 'gamerounds.game_id';
+
+    /**
+     * the column name for the half field
+     */
+    const COL_HALF = 'gamerounds.half';
 
     /**
      * the column name for the created field
@@ -103,11 +108,11 @@ class GameroundsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'RoundNB', 'GameID', 'Created', ),
-        self::TYPE_CAMELNAME     => array('id', 'roundNB', 'gameID', 'created', ),
-        self::TYPE_COLNAME       => array(GameroundsTableMap::COL_ID, GameroundsTableMap::COL_ROUNDNB, GameroundsTableMap::COL_GAME_ID, GameroundsTableMap::COL_CREATED, ),
-        self::TYPE_FIELDNAME     => array('id', 'roundnb', 'game_id', 'created', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'RoundNB', 'GameID', 'Half', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'roundNB', 'gameID', 'half', 'created', ),
+        self::TYPE_COLNAME       => array(GameroundsTableMap::COL_ID, GameroundsTableMap::COL_ROUNDNB, GameroundsTableMap::COL_GAME_ID, GameroundsTableMap::COL_HALF, GameroundsTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'roundnb', 'game_id', 'half', 'created', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -117,11 +122,11 @@ class GameroundsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'RoundNB' => 1, 'GameID' => 2, 'Created' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'roundNB' => 1, 'gameID' => 2, 'created' => 3, ),
-        self::TYPE_COLNAME       => array(GameroundsTableMap::COL_ID => 0, GameroundsTableMap::COL_ROUNDNB => 1, GameroundsTableMap::COL_GAME_ID => 2, GameroundsTableMap::COL_CREATED => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'roundnb' => 1, 'game_id' => 2, 'created' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'RoundNB' => 1, 'GameID' => 2, 'Half' => 3, 'Created' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'roundNB' => 1, 'gameID' => 2, 'half' => 3, 'created' => 4, ),
+        self::TYPE_COLNAME       => array(GameroundsTableMap::COL_ID => 0, GameroundsTableMap::COL_ROUNDNB => 1, GameroundsTableMap::COL_GAME_ID => 2, GameroundsTableMap::COL_HALF => 3, GameroundsTableMap::COL_CREATED => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'roundnb' => 1, 'game_id' => 2, 'half' => 3, 'created' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -144,6 +149,7 @@ class GameroundsTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('roundnb', 'RoundNB', 'INTEGER', true, null, null);
         $this->addForeignKey('game_id', 'GameID', 'INTEGER', 'games', 'id', true, null, null);
+        $this->addColumn('half', 'Half', 'INTEGER', false, 11, null);
         $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
 
@@ -333,11 +339,13 @@ class GameroundsTableMap extends TableMap
             $criteria->addSelectColumn(GameroundsTableMap::COL_ID);
             $criteria->addSelectColumn(GameroundsTableMap::COL_ROUNDNB);
             $criteria->addSelectColumn(GameroundsTableMap::COL_GAME_ID);
+            $criteria->addSelectColumn(GameroundsTableMap::COL_HALF);
             $criteria->addSelectColumn(GameroundsTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.roundnb');
             $criteria->addSelectColumn($alias . '.game_id');
+            $criteria->addSelectColumn($alias . '.half');
             $criteria->addSelectColumn($alias . '.created');
         }
     }

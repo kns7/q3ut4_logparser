@@ -29,6 +29,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamescoresQuery orderByPing($order = Criteria::ASC) Order by the ping column
  * @method     ChildGamescoresQuery orderByWinner($order = Criteria::ASC) Order by the winner column
  * @method     ChildGamescoresQuery orderByTeam($order = Criteria::ASC) Order by the team column
+ * @method     ChildGamescoresQuery orderByHalf($order = Criteria::ASC) Order by the half column
  * @method     ChildGamescoresQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
  * @method     ChildGamescoresQuery groupById() Group by the id column
@@ -40,6 +41,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamescoresQuery groupByPing() Group by the ping column
  * @method     ChildGamescoresQuery groupByWinner() Group by the winner column
  * @method     ChildGamescoresQuery groupByTeam() Group by the team column
+ * @method     ChildGamescoresQuery groupByHalf() Group by the half column
  * @method     ChildGamescoresQuery groupByCreated() Group by the created column
  *
  * @method     ChildGamescoresQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -84,6 +86,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamescores findOneByPing(int $ping) Return the first ChildGamescores filtered by the ping column
  * @method     ChildGamescores findOneByWinner(boolean $winner) Return the first ChildGamescores filtered by the winner column
  * @method     ChildGamescores findOneByTeam(int $team) Return the first ChildGamescores filtered by the team column
+ * @method     ChildGamescores findOneByHalf(int $half) Return the first ChildGamescores filtered by the half column
  * @method     ChildGamescores findOneByCreated(string $created) Return the first ChildGamescores filtered by the created column *
 
  * @method     ChildGamescores requirePk($key, ConnectionInterface $con = null) Return the ChildGamescores by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -98,6 +101,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamescores requireOneByPing(int $ping) Return the first ChildGamescores filtered by the ping column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGamescores requireOneByWinner(boolean $winner) Return the first ChildGamescores filtered by the winner column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGamescores requireOneByTeam(int $team) Return the first ChildGamescores filtered by the team column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGamescores requireOneByHalf(int $half) Return the first ChildGamescores filtered by the half column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGamescores requireOneByCreated(string $created) Return the first ChildGamescores filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGamescores[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGamescores objects based on current ModelCriteria
@@ -110,6 +114,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamescores[]|ObjectCollection findByPing(int $ping) Return ChildGamescores objects filtered by the ping column
  * @method     ChildGamescores[]|ObjectCollection findByWinner(boolean $winner) Return ChildGamescores objects filtered by the winner column
  * @method     ChildGamescores[]|ObjectCollection findByTeam(int $team) Return ChildGamescores objects filtered by the team column
+ * @method     ChildGamescores[]|ObjectCollection findByHalf(int $half) Return ChildGamescores objects filtered by the half column
  * @method     ChildGamescores[]|ObjectCollection findByCreated(string $created) Return ChildGamescores objects filtered by the created column
  * @method     ChildGamescores[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -209,7 +214,7 @@ abstract class GamescoresQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, game_id, player_id, kills, deaths, score, ping, winner, team, created FROM gamescores WHERE id = :p0';
+        $sql = 'SELECT id, game_id, player_id, kills, deaths, score, ping, winner, team, half, created FROM gamescores WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -656,6 +661,47 @@ abstract class GamescoresQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(GamescoresTableMap::COL_TEAM, $team, $comparison);
+    }
+
+    /**
+     * Filter the query on the half column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByHalf(1234); // WHERE half = 1234
+     * $query->filterByHalf(array(12, 34)); // WHERE half IN (12, 34)
+     * $query->filterByHalf(array('min' => 12)); // WHERE half > 12
+     * </code>
+     *
+     * @param     mixed $half The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildGamescoresQuery The current query, for fluid interface
+     */
+    public function filterByHalf($half = null, $comparison = null)
+    {
+        if (is_array($half)) {
+            $useMinMax = false;
+            if (isset($half['min'])) {
+                $this->addUsingAlias(GamescoresTableMap::COL_HALF, $half['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($half['max'])) {
+                $this->addUsingAlias(GamescoresTableMap::COL_HALF, $half['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(GamescoresTableMap::COL_HALF, $half, $comparison);
     }
 
     /**

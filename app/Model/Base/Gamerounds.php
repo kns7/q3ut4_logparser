@@ -99,6 +99,13 @@ abstract class Gamerounds implements ActiveRecordInterface
     protected $game_id;
 
     /**
+     * The value for the half field.
+     *
+     * @var        int
+     */
+    protected $half;
+
+    /**
      * The value for the created field.
      *
      * @var        DateTime
@@ -422,6 +429,16 @@ abstract class Gamerounds implements ActiveRecordInterface
     }
 
     /**
+     * Get the [half] column value.
+     *
+     * @return int
+     */
+    public function getHalf()
+    {
+        return $this->half;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created] column value.
      *
      *
@@ -506,6 +523,26 @@ abstract class Gamerounds implements ActiveRecordInterface
     } // setGameID()
 
     /**
+     * Set the value of [half] column.
+     *
+     * @param int $v new value
+     * @return $this|\Gamerounds The current object (for fluent API support)
+     */
+    public function setHalf($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->half !== $v) {
+            $this->half = $v;
+            $this->modifiedColumns[GameroundsTableMap::COL_HALF] = true;
+        }
+
+        return $this;
+    } // setHalf()
+
+    /**
      * Sets the value of [created] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
@@ -570,7 +607,10 @@ abstract class Gamerounds implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : GameroundsTableMap::translateFieldName('GameID', TableMap::TYPE_PHPNAME, $indexType)];
             $this->game_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GameroundsTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : GameroundsTableMap::translateFieldName('Half', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->half = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GameroundsTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -583,7 +623,7 @@ abstract class Gamerounds implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = GameroundsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = GameroundsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Gamerounds'), 0, $e);
@@ -885,6 +925,9 @@ abstract class Gamerounds implements ActiveRecordInterface
         if ($this->isColumnModified(GameroundsTableMap::COL_GAME_ID)) {
             $modifiedColumns[':p' . $index++]  = 'game_id';
         }
+        if ($this->isColumnModified(GameroundsTableMap::COL_HALF)) {
+            $modifiedColumns[':p' . $index++]  = 'half';
+        }
         if ($this->isColumnModified(GameroundsTableMap::COL_CREATED)) {
             $modifiedColumns[':p' . $index++]  = 'created';
         }
@@ -907,6 +950,9 @@ abstract class Gamerounds implements ActiveRecordInterface
                         break;
                     case 'game_id':
                         $stmt->bindValue($identifier, $this->game_id, PDO::PARAM_INT);
+                        break;
+                    case 'half':
+                        $stmt->bindValue($identifier, $this->half, PDO::PARAM_INT);
                         break;
                     case 'created':
                         $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -983,6 +1029,9 @@ abstract class Gamerounds implements ActiveRecordInterface
                 return $this->getGameID();
                 break;
             case 3:
+                return $this->getHalf();
+                break;
+            case 4:
                 return $this->getCreated();
                 break;
             default:
@@ -1018,10 +1067,11 @@ abstract class Gamerounds implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getRoundNB(),
             $keys[2] => $this->getGameID(),
-            $keys[3] => $this->getCreated(),
+            $keys[3] => $this->getHalf(),
+            $keys[4] => $this->getCreated(),
         );
-        if ($result[$keys[3]] instanceof \DateTimeInterface) {
-            $result[$keys[3]] = $result[$keys[3]]->format('c');
+        if ($result[$keys[4]] instanceof \DateTimeInterface) {
+            $result[$keys[4]] = $result[$keys[4]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1149,6 +1199,9 @@ abstract class Gamerounds implements ActiveRecordInterface
                 $this->setGameID($value);
                 break;
             case 3:
+                $this->setHalf($value);
+                break;
+            case 4:
                 $this->setCreated($value);
                 break;
         } // switch()
@@ -1187,7 +1240,10 @@ abstract class Gamerounds implements ActiveRecordInterface
             $this->setGameID($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCreated($arr[$keys[3]]);
+            $this->setHalf($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setCreated($arr[$keys[4]]);
         }
     }
 
@@ -1238,6 +1294,9 @@ abstract class Gamerounds implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GameroundsTableMap::COL_GAME_ID)) {
             $criteria->add(GameroundsTableMap::COL_GAME_ID, $this->game_id);
+        }
+        if ($this->isColumnModified(GameroundsTableMap::COL_HALF)) {
+            $criteria->add(GameroundsTableMap::COL_HALF, $this->half);
         }
         if ($this->isColumnModified(GameroundsTableMap::COL_CREATED)) {
             $criteria->add(GameroundsTableMap::COL_CREATED, $this->created);
@@ -1330,6 +1389,7 @@ abstract class Gamerounds implements ActiveRecordInterface
     {
         $copyObj->setRoundNB($this->getRoundNB());
         $copyObj->setGameID($this->getGameID());
+        $copyObj->setHalf($this->getHalf());
         $copyObj->setCreated($this->getCreated());
 
         if ($deepCopy) {
@@ -2584,6 +2644,7 @@ abstract class Gamerounds implements ActiveRecordInterface
         $this->id = null;
         $this->roundnb = null;
         $this->game_id = null;
+        $this->half = null;
         $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

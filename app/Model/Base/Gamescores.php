@@ -129,6 +129,13 @@ abstract class Gamescores implements ActiveRecordInterface
     protected $team;
 
     /**
+     * The value for the half field.
+     *
+     * @var        int
+     */
+    protected $half;
+
+    /**
      * The value for the created field.
      *
      * @var        DateTime
@@ -479,6 +486,16 @@ abstract class Gamescores implements ActiveRecordInterface
     }
 
     /**
+     * Get the [half] column value.
+     *
+     * @return int
+     */
+    public function getHalf()
+    {
+        return $this->half;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created] column value.
      *
      *
@@ -695,6 +712,26 @@ abstract class Gamescores implements ActiveRecordInterface
     } // setTeam()
 
     /**
+     * Set the value of [half] column.
+     *
+     * @param int $v new value
+     * @return $this|\Gamescores The current object (for fluent API support)
+     */
+    public function setHalf($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->half !== $v) {
+            $this->half = $v;
+            $this->modifiedColumns[GamescoresTableMap::COL_HALF] = true;
+        }
+
+        return $this;
+    } // setHalf()
+
+    /**
      * Sets the value of [created] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
@@ -777,7 +814,10 @@ abstract class Gamescores implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GamescoresTableMap::translateFieldName('Team', TableMap::TYPE_PHPNAME, $indexType)];
             $this->team = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : GamescoresTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : GamescoresTableMap::translateFieldName('Half', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->half = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : GamescoresTableMap::translateFieldName('Created', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -790,7 +830,7 @@ abstract class Gamescores implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = GamescoresTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 11; // 11 = GamescoresTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Gamescores'), 0, $e);
@@ -1045,6 +1085,9 @@ abstract class Gamescores implements ActiveRecordInterface
         if ($this->isColumnModified(GamescoresTableMap::COL_TEAM)) {
             $modifiedColumns[':p' . $index++]  = 'team';
         }
+        if ($this->isColumnModified(GamescoresTableMap::COL_HALF)) {
+            $modifiedColumns[':p' . $index++]  = 'half';
+        }
         if ($this->isColumnModified(GamescoresTableMap::COL_CREATED)) {
             $modifiedColumns[':p' . $index++]  = 'created';
         }
@@ -1085,6 +1128,9 @@ abstract class Gamescores implements ActiveRecordInterface
                         break;
                     case 'team':
                         $stmt->bindValue($identifier, $this->team, PDO::PARAM_INT);
+                        break;
+                    case 'half':
+                        $stmt->bindValue($identifier, $this->half, PDO::PARAM_INT);
                         break;
                     case 'created':
                         $stmt->bindValue($identifier, $this->created ? $this->created->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -1179,6 +1225,9 @@ abstract class Gamescores implements ActiveRecordInterface
                 return $this->getTeam();
                 break;
             case 9:
+                return $this->getHalf();
+                break;
+            case 10:
                 return $this->getCreated();
                 break;
             default:
@@ -1220,10 +1269,11 @@ abstract class Gamescores implements ActiveRecordInterface
             $keys[6] => $this->getPing(),
             $keys[7] => $this->getWinner(),
             $keys[8] => $this->getTeam(),
-            $keys[9] => $this->getCreated(),
+            $keys[9] => $this->getHalf(),
+            $keys[10] => $this->getCreated(),
         );
-        if ($result[$keys[9]] instanceof \DateTimeInterface) {
-            $result[$keys[9]] = $result[$keys[9]]->format('c');
+        if ($result[$keys[10]] instanceof \DateTimeInterface) {
+            $result[$keys[10]] = $result[$keys[10]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1324,6 +1374,9 @@ abstract class Gamescores implements ActiveRecordInterface
                 $this->setTeam($value);
                 break;
             case 9:
+                $this->setHalf($value);
+                break;
+            case 10:
                 $this->setCreated($value);
                 break;
         } // switch()
@@ -1380,7 +1433,10 @@ abstract class Gamescores implements ActiveRecordInterface
             $this->setTeam($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setCreated($arr[$keys[9]]);
+            $this->setHalf($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setCreated($arr[$keys[10]]);
         }
     }
 
@@ -1449,6 +1505,9 @@ abstract class Gamescores implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GamescoresTableMap::COL_TEAM)) {
             $criteria->add(GamescoresTableMap::COL_TEAM, $this->team);
+        }
+        if ($this->isColumnModified(GamescoresTableMap::COL_HALF)) {
+            $criteria->add(GamescoresTableMap::COL_HALF, $this->half);
         }
         if ($this->isColumnModified(GamescoresTableMap::COL_CREATED)) {
             $criteria->add(GamescoresTableMap::COL_CREATED, $this->created);
@@ -1547,6 +1606,7 @@ abstract class Gamescores implements ActiveRecordInterface
         $copyObj->setPing($this->getPing());
         $copyObj->setWinner($this->getWinner());
         $copyObj->setTeam($this->getTeam());
+        $copyObj->setHalf($this->getHalf());
         $copyObj->setCreated($this->getCreated());
         if ($makeNew) {
             $copyObj->setNew(true);
@@ -1700,6 +1760,7 @@ abstract class Gamescores implements ActiveRecordInterface
         $this->ping = null;
         $this->winner = null;
         $this->team = null;
+        $this->half = null;
         $this->created = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

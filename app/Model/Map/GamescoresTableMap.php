@@ -59,7 +59,7 @@ class GamescoresTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 10;
+    const NUM_COLUMNS = 11;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class GamescoresTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 10;
+    const NUM_HYDRATE_COLUMNS = 11;
 
     /**
      * the column name for the id field
@@ -117,6 +117,11 @@ class GamescoresTableMap extends TableMap
     const COL_TEAM = 'gamescores.team';
 
     /**
+     * the column name for the half field
+     */
+    const COL_HALF = 'gamescores.half';
+
+    /**
      * the column name for the created field
      */
     const COL_CREATED = 'gamescores.created';
@@ -133,11 +138,11 @@ class GamescoresTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'GameID', 'PlayerId', 'Kills', 'Deaths', 'Score', 'Ping', 'Winner', 'Team', 'Created', ),
-        self::TYPE_CAMELNAME     => array('id', 'gameID', 'playerId', 'kills', 'deaths', 'score', 'ping', 'winner', 'team', 'created', ),
-        self::TYPE_COLNAME       => array(GamescoresTableMap::COL_ID, GamescoresTableMap::COL_GAME_ID, GamescoresTableMap::COL_PLAYER_ID, GamescoresTableMap::COL_KILLS, GamescoresTableMap::COL_DEATHS, GamescoresTableMap::COL_SCORE, GamescoresTableMap::COL_PING, GamescoresTableMap::COL_WINNER, GamescoresTableMap::COL_TEAM, GamescoresTableMap::COL_CREATED, ),
-        self::TYPE_FIELDNAME     => array('id', 'game_id', 'player_id', 'kills', 'deaths', 'score', 'ping', 'winner', 'team', 'created', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id', 'GameID', 'PlayerId', 'Kills', 'Deaths', 'Score', 'Ping', 'Winner', 'Team', 'Half', 'Created', ),
+        self::TYPE_CAMELNAME     => array('id', 'gameID', 'playerId', 'kills', 'deaths', 'score', 'ping', 'winner', 'team', 'half', 'created', ),
+        self::TYPE_COLNAME       => array(GamescoresTableMap::COL_ID, GamescoresTableMap::COL_GAME_ID, GamescoresTableMap::COL_PLAYER_ID, GamescoresTableMap::COL_KILLS, GamescoresTableMap::COL_DEATHS, GamescoresTableMap::COL_SCORE, GamescoresTableMap::COL_PING, GamescoresTableMap::COL_WINNER, GamescoresTableMap::COL_TEAM, GamescoresTableMap::COL_HALF, GamescoresTableMap::COL_CREATED, ),
+        self::TYPE_FIELDNAME     => array('id', 'game_id', 'player_id', 'kills', 'deaths', 'score', 'ping', 'winner', 'team', 'half', 'created', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -147,11 +152,11 @@ class GamescoresTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'GameID' => 1, 'PlayerId' => 2, 'Kills' => 3, 'Deaths' => 4, 'Score' => 5, 'Ping' => 6, 'Winner' => 7, 'Team' => 8, 'Created' => 9, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'gameID' => 1, 'playerId' => 2, 'kills' => 3, 'deaths' => 4, 'score' => 5, 'ping' => 6, 'winner' => 7, 'team' => 8, 'created' => 9, ),
-        self::TYPE_COLNAME       => array(GamescoresTableMap::COL_ID => 0, GamescoresTableMap::COL_GAME_ID => 1, GamescoresTableMap::COL_PLAYER_ID => 2, GamescoresTableMap::COL_KILLS => 3, GamescoresTableMap::COL_DEATHS => 4, GamescoresTableMap::COL_SCORE => 5, GamescoresTableMap::COL_PING => 6, GamescoresTableMap::COL_WINNER => 7, GamescoresTableMap::COL_TEAM => 8, GamescoresTableMap::COL_CREATED => 9, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'game_id' => 1, 'player_id' => 2, 'kills' => 3, 'deaths' => 4, 'score' => 5, 'ping' => 6, 'winner' => 7, 'team' => 8, 'created' => 9, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'GameID' => 1, 'PlayerId' => 2, 'Kills' => 3, 'Deaths' => 4, 'Score' => 5, 'Ping' => 6, 'Winner' => 7, 'Team' => 8, 'Half' => 9, 'Created' => 10, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'gameID' => 1, 'playerId' => 2, 'kills' => 3, 'deaths' => 4, 'score' => 5, 'ping' => 6, 'winner' => 7, 'team' => 8, 'half' => 9, 'created' => 10, ),
+        self::TYPE_COLNAME       => array(GamescoresTableMap::COL_ID => 0, GamescoresTableMap::COL_GAME_ID => 1, GamescoresTableMap::COL_PLAYER_ID => 2, GamescoresTableMap::COL_KILLS => 3, GamescoresTableMap::COL_DEATHS => 4, GamescoresTableMap::COL_SCORE => 5, GamescoresTableMap::COL_PING => 6, GamescoresTableMap::COL_WINNER => 7, GamescoresTableMap::COL_TEAM => 8, GamescoresTableMap::COL_HALF => 9, GamescoresTableMap::COL_CREATED => 10, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'game_id' => 1, 'player_id' => 2, 'kills' => 3, 'deaths' => 4, 'score' => 5, 'ping' => 6, 'winner' => 7, 'team' => 8, 'half' => 9, 'created' => 10, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -180,6 +185,7 @@ class GamescoresTableMap extends TableMap
         $this->addColumn('ping', 'Ping', 'INTEGER', true, null, null);
         $this->addColumn('winner', 'Winner', 'BOOLEAN', false, 1, null);
         $this->addColumn('team', 'Team', 'INTEGER', false, 11, null);
+        $this->addColumn('half', 'Half', 'INTEGER', false, 11, null);
         $this->addColumn('created', 'Created', 'TIMESTAMP', false, null, null);
     } // initialize()
 
@@ -354,6 +360,7 @@ class GamescoresTableMap extends TableMap
             $criteria->addSelectColumn(GamescoresTableMap::COL_PING);
             $criteria->addSelectColumn(GamescoresTableMap::COL_WINNER);
             $criteria->addSelectColumn(GamescoresTableMap::COL_TEAM);
+            $criteria->addSelectColumn(GamescoresTableMap::COL_HALF);
             $criteria->addSelectColumn(GamescoresTableMap::COL_CREATED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
@@ -365,6 +372,7 @@ class GamescoresTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.ping');
             $criteria->addSelectColumn($alias . '.winner');
             $criteria->addSelectColumn($alias . '.team');
+            $criteria->addSelectColumn($alias . '.half');
             $criteria->addSelectColumn($alias . '.created');
         }
     }

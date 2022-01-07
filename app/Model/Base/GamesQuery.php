@@ -26,9 +26,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamesQuery orderByGametypeId($order = Criteria::ASC) Order by the gametype_id column
  * @method     ChildGamesQuery orderByTimelimit($order = Criteria::ASC) Order by the timelimit column
  * @method     ChildGamesQuery orderByRoundtime($order = Criteria::ASC) Order by the roundtime column
+ * @method     ChildGamesQuery orderByNbplayers($order = Criteria::ASC) Order by the nbplayers column
  * @method     ChildGamesQuery orderByRedScore($order = Criteria::ASC) Order by the redscore column
  * @method     ChildGamesQuery orderByBlueScore($order = Criteria::ASC) Order by the bluescore column
- * @method     ChildGamesQuery orderByNbplayers($order = Criteria::ASC) Order by the nbplayers column
+ * @method     ChildGamesQuery orderByRedScore2($order = Criteria::ASC) Order by the redscore2 column
+ * @method     ChildGamesQuery orderByBlueScore2($order = Criteria::ASC) Order by the bluescore2 column
  * @method     ChildGamesQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
  * @method     ChildGamesQuery groupById() Group by the id column
@@ -37,9 +39,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamesQuery groupByGametypeId() Group by the gametype_id column
  * @method     ChildGamesQuery groupByTimelimit() Group by the timelimit column
  * @method     ChildGamesQuery groupByRoundtime() Group by the roundtime column
+ * @method     ChildGamesQuery groupByNbplayers() Group by the nbplayers column
  * @method     ChildGamesQuery groupByRedScore() Group by the redscore column
  * @method     ChildGamesQuery groupByBlueScore() Group by the bluescore column
- * @method     ChildGamesQuery groupByNbplayers() Group by the nbplayers column
+ * @method     ChildGamesQuery groupByRedScore2() Group by the redscore2 column
+ * @method     ChildGamesQuery groupByBlueScore2() Group by the bluescore2 column
  * @method     ChildGamesQuery groupByCreated() Group by the created column
  *
  * @method     ChildGamesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -101,9 +105,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGames findOneByGametypeId(int $gametype_id) Return the first ChildGames filtered by the gametype_id column
  * @method     ChildGames findOneByTimelimit(int $timelimit) Return the first ChildGames filtered by the timelimit column
  * @method     ChildGames findOneByRoundtime(int $roundtime) Return the first ChildGames filtered by the roundtime column
+ * @method     ChildGames findOneByNbplayers(int $nbplayers) Return the first ChildGames filtered by the nbplayers column
  * @method     ChildGames findOneByRedScore(int $redscore) Return the first ChildGames filtered by the redscore column
  * @method     ChildGames findOneByBlueScore(int $bluescore) Return the first ChildGames filtered by the bluescore column
- * @method     ChildGames findOneByNbplayers(int $nbplayers) Return the first ChildGames filtered by the nbplayers column
+ * @method     ChildGames findOneByRedScore2(int $redscore2) Return the first ChildGames filtered by the redscore2 column
+ * @method     ChildGames findOneByBlueScore2(int $bluescore2) Return the first ChildGames filtered by the bluescore2 column
  * @method     ChildGames findOneByCreated(string $created) Return the first ChildGames filtered by the created column *
 
  * @method     ChildGames requirePk($key, ConnectionInterface $con = null) Return the ChildGames by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -115,9 +121,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGames requireOneByGametypeId(int $gametype_id) Return the first ChildGames filtered by the gametype_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOneByTimelimit(int $timelimit) Return the first ChildGames filtered by the timelimit column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOneByRoundtime(int $roundtime) Return the first ChildGames filtered by the roundtime column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGames requireOneByNbplayers(int $nbplayers) Return the first ChildGames filtered by the nbplayers column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOneByRedScore(int $redscore) Return the first ChildGames filtered by the redscore column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOneByBlueScore(int $bluescore) Return the first ChildGames filtered by the bluescore column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildGames requireOneByNbplayers(int $nbplayers) Return the first ChildGames filtered by the nbplayers column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGames requireOneByRedScore2(int $redscore2) Return the first ChildGames filtered by the redscore2 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGames requireOneByBlueScore2(int $bluescore2) Return the first ChildGames filtered by the bluescore2 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOneByCreated(string $created) Return the first ChildGames filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGames[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGames objects based on current ModelCriteria
@@ -127,9 +135,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGames[]|ObjectCollection findByGametypeId(int $gametype_id) Return ChildGames objects filtered by the gametype_id column
  * @method     ChildGames[]|ObjectCollection findByTimelimit(int $timelimit) Return ChildGames objects filtered by the timelimit column
  * @method     ChildGames[]|ObjectCollection findByRoundtime(int $roundtime) Return ChildGames objects filtered by the roundtime column
+ * @method     ChildGames[]|ObjectCollection findByNbplayers(int $nbplayers) Return ChildGames objects filtered by the nbplayers column
  * @method     ChildGames[]|ObjectCollection findByRedScore(int $redscore) Return ChildGames objects filtered by the redscore column
  * @method     ChildGames[]|ObjectCollection findByBlueScore(int $bluescore) Return ChildGames objects filtered by the bluescore column
- * @method     ChildGames[]|ObjectCollection findByNbplayers(int $nbplayers) Return ChildGames objects filtered by the nbplayers column
+ * @method     ChildGames[]|ObjectCollection findByRedScore2(int $redscore2) Return ChildGames objects filtered by the redscore2 column
+ * @method     ChildGames[]|ObjectCollection findByBlueScore2(int $bluescore2) Return ChildGames objects filtered by the bluescore2 column
  * @method     ChildGames[]|ObjectCollection findByCreated(string $created) Return ChildGames objects filtered by the created column
  * @method     ChildGames[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -229,7 +239,7 @@ abstract class GamesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, gamenb, map_id, gametype_id, timelimit, roundtime, redscore, bluescore, nbplayers, created FROM games WHERE id = :p0';
+        $sql = 'SELECT id, gamenb, map_id, gametype_id, timelimit, roundtime, nbplayers, redscore, bluescore, redscore2, bluescore2, created FROM games WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -570,6 +580,47 @@ abstract class GamesQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the nbplayers column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByNbplayers(1234); // WHERE nbplayers = 1234
+     * $query->filterByNbplayers(array(12, 34)); // WHERE nbplayers IN (12, 34)
+     * $query->filterByNbplayers(array('min' => 12)); // WHERE nbplayers > 12
+     * </code>
+     *
+     * @param     mixed $nbplayers The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildGamesQuery The current query, for fluid interface
+     */
+    public function filterByNbplayers($nbplayers = null, $comparison = null)
+    {
+        if (is_array($nbplayers)) {
+            $useMinMax = false;
+            if (isset($nbplayers['min'])) {
+                $this->addUsingAlias(GamesTableMap::COL_NBPLAYERS, $nbplayers['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($nbplayers['max'])) {
+                $this->addUsingAlias(GamesTableMap::COL_NBPLAYERS, $nbplayers['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(GamesTableMap::COL_NBPLAYERS, $nbplayers, $comparison);
+    }
+
+    /**
      * Filter the query on the redscore column
      *
      * Example usage:
@@ -652,16 +703,16 @@ abstract class GamesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the nbplayers column
+     * Filter the query on the redscore2 column
      *
      * Example usage:
      * <code>
-     * $query->filterByNbplayers(1234); // WHERE nbplayers = 1234
-     * $query->filterByNbplayers(array(12, 34)); // WHERE nbplayers IN (12, 34)
-     * $query->filterByNbplayers(array('min' => 12)); // WHERE nbplayers > 12
+     * $query->filterByRedScore2(1234); // WHERE redscore2 = 1234
+     * $query->filterByRedScore2(array(12, 34)); // WHERE redscore2 IN (12, 34)
+     * $query->filterByRedScore2(array('min' => 12)); // WHERE redscore2 > 12
      * </code>
      *
-     * @param     mixed $nbplayers The value to use as filter.
+     * @param     mixed $redScore2 The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -669,16 +720,16 @@ abstract class GamesQuery extends ModelCriteria
      *
      * @return $this|ChildGamesQuery The current query, for fluid interface
      */
-    public function filterByNbplayers($nbplayers = null, $comparison = null)
+    public function filterByRedScore2($redScore2 = null, $comparison = null)
     {
-        if (is_array($nbplayers)) {
+        if (is_array($redScore2)) {
             $useMinMax = false;
-            if (isset($nbplayers['min'])) {
-                $this->addUsingAlias(GamesTableMap::COL_NBPLAYERS, $nbplayers['min'], Criteria::GREATER_EQUAL);
+            if (isset($redScore2['min'])) {
+                $this->addUsingAlias(GamesTableMap::COL_REDSCORE2, $redScore2['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($nbplayers['max'])) {
-                $this->addUsingAlias(GamesTableMap::COL_NBPLAYERS, $nbplayers['max'], Criteria::LESS_EQUAL);
+            if (isset($redScore2['max'])) {
+                $this->addUsingAlias(GamesTableMap::COL_REDSCORE2, $redScore2['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -689,7 +740,48 @@ abstract class GamesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GamesTableMap::COL_NBPLAYERS, $nbplayers, $comparison);
+        return $this->addUsingAlias(GamesTableMap::COL_REDSCORE2, $redScore2, $comparison);
+    }
+
+    /**
+     * Filter the query on the bluescore2 column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByBlueScore2(1234); // WHERE bluescore2 = 1234
+     * $query->filterByBlueScore2(array(12, 34)); // WHERE bluescore2 IN (12, 34)
+     * $query->filterByBlueScore2(array('min' => 12)); // WHERE bluescore2 > 12
+     * </code>
+     *
+     * @param     mixed $blueScore2 The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildGamesQuery The current query, for fluid interface
+     */
+    public function filterByBlueScore2($blueScore2 = null, $comparison = null)
+    {
+        if (is_array($blueScore2)) {
+            $useMinMax = false;
+            if (isset($blueScore2['min'])) {
+                $this->addUsingAlias(GamesTableMap::COL_BLUESCORE2, $blueScore2['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($blueScore2['max'])) {
+                $this->addUsingAlias(GamesTableMap::COL_BLUESCORE2, $blueScore2['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(GamesTableMap::COL_BLUESCORE2, $blueScore2, $comparison);
     }
 
     /**

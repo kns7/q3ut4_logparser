@@ -86,6 +86,7 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="roundnb" phpName="RoundNB" type="INTEGER" required="true"/>
     <column name="game_id" phpName="GameID" type="INTEGER" required="true"/>
+    <column name="half" phpName="Half" type="INTEGER" size="11"/>
     <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="games" phpName="Games" refPhpName="Round">
@@ -106,6 +107,7 @@
     <column name="ping" phpName="Ping" type="INTEGER" required="true"/>
     <column name="winner" phpName="Winner" type="BOOLEAN" size="1"/>
     <column name="team" phpName="Team" type="INTEGER" size="11"/>
+    <column name="half" phpName="Half" type="INTEGER" size="11"/>
     <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="games" phpName="Games" refPhpName="Score">
@@ -126,9 +128,11 @@
     <column name="gametype_id" phpName="GametypeId" type="INTEGER" required="true"/>
     <column name="timelimit" phpName="Timelimit" type="INTEGER" required="true"/>
     <column name="roundtime" phpName="Roundtime" type="INTEGER" required="true"/>
-    <column name="redscore" phpName="RedScore" type="INTEGER" required="true"/>
-    <column name="bluescore" phpName="BlueScore" type="INTEGER" required="true"/>
     <column name="nbplayers" phpName="Nbplayers" type="INTEGER" required="true"/>
+    <column name="redscore" phpName="RedScore" type="INTEGER"/>
+    <column name="bluescore" phpName="BlueScore" type="INTEGER"/>
+    <column name="redscore2" phpName="RedScore2" type="INTEGER"/>
+    <column name="bluescore2" phpName="BlueScore2" type="INTEGER"/>
     <column name="created" phpName="Created" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="maps" phpName="Maps" refPhpName="Game">

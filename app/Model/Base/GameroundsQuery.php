@@ -23,11 +23,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGameroundsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildGameroundsQuery orderByRoundNB($order = Criteria::ASC) Order by the roundnb column
  * @method     ChildGameroundsQuery orderByGameID($order = Criteria::ASC) Order by the game_id column
+ * @method     ChildGameroundsQuery orderByHalf($order = Criteria::ASC) Order by the half column
  * @method     ChildGameroundsQuery orderByCreated($order = Criteria::ASC) Order by the created column
  *
  * @method     ChildGameroundsQuery groupById() Group by the id column
  * @method     ChildGameroundsQuery groupByRoundNB() Group by the roundnb column
  * @method     ChildGameroundsQuery groupByGameID() Group by the game_id column
+ * @method     ChildGameroundsQuery groupByHalf() Group by the half column
  * @method     ChildGameroundsQuery groupByCreated() Group by the created column
  *
  * @method     ChildGameroundsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -96,6 +98,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamerounds findOneById(int $id) Return the first ChildGamerounds filtered by the id column
  * @method     ChildGamerounds findOneByRoundNB(int $roundnb) Return the first ChildGamerounds filtered by the roundnb column
  * @method     ChildGamerounds findOneByGameID(int $game_id) Return the first ChildGamerounds filtered by the game_id column
+ * @method     ChildGamerounds findOneByHalf(int $half) Return the first ChildGamerounds filtered by the half column
  * @method     ChildGamerounds findOneByCreated(string $created) Return the first ChildGamerounds filtered by the created column *
 
  * @method     ChildGamerounds requirePk($key, ConnectionInterface $con = null) Return the ChildGamerounds by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -104,12 +107,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamerounds requireOneById(int $id) Return the first ChildGamerounds filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGamerounds requireOneByRoundNB(int $roundnb) Return the first ChildGamerounds filtered by the roundnb column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGamerounds requireOneByGameID(int $game_id) Return the first ChildGamerounds filtered by the game_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGamerounds requireOneByHalf(int $half) Return the first ChildGamerounds filtered by the half column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGamerounds requireOneByCreated(string $created) Return the first ChildGamerounds filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGamerounds[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGamerounds objects based on current ModelCriteria
  * @method     ChildGamerounds[]|ObjectCollection findById(int $id) Return ChildGamerounds objects filtered by the id column
  * @method     ChildGamerounds[]|ObjectCollection findByRoundNB(int $roundnb) Return ChildGamerounds objects filtered by the roundnb column
  * @method     ChildGamerounds[]|ObjectCollection findByGameID(int $game_id) Return ChildGamerounds objects filtered by the game_id column
+ * @method     ChildGamerounds[]|ObjectCollection findByHalf(int $half) Return ChildGamerounds objects filtered by the half column
  * @method     ChildGamerounds[]|ObjectCollection findByCreated(string $created) Return ChildGamerounds objects filtered by the created column
  * @method     ChildGamerounds[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -209,7 +214,7 @@ abstract class GameroundsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, roundnb, game_id, created FROM gamerounds WHERE id = :p0';
+        $sql = 'SELECT id, roundnb, game_id, half, created FROM gamerounds WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -422,6 +427,47 @@ abstract class GameroundsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(GameroundsTableMap::COL_GAME_ID, $gameID, $comparison);
+    }
+
+    /**
+     * Filter the query on the half column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByHalf(1234); // WHERE half = 1234
+     * $query->filterByHalf(array(12, 34)); // WHERE half IN (12, 34)
+     * $query->filterByHalf(array('min' => 12)); // WHERE half > 12
+     * </code>
+     *
+     * @param     mixed $half The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildGameroundsQuery The current query, for fluid interface
+     */
+    public function filterByHalf($half = null, $comparison = null)
+    {
+        if (is_array($half)) {
+            $useMinMax = false;
+            if (isset($half['min'])) {
+                $this->addUsingAlias(GameroundsTableMap::COL_HALF, $half['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($half['max'])) {
+                $this->addUsingAlias(GameroundsTableMap::COL_HALF, $half['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(GameroundsTableMap::COL_HALF, $half, $comparison);
     }
 
     /**
