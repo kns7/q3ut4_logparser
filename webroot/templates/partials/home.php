@@ -72,11 +72,16 @@
             <?php
             $i = 1;
             foreach($times as $t){
+                if($t['time'] >= 86400){
+                    $time = $app->Ctrl->Stats->secondsToTime($t["time"]);
+                }else{
+                    $time = gmdate("H:i:s",$t['time']);
+                }
                 ?>
                 <tr>
                     <td>#<?= $i;?></td>
                     <td><a href="/player#<?=$t['id'];?>"><?= $t['name'];?></a></td>
-                    <td><?= gmdate("H:i:s",$t['time']);?></td>
+                    <td data-toggle="tooltip" data-placement="right" title="<?= $t['time'];?>  secondes"><?= $time;?></td>
                 </tr>
                 <?php
                 $i++;

@@ -79,4 +79,10 @@ class Controller
     {
         return \GamesQuery::create()->orderByCreated("DESC")->groupByCreated()->find();
     }
+
+    public function secondsToTime($seconds) {
+        $dtF = new \DateTime('@0');
+        $dtT = new \DateTime("@$seconds");
+        return $dtF->diff($dtT)->format('%a jours, %h:%i:%s');
+    }
 }

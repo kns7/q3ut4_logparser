@@ -8,8 +8,15 @@ include('header.php');
                     <option value="0" selected>Choisissez une date de jeu</option>
                     <?php
                     foreach($dates as $d){
+                        if($d->getCreated()->format("Y-m-d") == "2020-01-01"){
+                            $text = "Année 2020 (Ancien Serveur)";
+                        }elseif($d->getCreated()->format("Y-m-d") == "2021-01-01"){
+                            $text = "Année 2021 (Nouveau Serveur)";
+                        }else{
+                            $text = $d->getCreated()->format("Y-m-d");
+                        }
                         ?>
-                        <option value="<?=$d->getCreated()->format("Y-m-d");?>"><?= $d->getCreated()->format("d/m/Y");?></option>
+                        <option value="<?=$d->getCreated()->format("Y-m-d");?>"><?= $text;?></option>
                         <?php
                     }
                     ?>
