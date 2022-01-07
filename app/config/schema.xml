@@ -11,6 +11,7 @@
     </vendor>
   </table>
 
+
   <table name="bombs" idMethod="native" phpName="Bombs">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
@@ -29,6 +30,7 @@
     </vendor>
   </table>
 
+
   <table name="config" idMethod="native" phpName="Config">
     <column name="key" phpName="Key" type="VARCHAR" size="255" primaryKey="true" required="true"/>
     <column name="value" phpName="Value" type="VARCHAR" size="255" required="true"/>
@@ -37,6 +39,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
+
 
   <table name="flags" idMethod="native" phpName="Flags">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
@@ -82,6 +85,7 @@
     </vendor>
   </table>
 
+
   <table name="gamerounds" idMethod="native" phpName="Gamerounds">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="roundnb" phpName="RoundNB" type="INTEGER" required="true"/>
@@ -96,6 +100,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
+
 
   <table name="gamescores" idMethod="native" phpName="Gamescores">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
@@ -120,6 +125,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
+
 
   <table name="games" idMethod="native" phpName="Games">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
@@ -146,6 +152,7 @@
     </vendor>
   </table>
 
+
   <table name="gametimes" idMethod="native" phpName="Gametimes">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
     <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
@@ -161,6 +168,7 @@
     </vendor>
   </table>
 
+
   <table name="gametypes" idMethod="native" phpName="Gametypes">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="code" phpName="Code" type="INTEGER" required="true"/>
@@ -171,6 +179,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
+
 
   <table name="hits" idMethod="native" phpName="Hits">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
@@ -197,6 +206,7 @@
     </vendor>
   </table>
 
+
   <table name="maps" idMethod="native" phpName="Maps">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="file" phpName="File" type="VARCHAR" size="255" required="true"/>
@@ -210,63 +220,12 @@
     </vendor>
   </table>
 
+
   <table name="players" idMethod="native" phpName="Players">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
     <column name="altname" phpName="Altname" type="LONGVARCHAR"/>
 
-    <vendor type="mysql">
-      <parameter name="Engine" value="InnoDB"/>
-    </vendor>
-  </table>
-
-
-  <table name="rounds" idMethod="native" phpName="Rounds">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
-    <column name="winner" phpName="Winner" type="VARCHAR" size="255" required="true"/>
-    <column name="red_score" phpName="RedScore" type="INTEGER" required="true"/>
-    <column name="blue_score" phpName="BlueScore" type="INTEGER" required="true"/>
-    <column name="gametype_id" phpName="GametypeId" type="INTEGER" required="true"/>
-    <column name="nbplayers" phpName="Nbplayers" type="INTEGER" required="true"/>
-    <column name="created" phpName="Created" type="TIMESTAMP"/>
-
-    <foreign-key foreignTable="gametypes" phpName="Gametypes" refPhpName="Round">
-      <reference local="gametype_id" foreign="id"/>
-    </foreign-key>
-    <vendor type="mysql">
-      <parameter name="Engine" value="InnoDB"/>
-    </vendor>
-  </table>
-
-
-  <table name="scores" idMethod="native" phpName="Scores">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
-    <column name="score" phpName="Score" type="INTEGER" required="true"/>
-    <column name="created" phpName="Created" type="TIMESTAMP"/>
-
-    <foreign-key foreignTable="players" phpName="Players" refPhpName="Score">
-      <reference local="player_id" foreign="id"/>
-    </foreign-key>
-    <vendor type="mysql">
-      <parameter name="Engine" value="InnoDB"/>
-    </vendor>
-  </table>
-
-
-  <table name="teams" idMethod="native" phpName="Teams">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="round_id" phpName="RoundId" type="INTEGER" required="true"/>
-    <column name="player_id" phpName="PlayerId" type="INTEGER" required="true"/>
-    <column name="team" phpName="Team" type="VARCHAR" size="255" required="true"/>
-    <column name="created" phpName="Created" type="TIMESTAMP"/>
-
-    <foreign-key foreignTable="players" phpName="Players" refPhpName="Team">
-      <reference local="player_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="rounds" phpName="Rounds" refPhpName="Team">
-      <reference local="round_id" foreign="id"/>
-    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>

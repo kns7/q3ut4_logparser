@@ -48,17 +48,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGametypesQuery rightJoinWithGame() Adds a RIGHT JOIN clause and with to the query using the Game relation
  * @method     ChildGametypesQuery innerJoinWithGame() Adds a INNER JOIN clause and with to the query using the Game relation
  *
- * @method     ChildGametypesQuery leftJoinRound($relationAlias = null) Adds a LEFT JOIN clause to the query using the Round relation
- * @method     ChildGametypesQuery rightJoinRound($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Round relation
- * @method     ChildGametypesQuery innerJoinRound($relationAlias = null) Adds a INNER JOIN clause to the query using the Round relation
- *
- * @method     ChildGametypesQuery joinWithRound($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Round relation
- *
- * @method     ChildGametypesQuery leftJoinWithRound() Adds a LEFT JOIN clause and with to the query using the Round relation
- * @method     ChildGametypesQuery rightJoinWithRound() Adds a RIGHT JOIN clause and with to the query using the Round relation
- * @method     ChildGametypesQuery innerJoinWithRound() Adds a INNER JOIN clause and with to the query using the Round relation
- *
- * @method     \GamesQuery|\RoundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \GamesQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildGametypes findOne(ConnectionInterface $con = null) Return the first ChildGametypes matching the query
  * @method     ChildGametypes findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGametypes matching the query, or a new ChildGametypes object populated from the query conditions when no match is found
@@ -472,79 +462,6 @@ abstract class GametypesQuery extends ModelCriteria
         return $this
             ->joinGame($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Game', '\GamesQuery');
-    }
-
-    /**
-     * Filter the query by a related \Rounds object
-     *
-     * @param \Rounds|ObjectCollection $rounds the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildGametypesQuery The current query, for fluid interface
-     */
-    public function filterByRound($rounds, $comparison = null)
-    {
-        if ($rounds instanceof \Rounds) {
-            return $this
-                ->addUsingAlias(GametypesTableMap::COL_ID, $rounds->getGametypeId(), $comparison);
-        } elseif ($rounds instanceof ObjectCollection) {
-            return $this
-                ->useRoundQuery()
-                ->filterByPrimaryKeys($rounds->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByRound() only accepts arguments of type \Rounds or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Round relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildGametypesQuery The current query, for fluid interface
-     */
-    public function joinRound($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Round');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Round');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Round relation Rounds object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \RoundsQuery A secondary query class using the current class as primary query
-     */
-    public function useRoundQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinRound($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Round', '\RoundsQuery');
     }
 
     /**

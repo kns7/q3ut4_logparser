@@ -13,20 +13,6 @@ use Propel\Runtime\Exception\PropelException;
 
 class ScoresController extends Controller
 {
-    public function add(\Players $player, $score)
-    {
-        $scores = new \Scores();
-        $scores->setPlayers($player)
-            ->setScore($score);
-
-        try {
-            $scores->save();
-            return $scores;
-        } catch (PropelException $e){
-            return false;
-        }
-    }
-
     public function addScore(\Players $player, \Games $game, $kills, $deaths, $points, $ping, $winner,$team, $half = 1)
     {
         $score = new \Gamescores();

@@ -202,20 +202,6 @@ class PlayersTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'HittedPlayers', false);
-        $this->addRelation('Score', '\\Scores', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':player_id',
-    1 => ':id',
-  ),
-), null, null, 'Scores', false);
-        $this->addRelation('Team', '\\Teams', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':player_id',
-    1 => ':id',
-  ),
-), null, null, 'Teams', false);
     } // buildRelations()
 
     /**

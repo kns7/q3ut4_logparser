@@ -159,13 +159,6 @@ class GametypesTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Games', false);
-        $this->addRelation('Round', '\\Rounds', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':gametype_id',
-    1 => ':id',
-  ),
-), null, null, 'Rounds', false);
     } // buildRelations()
 
     /**

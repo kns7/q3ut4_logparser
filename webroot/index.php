@@ -65,7 +65,6 @@ $app->container->singleton('Ctrl',function() use ($app){
         'Rounds' => new \App\Controller\RoundsController($app),
         'Scores' => new \App\Controller\ScoresController($app),
         'Stats' => new \App\Controller\StatsController($app),
-        'Teams' => new \App\Controller\TeamsController($app),
         'Weapons' => new WeaponsController($app)
     ];
 });

@@ -120,7 +120,6 @@ class ComposerStaticInit28a17c4ad700c1f4b526c9866f5bae80
         'App\\Controller\\RoundsController' => __DIR__ . '/../..' . '/app/Controller/RoundsController.php',
         'App\\Controller\\ScoresController' => __DIR__ . '/../..' . '/app/Controller/ScoresController.php',
         'App\\Controller\\StatsController' => __DIR__ . '/../..' . '/app/Controller/StatsController.php',
-        'App\\Controller\\TeamsController' => __DIR__ . '/../..' . '/app/Controller/TeamsController.php',
         'Base\\Bodyparts' => __DIR__ . '/../..' . '/app/Model/Base/Bodyparts.php',
         'Base\\BodypartsQuery' => __DIR__ . '/../..' . '/app/Model/Base/BodypartsQuery.php',
         'Base\\Bombs' => __DIR__ . '/../..' . '/app/Model/Base/Bombs.php',
