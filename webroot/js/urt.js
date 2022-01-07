@@ -95,12 +95,16 @@ function loadHome(){
     });
 }
 
-function loadGamesList(dt){
+function loadGamesList(dt,id){
     console.log("Load Games List...");
     console.log(" - Date: "+ dt);
     loader(true);
     $.get("/views/games/"+dt,function(d){
         $(".games-list").html(d);
+        if(id !== undefined){
+            $(".btn-gamescores").removeClass("active");
+            $(".btn-gamescores[data-id="+id+"]").addClass("active");
+        }
         postLoad();
     });
 }
@@ -160,7 +164,20 @@ $(document).ready(function(){
             $("#player_choose2").val(hash[1]);
             loadVersusStats(hash[0],hash[1]);
         }
-
+    }
+    if(href[href.length - 1].search("games") != -1 && window.location.hash.length > 1){
+        hash = window.location.hash.replace("#","").split("-");
+        if(hash.length == 1){
+            date = hash[0].substr(0,4)+"-"+hash[0].substr(4,2)+"-"+hash[0].substr(6,2)
+            $("#gamesdate").val(date);
+            loadGamesList(date);
+        }
+        if(hash.length == 2){
+            date = hash[0].substr(0,4)+"-"+hash[0].substr(4,2)+"-"+hash[0].substr(6,2)
+            $("#gamesdate").val(date);
+            loadGamesList(date,hash[1]);
+            loadGameScores(hash[1]);
+        }
     }
 
     // Tooltips

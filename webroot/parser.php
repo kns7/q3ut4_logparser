@@ -71,6 +71,6 @@ $app->container->singleton('Ctrl',function() use ($app){
 });
 
 if($config["PARSE_MODE"] == "full") {
-    $app->Ctrl->Logs->clearDBTests();
+    $app->Ctrl->Logs->clearNewDBTests();
 }
-$app->Ctrl->Logs->parseLog($config["PARSE_LOGFILE"]);
+$app->Ctrl->Logs->newParser($config["PARSE_LOGFILE"]);
