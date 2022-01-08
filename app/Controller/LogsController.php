@@ -72,7 +72,8 @@ class LogsController extends Controller {
                     $this->currentgame = $this->app->Ctrl->Games->add($this->gamenb,$this->currentmap,$this->gametype,$timelimit,$roundtime,count($this->players));
 
                     if($this->currentgame !== false ){
-                        $message = "Game (".$this->gamenb."). Map: ".$this->currentmap->getName().", Gametype: ".$this->gametype->getName().", Timelimit: ".$timelimit.", Roundtime: ". $roundtime." Players: ".count($this->players);
+                        $mapname = (!is_null($this->currentmap))?$this->currentmap->getName():"Map inconnue";
+                        $message = "Game (".$this->gamenb."). Map: $mapname, Gametype: ".$this->gametype->getName().", Timelimit: ".$timelimit.", Roundtime: ". $roundtime." Players: ".count($this->players);
                         $this->logOutput($message,$l,$action,"INFO");
                         switch($this->gametype->getCode()){
                             case 0:
