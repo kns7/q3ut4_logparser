@@ -35,6 +35,17 @@ if($p2->getWeaponsRank()->count() > 0) {
 }else{
     $bestweapon['2'] = null;
 }
+
+if($p1->getMapsWins()->count() > 0){
+    $bestmap['1'] = (!is_null($p1->getMapsWins()->getFirst()->getGames()->getMaps()))?$p1->getMapsWins()->getFirst():null;
+}else{
+    $bestmap['1'] = null;
+}
+if($p2->getMapsWins()->count() > 0){
+    $bestmap['2'] = (!is_null($p2->getMapsWins()->getFirst()->getGames()->getMaps()))?$p2->getMapsWins()->getFirst():null;
+}else{
+    $bestmap['2'] = null;
+}
 ?>
 <div class="d-none d-md-block">
     <div class="row justify-content-around">
@@ -138,7 +149,11 @@ if($p2->getWeaponsRank()->count() > 0) {
                     <th class="text-center">Flags Perdus (Dropped)</th>
                     <td class="text-right"><?= ($ctf['drop']['2'] < $ctf['drop']['1'])?"<strong class='text-primary'>":"";?><?= $ctf['drop']['2'];?><?= ($ctf['drop']['2'] < $ctf['drop']['1'])?"</strong>":"";?></td>
                 </tr>
-                
+                <tr>
+                    <td class="text-left"><?= (!is_null($bestmap['1']))?$bestmap['1']->getGames()->getMaps()->getName()." (".$bestmap['1']->getWins().")":"N/A";?></td>
+                    <th class="text-center">Meilleure carte (victoires)</th>
+                    <td class="text-right"><?= (!is_null($bestmap['2']))?$bestmap['2']->getGames()->getMaps()->getName()." (".$bestmap['2']->getWins().")":"N/A";?></td>
+                </tr>
                 <tr>
                     <td class="text-left"><?= (!is_null($bestweapon['1']))?$bestweapon['1']->getName():"N/A";?></td>
                     <th class="text-center">Arme pr&eacute;f&eacute;r&eacute;e</th>

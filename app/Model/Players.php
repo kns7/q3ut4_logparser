@@ -179,5 +179,18 @@ class Players extends BasePlayers
             ->filterByRoundId($rounds)
             ->count();
     }
+
+    public function getMapsWins()
+    {
+        return \GamescoresQuery::create()
+            ->filterByPlayerId($this->getId())
+            ->filterByWinner(true)
+            ->useGamesQuery()
+            ->groupByMapId()
+            ->endUse()
+            ->withColumn("COUNT(*)","wins")
+            ->orderBy("wins","DESC")
+            ->find();
+    }
 }
 

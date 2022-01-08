@@ -2,6 +2,12 @@
 $bestweapon = ($player->getWeaponsRank()->count() > 0)? $player->getWeaponsRank()->getFirst()->getWeapons():null;
 $bestsniper = ($player->getWeaponsRank("sniper")->count() > 0)?$player->getWeaponsRank("sniper")->getFirst()->getWeapons():null;
 $bestsidearm = ($player->getWeaponsRank("sidearm")->count() > 0)?$player->getWeaponsRank("sidearm")->getFirst()->getWeapons():null;
+if($player->getMapsWins()->count() > 0){
+    $bestmap = (!is_null($player->getMapsWins()->getFirst()->getGames()->getMaps()))?$player->getMapsWins()->getFirst():null;
+}else{
+    $bestmap = null;
+}
+
 
 $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$player->getId().".png":"/img/user.png";
 ?>
@@ -19,6 +25,7 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
                 <li class="list-group-item">Arme pr&eacute;f&eacute;r&eacute;e<br/><strong><?= (!is_null($bestweapon))?$bestweapon->getName():"N/A";?></strong></li>
                 <li class="list-group-item">Sniper pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestsniper))?$bestsniper->getName():"N/A";?></strong></li>
                 <li class="list-group-item">Pistolet pr&eacute;f&eacute;r&eacute;<br/><strong><?= (!is_null($bestsidearm))?$bestsidearm->getName():"N/A";?></strong></li>
+                <li class="list-group-item">Meilleure carte<br/><strong><?= (!is_null($bestmap))?$bestmap->getGames()->getMaps()->getName()." (".$bestmap->getWins().")":"N/A";?></strong></li>
             </ul>
             <hr/>
             <ul class="list-group list-group-flush">
@@ -86,6 +93,14 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
         <div class="col-sm-4">
             <h2 class="text-center">Grenades</h2>
             <canvas class="chart" id="playerweapongrenade_chart" data-name="player-weapongrenade" data-id="<?=$player->getId();?>" data-chart="pie"></canvas>
+        </div>
+    </div>
+    <hr/>
+    <div class="row"><div class="col text-center"><h1>Stats Serveur</h1></div></div>
+    <div class="row justify-content-around">
+        <div class="col-8">
+            <h2 class="text-center">Maps gagn&eacute;es</h2>
+            <canvas class="chart" id="playermapwins_chart" data-name="player-mapwins" data-id="<?=$player->getId();?>" data-chart="bar"></canvas>
         </div>
     </div>
 </div>

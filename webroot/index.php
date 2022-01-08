@@ -172,6 +172,21 @@ $app->group("/ajax",function() use($app){
             echo json_encode($return);
         });
 
+        $app->get('/mapscount',function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Stats->getStatsMaps() as $g){
+                array_push($datas,$g["played"]);
+                array_push($labels,$g["name"]);
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+
         $app->get('/player-kills/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -307,6 +322,22 @@ $app->group("/ajax",function() use($app){
             echo json_encode($return);
         });
 
+
+        $app->get('/player-mapwins/:id',function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Players->get($id)->getMapsWins() as $p){
+                array_push($datas,$p->getWins());
+                array_push($labels,$p->getGames()->getMaps()->getName());
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+
         $app->get('/player-weapongrenade/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -335,6 +366,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/vs-hits/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -351,6 +383,7 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+
         $app->get('/vs-hits2/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -398,9 +431,23 @@ if($_SERVER['SITE_MODE'] == "development"){
            echo '</pre>';
 
        });
-       $app->get('/connectionstring',function() use($app){
-            $string = '\ip\146.199.115.89:27960\snaps\20\name\Manics69\password\marchelle\racered\3\raceblue\3\racefree\0\rate\25000\ut_timenudge\0\cg_rgb\128 128 128\cg_physics\1\cg_ghost\1\cg_autopickup\-1\sex\male\handicap\100\color2\5\color1\4\gear\GZAORWA\authc\0\cl_guid\83BCF5AF7EC2318AE35629B4830449D7\weapmodes\0000011022000002000200000000';
-            echo $app->Ctrl->Logs->getValueFromConnectionString($string,"name");
+       $app->get('/playermap/:player',function($player) use($app){
+           $return = \GamescoresQuery::create()
+               ->filterByPlayerId($player)
+               ->filterByWinner(true)
+               ->useGamesQuery()
+               ->groupByMapId()
+               ->endUse()
+               ->withColumn("COUNT(*)","wins")
+               ->orderBy("wins","DESC")
+               ->find();
+           echo $return->count();
+           echo "<table>";
+           echo "<thead><tr><th>Map</th><th>Wins</th></tr></thead><tbody>";
+           foreach($return as $r){
+               echo "<tr><td>". $r->getGames()->getMaps()->getName()."</td><td>".$r->getWins()."</td></tr>";
+           }
+           echo "</tbody></table>";
        });
     });
 

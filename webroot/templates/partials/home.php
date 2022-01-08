@@ -380,3 +380,9 @@
         <canvas class="chart" id="gametype_chart" data-name="gametypes" data-chart="pie"></canvas>
     </div>
 </div>
+<div class="row justify-content-around">
+    <div class="col">
+        <h2 class="text-center">Maps les plus jou&eacute;es</h2>
+        <canvas class="chart" id="mapscount_chart" data-name="mapscount" data-chart="bar"></canvas>
+    </div>
+</div>

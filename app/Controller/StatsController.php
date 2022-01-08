@@ -306,4 +306,27 @@ class StatsController extends Controller
 
         return $return;
     }
+
+    public function getStatsMaps()
+    {
+        $return = [];
+        $maps = $this->app->Ctrl->Maps->getList();
+        foreach($maps as $m){
+            if($m->getGames()->count() > 1) {
+                array_push($return, [
+                    "id" => $m->getId(),
+                    "name" => $m->getName(),
+                    "played" => $m->getGames()->count()
+                ]);
+            }
+        }
+
+        // Array Sort (Total DESC)
+        foreach($return as $key => $row){
+            $sorting[$key] = $row["played"];
+        }
+        array_multisort($sorting, SORT_DESC, $return);
+
+        return $return;
+    }
 }
