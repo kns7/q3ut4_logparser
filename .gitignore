@@ -1,0 +1,8 @@
+*.code-workspace
+/app/config/config.php
+propel.yml
+games.log
+generated-sql/*
+logs/*
+/webroot/img/users/*
+.idea/*
