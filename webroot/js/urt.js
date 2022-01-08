@@ -33,13 +33,17 @@ function makeChart(el) {
     var id = $(el).attr('id');
     var type = $(el).attr('data-chart');
     var dataid = $(el).attr('data-id');
+    var dt = $(el).attr('data-date');
     console.log(" - Element: "+ id);
     console.log(" - Type: "+type);
+    var url = "ajax/charts/" + $(el).attr('data-name');
     if(dataid !== undefined) {
         console.log(" - Data ID: "+dataid);
-        var url = "ajax/charts/" + $(el).attr('data-name') + "/" + dataid;
-    }else{
-        var url = "ajax/charts/" + $(el).attr('data-name');
+        url = url + "/" + dataid;
+    }
+    if(dt !== undefined){
+        console.log(" - Date: "+dt);
+        url = url + "/" + dt;
     }
     $.ajax({
         url: url,
@@ -105,6 +109,16 @@ function loadGamesList(dt,id){
             $(".btn-gamescores").removeClass("active");
             $(".btn-gamescores[data-id="+id+"]").addClass("active");
         }
+        postLoad(false);
+    });
+}
+
+function loadGameStats(dt){
+    console.log("Load Game Stats...");
+    console.log(" - Date: "+dt);
+    loader(true,true);
+    $.get("/views/gamestats/"+dt,function(d){
+        $(".games-scores").html(d);
         postLoad();
     });
 }
@@ -132,14 +146,17 @@ function loader(status,overlay){
     }
 }
 
-function postLoad() {
+function postLoad(loaderstop) {
     $(".chart").each(function(){
         console.log("Loaded Chart [" + $(this).attr('id') + "]");
         makeChart(this);
     });
     // Tooltips
     $('[data-toggle="tooltip"]').tooltip();
-    loader(false);
+    if(loaderstop === undefined){ loaderstop = true; }
+    if(loaderstop){
+        loader(false);
+    }
 }
 
 $(document).ready(function(){
@@ -219,12 +236,20 @@ $(document).ready(function(){
             var dt = $(this).val();
             if(dt != "0"){
                 loadGamesList(dt);
+                loadGameStats(dt);
+            }else{
+                $(".games-scores").html("");
+                $(".games-list").html("");
             }
         })
         .on("click",".btn-gamescores",function(e){
             var id = $(this).attr('data-id');
             $(".btn-gamescores").removeClass("active");
             $(this).addClass("active");
-            loadGameScores(id);
+            if(id == "global"){
+                loadGameStats($(this).attr('data-date'));
+            }else {
+                loadGameScores(id);
+            }
         })
 });

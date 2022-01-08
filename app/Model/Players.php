@@ -14,24 +14,32 @@ use Base\Players as BasePlayers;
  */
 class Players extends BasePlayers
 {
-    public function getKills()
+    public function getKills($date = false)
     {
-        return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
+        $query = \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL);
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->count();
     }
 
-    public function getKillsDetails()
+    public function getKillsDetails($date = false)
     {
-        return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","Kills")->groupByFraggedId()->orderBy("Kills","DESC")->find();
+        $query = \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("COUNT(*)","Kills")->groupByFraggedId()->orderBy("Kills","DESC");
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->find();
     }
 
-    public function getKillsPerPlayer($player_id)
+    public function getKillsPerPlayer($player_id,$date = false)
     {
-        return \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($player_id)->count();
+        $query = \FragsQuery::create()->filterByFraggerId($this->getId())->filterByFraggedId($player_id);
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->count();
     }
 
-    public function getDeaths()
+    public function getDeaths($date = false)
     {
-        return \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
+        $query = \FragsQuery::create()->filterByFraggedId($this->getId())->filterByFraggerId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL);
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->count();
     }
 
     public function getDeathsDetails()
@@ -69,9 +77,11 @@ class Players extends BasePlayers
         return ($this->getDeaths() != 0)? $this->getKills() / $this->getDeaths(): 0;
     }
 
-    public function getPlayingTime()
+    public function getPlayingTime($date = false)
     {
-        $times = \GametimesQuery::create()->filterByPlayerId($this->getId())->filterByStop("-1", \Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("SUM(stop-start)","times")->find();
+        $times = \GametimesQuery::create()->filterByPlayerId($this->getId())->filterByStop("-1", \Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->withColumn("SUM(stop-start)","times");
+        if($date != false){ $times->filterByCreated($date); }
+        $times->find();
         $return = 0;
         foreach($times as $t){
             $return += $t->getTimes();
@@ -79,23 +89,28 @@ class Players extends BasePlayers
         return $return;
     }
 
-    public function getRoundWins()
+    public function getRoundWins($date = false)
     {
-        return \GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByWinner(true)->filterByTeam("1")->_or()->filterByTeam("2")->count();
+        $query = \GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByWinner(true)->filterByTeam("1")->_or()->filterByTeam("2");
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->count();
     }
 
-    public function getRoundLooses()
+    public function getRoundLooses($date = false)
     {
-        return \GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByWinner(false)->filterByTeam("1")->_or()->filterByTeam("2")->count();
+        $query = \GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByWinner(false)->filterByTeam("1")->_or()->filterByTeam("2");
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->count();
     }
 
-    public function getWeaponsRank($type = "")
+    public function getWeaponsRank($type = "",$date = false)
     {
         $query = \FragsQuery::create()
             ->filterByFraggerId($this->getId())
             ->filterByFraggedId($this->getId(),\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)
             //->filterByRoundId($rounds,\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)
             ->withColumn("COUNT(*)","kills");
+        if($date != false){ $query->filterByCreated($date); }
         switch($type){
             default:
                 break;
@@ -125,9 +140,10 @@ class Players extends BasePlayers
     }
 
 
-    public function getBombsCount($type = "all")
+    public function getBombsCount($type = "all", $date = false)
     {
         $query = \BombsQuery::create()->filterByPlayerId($this->getId());
+        if($date != false){ $query->filterByCreated($date); }
         switch($type){
             case "all":
 
@@ -140,13 +156,15 @@ class Players extends BasePlayers
         return $query->count();
     }
 
-    public function getGametypeWins($gametype_id)
+    public function getGametypeWins($gametype_id,$date = false)
     {
         $games = GamesQuery::create()->filterByGametypeId($gametype_id)->select("id")->find()->toArray();
-        return GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByGameID($games)->filterByWinner(true)->count();
+        $query = GamescoresQuery::create()->filterByPlayerId($this->getId())->filterByGameID($games)->filterByWinner(true);
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->count();
     }
 
-    public function getCTFCount($type = "all")
+    public function getCTFCount($type = "all",$date = false)
     {
         $query = \FlagsQuery::create()->filterByPlayerId($this->getId());
         switch($type){
@@ -158,6 +176,7 @@ class Players extends BasePlayers
                 $query->filterByEvent($type);
                 break;
         }
+        if($date != false){ $query->filterByCreated($date); }
         return $query->count();
     }
 
@@ -180,17 +199,18 @@ class Players extends BasePlayers
             ->count();
     }
 
-    public function getMapsWins()
+    public function getMapsWins($date = false)
     {
-        return \GamescoresQuery::create()
+        $query = \GamescoresQuery::create()
             ->filterByPlayerId($this->getId())
             ->filterByWinner(true)
             ->useGamesQuery()
             ->groupByMapId()
             ->endUse()
             ->withColumn("COUNT(*)","wins")
-            ->orderBy("wins","DESC")
-            ->find();
+            ->orderBy("wins","DESC");
+        if($date != false){ $query->filterByCreated($date); }
+        return $query->find();
     }
 }
 

@@ -13,7 +13,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 
 class StatsController extends Controller
 {
-    public function getFragRanking($weapons = "",$withoutggame = false)
+    public function getFragRanking($weapons = "",$withoutggame = false, $date = false)
     {
 
         $query = \FragsQuery::create()->withColumn("COUNT(*)","Frags")->where("Frags.FraggerId <> Frags.FraggedId");
@@ -21,6 +21,9 @@ class StatsController extends Controller
             $games = \GamesQuery::create()->filterByGametypeId(11)->select("id")->find()->toArray();
             $rounds  = \GameroundsQuery::create()->filterByGameID($games)->select("id")->find()->toArray();
             $query->filterByRoundId($rounds,Criteria::NOT_IN);
+        }
+        if($date !== false){
+            $query->filterByCreated($date);
         }
 
         switch($weapons){
@@ -48,14 +51,14 @@ class StatsController extends Controller
         return $query->groupByFraggerId()->orderBy("Frags","DESC")->find();
     }
 
-    public function getKDRatioRanking()
+    public function getKDRatioRanking($date = false)
     {
         $return = [];
         // Get all players
-        $players = $this->app->Ctrl->Players->getList();
+        $players = $this->app->Ctrl->Players->getList($date);
         foreach($players as $p){
-            $k = $p->getKills();
-            $d = $p->getDeaths();
+            $k = $p->getKills($date);
+            $d = $p->getDeaths($date);
             if($d != 0) {
                 $r = $k / $d;
             }else{
@@ -84,7 +87,7 @@ class StatsController extends Controller
     {
         $return = [];
         // Get all players
-        $players = $this->app->Ctrl->Players->getList();
+        $players = $this->app->Ctrl->Players->getList($date);
         foreach($players as $p){
 
             array_push($return,[
@@ -103,16 +106,16 @@ class StatsController extends Controller
         return $return;
     }
 
-    public function getPlayingTime()
+    public function getPlayingTime($date = false)
     {
         $return = [];
         // Get all players
-        $players = $this->app->Ctrl->Players->getList();
+        $players = $this->app->Ctrl->Players->getList($date);
         foreach($players as $p){
             array_push($return,[
                 "id" => $p->getId(),
                 "name" => $p->getName(),
-                "time" => $p->getPlayingTime()
+                "time" => $p->getPlayingTime($date)
             ]);
         }
 
@@ -125,18 +128,18 @@ class StatsController extends Controller
         return $return;
     }
 
-    public function getRoundsWinLooses()
+    public function getRoundsWinLooses($date = false)
     {
         $return = [];
         // Get all players
-        $players = $this->app->Ctrl->Players->getList();
+        $players = $this->app->Ctrl->Players->getList($date);
         foreach($players as $p){
             array_push($return,[
                 "id" => $p->getId(),
                 "name" => $p->getName(),
-                "wins" => $p->getRoundWins(),
-                "looses" => $p->getRoundLooses(),
-                "total" => intval($p->getRoundWins()) - intval($p->getRoundLooses())
+                "wins" => $p->getRoundWins($date),
+                "looses" => $p->getRoundLooses($date),
+                "total" => intval($p->getRoundWins($date)) - intval($p->getRoundLooses($date))
             ]);
         }
 
@@ -149,7 +152,7 @@ class StatsController extends Controller
         return $return;
     }
 
-    public function getStatsWeapons()
+    public function getStatsWeapons($date = false)
     {
         $return = [];
         $total = 0;
@@ -158,9 +161,9 @@ class StatsController extends Controller
             array_push($return,[
                "id" => $w->getId(),
                "name" => $w->getName(),
-               "kills" => $w->getKills()
+               "kills" => $w->getKills($date)
             ]);
-            $total += $w->getKills();
+            $total += $w->getKills($date);
         }
 
         // Array Sort Kills DESC
@@ -172,7 +175,7 @@ class StatsController extends Controller
         return ["weapons" => $return, "total" => $total];
     }
 
-    public function getStatsGametypes()
+    public function getStatsGametypes($date = false)
     {
         $return = [];
         $total = 0;
@@ -180,9 +183,9 @@ class StatsController extends Controller
             array_push($return, [
                 "id" => $g->getId(),
                 "name" => $g->getName(),
-                "rounds" => $g->getRoundsCount()
+                "rounds" => $g->getRoundsCount($date)
             ]);
-            $total += $g->getRoundsCount();
+            $total += $g->getRoundsCount($date);
         }
 
         // Array Sort Rounds DESC
@@ -194,19 +197,19 @@ class StatsController extends Controller
         return ["gametypes" => $return, "total" => $total];
     }
 
-    public function getStatsBombs()
+    public function getStatsBombs($date = false)
     {
         $return = [];
         // Get all players
-        $players = $this->app->Ctrl->Players->getList();
+        $players = $this->app->Ctrl->Players->getList($date);
         foreach($players as $p){
             array_push($return,[
                 "id" => $p->getId(),
                 "name" => $p->getName(),
-                "planted" => $p->getBombsCount("planted"),
-                "defused" => $p->getBombsCount("defused"),
-                "exploded" => $p->getBombsCount("exploded"),
-                "total" => intval($p->getBombsCount("planted")) + intval($p->getBombsCount("defused")) + intval($p->getBombsCount("exploded"))
+                "planted" => $p->getBombsCount("planted",$date),
+                "defused" => $p->getBombsCount("defused",$date),
+                "exploded" => $p->getBombsCount("exploded",$date),
+                "total" => intval($p->getBombsCount("planted",$date)) + intval($p->getBombsCount("defused",$date)) + intval($p->getBombsCount("exploded",$date))
             ]);
         }
 
@@ -219,16 +222,16 @@ class StatsController extends Controller
         return $return;
     }
 
-    public function getWinsGametypes($gametype)
+    public function getWinsGametypes($gametype,$date = false)
     {
         $return = [];
         // Get all players
-        $players = $this->app->Ctrl->Players->getList();
+        $players = $this->app->Ctrl->Players->getList($date);
         foreach($players as $p){
             array_push($return,[
                 "id" => $p->getId(),
                 "name" => $p->getName(),
-                "wins" => $p->getGametypeWins($gametype)
+                "wins" => $p->getGametypeWins($gametype,$date)
             ]);
         }
         // Array Sort (Total DESC)
@@ -282,19 +285,19 @@ class StatsController extends Controller
         return $return;
     }
 
-    public function getStatsCTF()
+    public function getStatsCTF($date = false)
     {
         $return = [];
         // Get all players
-        $players = $this->app->Ctrl->Players->getList();
+        $players = $this->app->Ctrl->Players->getList($date);
         foreach($players as $p){
             array_push($return,[
                 "id" => $p->getId(),
                 "name" => $p->getName(),
-                "capture" => $p->getCTFCount("capture"),
-                "drop" => $p->getCTFCount("drop"),
-                "return" => $p->getCTFCount("return"),
-                "total" => intval($p->getCTFCount("capture")) + intval($p->getCTFCount("return"))
+                "capture" => $p->getCTFCount("capture",$date),
+                "drop" => $p->getCTFCount("drop",$date),
+                "return" => $p->getCTFCount("return",$date),
+                "total" => intval($p->getCTFCount("capture",$date)) + intval($p->getCTFCount("return",$date)) - intval($p->getCTFCount("drop",$date))
             ]);
         }
 
@@ -307,16 +310,21 @@ class StatsController extends Controller
         return $return;
     }
 
-    public function getStatsMaps()
+    public function getStatsMaps($date = false)
     {
         $return = [];
         $maps = $this->app->Ctrl->Maps->getList();
         foreach($maps as $m){
-            if($m->getGames()->count() > 1) {
+            if($date !== false) {
+                $games = \GamesQuery::create()->filterByMapId($m->getId())->filterByCreated($date);
+            }else{
+                $games = $m->getGames();
+            }
+            if($games->count() > 1 && $date == false || $games->count() > 0 && $date !== false) {
                 array_push($return, [
                     "id" => $m->getId(),
                     "name" => $m->getName(),
-                    "played" => $m->getGames()->count()
+                    "played" => $games->count()
                 ]);
             }
         }

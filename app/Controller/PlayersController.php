@@ -9,9 +9,14 @@ use Propel\Runtime\Exception\PropelException;
 class PlayersController extends Controller
 {
 
-    public function getList()
+    public function getList($date = false)
     {
-        return PlayersQuery::create()->orderByName()->find();
+        if($date !== false){
+            $players = \GamescoresQuery::create()->filterByCreated($date)->select("player_id","id")->find()->toArray();
+            return PlayersQuery::create()->filterById($players)->orderByName()->find();
+        }else{
+            return PlayersQuery::create()->orderByName()->find();
+        }
     }
 
     public function get($id)

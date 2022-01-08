@@ -153,7 +153,7 @@
         </table>
     </div>
     <div class="col-xl-3 col-lg-6">
-        <h2 class="text-center">Grenadiers (Grenades HE)</h2>
+        <h2 class="text-center">Grenades</h2>
         <table class="table table-hover table-striped">
             <thead>
             <tr class="bg-dark text-light">
@@ -180,7 +180,7 @@
         </table>
     </div>
     <div class="col-xl-3 col-lg-6">
-        <h2 class="text-center">Charcuteurs (Couteau)</h2>
+        <h2 class="text-center">Couteau</h2>
         <table class="table table-hover table-striped">
             <thead>
             <tr class="bg-dark text-light">
@@ -215,153 +215,175 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xl-4 col-lg-6">
-        <h2 class="text-center">Gun Game</h2>
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr class="bg-dark text-light">
-                <th></th>
-                <th>Joueur</th>
-                <th>Victoires</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            foreach($ggame as $g){
-                ?>
-                <tr>
-                    <td>#<?= $i;?></td>
-                    <td><a href="/player#<?=$g['id'];?>"><?= $g['name'];?></a></td>
-                    <td><?= $g["wins"];?></td>
+    <?php
+    if($ggame[0]["wins"] > 0) {
+        ?>
+        <div class="col-xl-4 col-lg-6">
+            <h2 class="text-center">Gun Game</h2>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr class="bg-dark text-light">
+                    <th></th>
+                    <th>Joueur</th>
+                    <th>Victoires</th>
                 </tr>
+                </thead>
+                <tbody>
                 <?php
-                $i++;
-            }
-            ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-xl-4 col-lg-6">
-        <h2 class="text-center">Bomb & Defuse</h2>
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr class="bg-dark text-light">
-                <th></th>
-                <th>Joueur</th>
-                <th>Explos&eacute;es</th>
-                <th>D&eacute;fus&eacute;es</th>
-                <th>Plant&eacute;es</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            foreach($bombs as $b){
+                $i = 1;
+                foreach ($ggame as $g) {
+                    ?>
+                    <tr>
+                        <td>#<?= $i; ?></td>
+                        <td><a href="/player#<?= $g['id']; ?>"><?= $g['name']; ?></a></td>
+                        <td><?= $g["wins"]; ?></td>
+                    </tr>
+                    <?php
+                    $i++;
+                }
                 ?>
-                <tr>
-                    <td>#<?= $i;?></td>
-                    <td><a href="/player#<?=$b['id'];?>"><?= $b['name'];?></a></td>
-                    <td><?= $b["exploded"];?></td>
-                    <td><?=$b['defused']?></td>
-                    <td><?=$b['planted']?></td>
+                </tbody>
+            </table>
+        </div>
+        <?php
+    }
+    if($bombs[0]["total"] > 0){
+        ?>
+        <div class="col-xl-4 col-lg-6">
+            <h2 class="text-center">Bomb & Defuse</h2>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr class="bg-dark text-light">
+                    <th></th>
+                    <th>Joueur</th>
+                    <th>Explos&eacute;es</th>
+                    <th>D&eacute;fus&eacute;es</th>
+                    <th>Plant&eacute;es</th>
                 </tr>
+                </thead>
+                <tbody>
                 <?php
-                $i++;
-            }
-            ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-xl-4 col-lg-6">
-        <h2 class="text-center">Jeux en Equipes</h2>
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr class="bg-dark text-light">
-                <th></th>
-                <th>Joueur</th>
-                <th>Total</th>
-                <th>Gagné</th>
-                <th>Perdu</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            foreach($winlooses as $w){
+                $i = 1;
+                foreach ($bombs as $b) {
+                    ?>
+                    <tr>
+                        <td>#<?= $i; ?></td>
+                        <td><a href="/player#<?= $b['id']; ?>"><?= $b['name']; ?></a></td>
+                        <td><?= $b["exploded"]; ?></td>
+                        <td><?= $b['defused'] ?></td>
+                        <td><?= $b['planted'] ?></td>
+                    </tr>
+                    <?php
+                    $i++;
+                }
                 ?>
-                <tr>
-                    <td>#<?= $i;?></td>
-                    <td><a href="/player#<?=$w['id'];?>"><?= $w['name'];?></a></td>
-                    <td><strong><?= $w["total"];?></strong></td>
-                    <td><?=$w['wins']?></td>
-                    <td><?=$w['looses']?></td>
+                </tbody>
+            </table>
+        </div>
+        <?php
+    }
+    if($winlooses[0]["wins"] > 0 || $winlooses[0]["looses"] > 0) {
+        ?>
+        <div class="col-xl-4 col-lg-6">
+            <h2 class="text-center">Jeux en Equipes</h2>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr class="bg-dark text-light">
+                    <th></th>
+                    <th>Joueur</th>
+                    <th>Total</th>
+                    <th>Gagné</th>
+                    <th>Perdu</th>
                 </tr>
+                </thead>
+                <tbody>
                 <?php
-                $i++;
-            }
-            ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-xl-4 col-lg-6">
-        <h2 class="text-center">Free For All</h2>
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr class="bg-dark text-light">
-                <th></th>
-                <th>Joueur</th>
-                <th>Victoires</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            foreach($ffa as $f){
+                $i = 1;
+                foreach ($winlooses as $w) {
+                    ?>
+                    <tr>
+                        <td>#<?= $i; ?></td>
+                        <td><a href="/player#<?= $w['id']; ?>"><?= $w['name']; ?></a></td>
+                        <td><strong><?= $w["total"]; ?></strong></td>
+                        <td><?= $w['wins'] ?></td>
+                        <td><?= $w['looses'] ?></td>
+                    </tr>
+                    <?php
+                    $i++;
+                }
                 ?>
-                <tr>
-                    <td>#<?= $i;?></td>
-                    <td><a href="/player#<?=$f['id'];?>"><?= $f['name'];?></a></td>
-                    <td><?= $f["wins"];?></td>
+                </tbody>
+            </table>
+        </div>
+        <?php
+    }
+    if($ffa[0]["wins"] > 0) {
+        ?>
+        <div class="col-xl-4 col-lg-6">
+            <h2 class="text-center">Free For All</h2>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr class="bg-dark text-light">
+                    <th></th>
+                    <th>Joueur</th>
+                    <th>Victoires</th>
                 </tr>
+                </thead>
+                <tbody>
                 <?php
-                $i++;
-            }
-            ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-xl-4 col-lg-6">
-        <h2 class="text-center">Capture The Flag</h2>
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr class="bg-dark text-light">
-                <th></th>
-                <th>Joueur</th>
-                <th>Captur&eacute;s</th>
-                <th>Retourn&eacute;s</th>
-                <th>Perdus</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            foreach($ctf as $c){
+                $i = 1;
+                foreach ($ffa as $f) {
+                    ?>
+                    <tr>
+                        <td>#<?= $i; ?></td>
+                        <td><a href="/player#<?= $f['id']; ?>"><?= $f['name']; ?></a></td>
+                        <td><?= $f["wins"]; ?></td>
+                    </tr>
+                    <?php
+                    $i++;
+                }
                 ?>
-                <tr>
-                    <td>#<?= $i;?></td>
-                    <td><a href="/player#<?=$c['id'];?>"><?= $c['name'];?></a></td>
-                    <td><?= $c["capture"];?></td>
-                    <td><?=$c['return']?></td>
-                    <td><?=$c['drop']?></td>
+                </tbody>
+            </table>
+        </div>
+        <?php
+    }
+    if($ctf[0]["capture"] > 0 || $ctf[0]["drop"] > 0 || $ctf[0]["return"] > 0 ) {
+        ?>
+        <div class="col-xl-4 col-lg-6">
+            <h2 class="text-center">Capture The Flag</h2>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr class="bg-dark text-light">
+                    <th></th>
+                    <th>Joueur</th>
+                    <th>Captur&eacute;s</th>
+                    <th>Retourn&eacute;s</th>
+                    <th>Perdus</th>
                 </tr>
+                </thead>
+                <tbody>
                 <?php
-                $i++;
-            }
-            ?>
-            </tbody>
-        </table>
-    </div>
+                $i = 1;
+                foreach ($ctf as $c) {
+                    ?>
+                    <tr>
+                        <td>#<?= $i; ?></td>
+                        <td><a href="/player#<?= $c['id']; ?>"><?= $c['name']; ?></a></td>
+                        <td><?= $c["capture"]; ?></td>
+                        <td><?= $c['return'] ?></td>
+                        <td><?= $c['drop'] ?></td>
+                    </tr>
+                    <?php
+                    $i++;
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+    }
+    ?>
 </div>
 <hr/>
 
@@ -373,16 +395,16 @@
 <div class="row justify-content-around">
     <div class="col-lg-6 col-xl-4">
         <h2 class="text-center">Armes les plus utilisées</h2>
-        <canvas class="chart" id="weaponuse_chart" data-name="weapons-use" data-chart="pie"></canvas>
+        <canvas class="chart" id="weaponuse_chart" data-name="weapons-use" data-chart="pie" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
     </div>
     <div class="col-lg-6 col-xl-4">
         <h2 class="text-center">Modes de Jeux</h2>
-        <canvas class="chart" id="gametype_chart" data-name="gametypes" data-chart="pie"></canvas>
+        <canvas class="chart" id="gametype_chart" data-name="gametypes" data-chart="pie" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
     </div>
 </div>
 <div class="row justify-content-around">
     <div class="col">
         <h2 class="text-center">Maps les plus jou&eacute;es</h2>
-        <canvas class="chart" id="mapscount_chart" data-name="mapscount" data-chart="bar"></canvas>
+        <canvas class="chart" id="mapscount_chart" data-name="mapscount" data-chart="bar" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
     </div>
 </div>

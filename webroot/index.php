@@ -112,7 +112,8 @@ $app->group('/views',function() use($app){
         $ggame = $app->Ctrl->Stats->getWinsGametypes(11);
         $ffa = $app->Ctrl->Stats->getWinsGametypes(1);
         $ctf = $app->Ctrl->Stats->getStatsCTF();
-        $app->render('partials/home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','sidearms','grenades','knives', 'bombs', 'ggame', 'ffa', 'ctf'));
+        $date = null;
+        $app->render('partials/home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','sidearms','grenades','knives', 'bombs', 'ggame', 'ffa', 'ctf','date'));
     });
     $app->get('/stats/:player',function($player) use($app){
         $player = $app->Ctrl->Players->get($player);
@@ -127,13 +128,30 @@ $app->group('/views',function() use($app){
 
     $app->get('/games/:date',function($date) use($app){
         $games = $app->Ctrl->Games->getList($date);
-        $app->render('partials/gameslist.php',compact('app','games'));
+        $app->render('partials/gameslist.php',compact('app','games','date'));
     });
 
     $app->get('/gamescores/:id',function($id) use($app){
         $scores = $app->Ctrl->Games->getScores($id);
         $game = $app->Ctrl->Games->get($id);
         $app->render('partials/gamescores.php',compact('app','scores','game'));
+    });
+
+    $app->get('/gamestats/:date',function($date) use($app){
+        $frags = $app->Ctrl->Stats->getFragRanking("",false,$date);
+        $ratios = $app->Ctrl->Stats->getKDRatioRanking($date);
+        $times = $app->Ctrl->Stats->getPlayingTime($date);
+        $winlooses = $app->Ctrl->Stats->getRoundsWinLooses($date);
+        $weapons = $app->Ctrl->Stats->getStatsWeapons($date);
+        $snipers = $app->Ctrl->Stats->getFragRanking("sniper",true,$date);
+        $sidearms = $app->Ctrl->Stats->getFragRanking("sidearm",true,$date);
+        $grenades = $app->Ctrl->Stats->getFragRanking("grenade",true,$date);
+        $knives = $app->Ctrl->Stats->getFragRanking("knife",true,$date);
+        $bombs = $app->Ctrl->Stats->getStatsBombs($date);
+        $ggame = $app->Ctrl->Stats->getWinsGametypes(11,$date);
+        $ffa = $app->Ctrl->Stats->getWinsGametypes(1,$date);
+        $ctf = $app->Ctrl->Stats->getStatsCTF($date);
+        $app->render('partials/home.php',compact('app','frags','ratios','times','winlooses','weapons','snipers','sidearms','grenades','knives', 'bombs', 'ggame', 'ffa', 'ctf','date'));
     });
 });
 
@@ -148,6 +166,20 @@ $app->group("/ajax",function() use($app){
             $datas = [];
             $labels = [];
             foreach($app->Ctrl->Stats->getStatsWeapons()["weapons"] as $w){
+                array_push($datas,$w["kills"]);
+                array_push($labels,$w["name"]);
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/weapons-use/:date',function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Stats->getStatsWeapons($date)["weapons"] as $w){
                 array_push($datas,$w["kills"]);
                 array_push($labels,$w["name"]);
             }
@@ -171,6 +203,20 @@ $app->group("/ajax",function() use($app){
             $return->labels = $labels;
             echo json_encode($return);
         });
+        $app->get('/gametypes/:date',function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Stats->getStatsGametypes($date)["gametypes"] as $g){
+                array_push($datas,$g["rounds"]);
+                array_push($labels,$g["name"]);
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
 
         $app->get('/mapscount',function() use($app){
             $app->response->setStatus(200);
@@ -178,6 +224,20 @@ $app->group("/ajax",function() use($app){
             $datas = [];
             $labels = [];
             foreach($app->Ctrl->Stats->getStatsMaps() as $g){
+                array_push($datas,$g["played"]);
+                array_push($labels,$g["name"]);
+            }
+            $return = new StdClass();
+            $return->datas = $datas;
+            $return->labels = $labels;
+            echo json_encode($return);
+        });
+        $app->get('/mapscount/:date',function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $datas = [];
+            $labels = [];
+            foreach($app->Ctrl->Stats->getStatsMaps($date) as $g){
                 array_push($datas,$g["played"]);
                 array_push($labels,$g["name"]);
             }

@@ -14,8 +14,12 @@ use Base\Gametypes as BaseGametypes;
  */
 class Gametypes extends BaseGametypes
 {
-    public function getRoundsCount()
+    public function getRoundsCount($date = false)
     {
-        return \GamesQuery::create()->filterByGametypeId($this->getId())->filterByNbplayers(0,\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL)->count();
+        $query = \GamesQuery::create()->filterByGametypeId($this->getId())->filterByNbplayers(0,\Propel\Runtime\ActiveQuery\Criteria::NOT_EQUAL);
+        if($date !== false){
+            $query->filterByCreated($date);
+        }
+        return $query->count();
     }
 }
