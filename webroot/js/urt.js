@@ -187,13 +187,19 @@ $(document).ready(function(){
         if(hash.length == 1){
             date = hash[0].substr(0,4)+"-"+hash[0].substr(4,2)+"-"+hash[0].substr(6,2)
             $("#gamesdate").val(date);
+            $("")
             loadGamesList(date);
+            loadGameStats(date);
         }
         if(hash.length == 2){
             date = hash[0].substr(0,4)+"-"+hash[0].substr(4,2)+"-"+hash[0].substr(6,2)
             $("#gamesdate").val(date);
             loadGamesList(date,hash[1]);
-            loadGameScores(hash[1]);
+            if(hash[1] == "global"){
+                loadGameStats(date);
+            }else{
+                loadGameScores(hash[1]);
+            }
         }
     }
 
@@ -237,6 +243,7 @@ $(document).ready(function(){
             if(dt != "0"){
                 loadGamesList(dt);
                 loadGameStats(dt);
+
             }else{
                 $(".games-scores").html("");
                 $(".games-list").html("");
