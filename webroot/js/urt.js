@@ -1,21 +1,21 @@
 chartColors = [
-    'rgb(255, 99, 132)',
-    'rgb(255, 159, 64)',
-    'rgb(255, 205, 86)',
-    'rgb(75, 192, 192)',
-    'rgb(54, 162, 235)',
-    'rgb(153, 102, 255)',
-    'rgb(201, 203, 207)',
-    'rgb(0, 238, 255)',
-    'rgb(234, 98, 183)',
-    'rgb(234, 100, 98)',
-    'rgb(164, 234, 98)',
-    'rgb(234, 98, 164)',
-    'rgb(234, 121, 98)'
+    "rgb(255, 99, 132)",
+    "rgb(255, 159, 64)",
+    "rgb(255, 205, 86)",
+    "rgb(75, 192, 192)",
+    "rgb(54, 162, 235)",
+    "rgb(153, 102, 255)",
+    "rgb(201, 203, 207)",
+    "rgb(0, 238, 255)",
+    "rgb(234, 98, 183)",
+    "rgb(234, 100, 98)",
+    "rgb(164, 234, 98)",
+    "rgb(234, 98, 164)",
+    "rgb(234, 121, 98)"
 ];
 chartColorsVS = [
-    'rgb(40, 167, 69)',
-    'rgb(220, 53, 69)'
+    "rgb(40, 167, 69)",
+    "rgb(220, 53, 69)"
 ];
 
 function getRandomColor() {
@@ -49,19 +49,77 @@ function makeChart(el) {
         url: url,
         method: 'GET',
         success: function(datas,status){
-            chart = new Chart(
-                document.getElementById(id),
-                {
-                    type: type,
-                    data: {
-                        labels: datas.labels,
-                        datasets: [{
-                            data: datas.datas,
-                            backgroundColor: chartColors
-                        }]
-                    }
+            if(datas.datasets === undefined) {
+                switch (type) {
+                    case "line":
+                        var chartdatas = {
+                            labels: datas.labels,
+                            datasets: [{
+                                label: datas.label,
+                                data: datas.datas,
+                                borderColor: 'rgb(255, 159, 64)',
+                                backgroundColor: 'rgb(255, 159, 64)',
+                                tension: 0.1
+                            }]
+                        };
+                        options = {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                        break;
+
+                    case "pie":
+                        var chartdatas = {
+                            labels: datas.labels,
+                            datasets: [{
+                                data: datas.datas,
+                                backgroundColor: chartColors
+                            }]
+                        };
+                        options = {}
+                        break;
+
+                    case "bar":
+                        var chartdatas = {
+                            labels: datas.labels,
+                            datasets: [{
+                                data: datas.datas,
+                                backgroundColor: chartColors
+                            }]
+                        };
+                        options = {}
+                        break;
+
                 }
-            )
+                chart = new Chart(
+                    document.getElementById(id),
+                    {
+                        type: type,
+                        data: chartdatas,
+                        options: options
+                    }
+                )
+            }else{
+                chart = new Chart(
+                    document.getElementById(id),
+                    {
+                        data: {
+                            datasets: datas.datasets,
+                            labels: datas.labels
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    }
+                )
+            }
             loader(false);
         }
     })

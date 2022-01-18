@@ -9,24 +9,32 @@ require("../vendor/autoload.php");
 require("../app/config/config.php");
 
 // MySQL Configuration / Connection
-$serviceContainer = Propel::getServiceContainer();
-$serviceContainer->checkVersion('2.0.0-dev');
+$serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
+$serviceContainer->checkVersion(2);
 $serviceContainer->setAdapterClass('default', 'mysql');
-$manager = new ConnectionManagerSingle();
+$manager = new \Propel\Runtime\Connection\ConnectionManagerSingle();
 $manager->setConfiguration(array (
-    'classname' => 'Propel\\Runtime\\Connection\\DebugPDO',
     'dsn' => 'mysql:host='.$_SERVER['MYSQL_HOST'].';port='.$_SERVER['MYSQL_PORT'].';dbname='.$_SERVER['MYSQL_DB'],
     'user' => $_SERVER['MYSQL_USER'],
     'password' => $_SERVER['MYSQL_PASSWORD'],
-    'attributes' =>
+    'settings' =>
         array (
-            'ATTR_EMULATE_PREPARES' => false,
-            'ATTR_TIMEOUT' => 30,
-        )
+            'charset' => 'utf8',
+            'queries' =>
+                array (
+                ),
+        ),
+    'classname' => '\\Propel\\Runtime\\Connection\\ConnectionWrapper',
+    'model_paths' =>
+        array (
+            0 => 'src',
+            1 => 'vendor',
+        ),
 ));
 $manager->setName('default');
 $serviceContainer->setConnectionManager('default', $manager);
 $serviceContainer->setDefaultDatasource('default');
+require_once __DIR__ . '/../app/config/loadDatabase.php';
 
 $app = new Slim([
     'template.path' => 'templates/',
@@ -413,6 +421,24 @@ $app->group("/ajax",function() use($app){
             echo json_encode($return);
         });
 
+        $app->get('/player-timefrags/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"frags"));
+        });
+
+        $app->get('/player-timeratio/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"ratio"));
+        });
+
+        $app->get('/player-timeping/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"ping"));
+        });
+
         $app->get('/vs-killsdeath/:id',function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -459,6 +485,102 @@ $app->group("/ajax",function() use($app){
             $return->datas = $datas;
             $return->labels = $labels;
             echo json_encode($return);
+        });
+
+        $app->get('/vs-timefrags/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"frags"));
+        });
+
+        $app->get('/vs-timedeaths/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"deaths"));
+        });
+
+        $app->get('/vs-timeratio/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"ratio"));
+        });
+
+        $app->get('/vs-timeping/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"ping"));
+        });
+
+        $app->get('/players-timefrags', function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = [];
+            foreach($app->Ctrl->Players->getList() as $p){
+                array_push($ids,$p->getId());
+            }
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"frags"));
+        });
+
+        $app->get('/players-timedeaths', function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = [];
+            foreach($app->Ctrl->Players->getList() as $p){
+                array_push($ids,$p->getId());
+            }
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"deaths"));
+        });
+
+        $app->get('/players-timeratio', function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = [];
+            foreach($app->Ctrl->Players->getList() as $p){
+                array_push($ids,$p->getId());
+            }
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"ratio"));
+        });
+
+        $app->get('/players-timeping', function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = [];
+            foreach($app->Ctrl->Players->getList() as $p){
+                array_push($ids,$p->getId());
+            }
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"ping"));
+        });
+
+        $app->get('/players-gamesfrags/:date', function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $games = \GamesQuery::create()->findByCreated($date);
+            echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"frags"));
+        });
+
+        $app->get('/players-gamesdeaths/:date', function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $games = \GamesQuery::create()->findByCreated($date);
+            echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"deaths"));
+        });
+
+        $app->get('/players-gamesratio/:date', function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $games = \GamesQuery::create()->findByCreated($date);
+            echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"ratio"));
+        });
+
+        $app->get('/players-gamesping/:date', function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $games = \GamesQuery::create()->findByCreated($date);
+            echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"ping"));
         });
     });
 });

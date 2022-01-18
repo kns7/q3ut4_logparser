@@ -52,14 +52,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \FragsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildWeapons findOne(ConnectionInterface $con = null) Return the first ChildWeapons matching the query
+ * @method     ChildWeapons|null findOne(ConnectionInterface $con = null) Return the first ChildWeapons matching the query
  * @method     ChildWeapons findOneOrCreate(ConnectionInterface $con = null) Return the first ChildWeapons matching the query, or a new ChildWeapons object populated from the query conditions when no match is found
  *
- * @method     ChildWeapons findOneById(int $id) Return the first ChildWeapons filtered by the id column
- * @method     ChildWeapons findOneByCode(string $code) Return the first ChildWeapons filtered by the code column
- * @method     ChildWeapons findOneByName(string $name) Return the first ChildWeapons filtered by the name column
- * @method     ChildWeapons findOneByType(string $type) Return the first ChildWeapons filtered by the type column
- * @method     ChildWeapons findOneByUrl(string $url) Return the first ChildWeapons filtered by the url column *
+ * @method     ChildWeapons|null findOneById(int $id) Return the first ChildWeapons filtered by the id column
+ * @method     ChildWeapons|null findOneByCode(string $code) Return the first ChildWeapons filtered by the code column
+ * @method     ChildWeapons|null findOneByName(string $name) Return the first ChildWeapons filtered by the name column
+ * @method     ChildWeapons|null findOneByType(string $type) Return the first ChildWeapons filtered by the type column
+ * @method     ChildWeapons|null findOneByUrl(string $url) Return the first ChildWeapons filtered by the url column *
 
  * @method     ChildWeapons requirePk($key, ConnectionInterface $con = null) Return the ChildWeapons by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWeapons requireOne(ConnectionInterface $con = null) Return the first ChildWeapons matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -71,12 +71,19 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWeapons requireOneByUrl(string $url) Return the first ChildWeapons filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildWeapons[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildWeapons objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildWeapons> find(ConnectionInterface $con = null) Return ChildWeapons objects based on current ModelCriteria
  * @method     ChildWeapons[]|ObjectCollection findById(int $id) Return ChildWeapons objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildWeapons> findById(int $id) Return ChildWeapons objects filtered by the id column
  * @method     ChildWeapons[]|ObjectCollection findByCode(string $code) Return ChildWeapons objects filtered by the code column
+ * @psalm-method ObjectCollection&\Traversable<ChildWeapons> findByCode(string $code) Return ChildWeapons objects filtered by the code column
  * @method     ChildWeapons[]|ObjectCollection findByName(string $name) Return ChildWeapons objects filtered by the name column
+ * @psalm-method ObjectCollection&\Traversable<ChildWeapons> findByName(string $name) Return ChildWeapons objects filtered by the name column
  * @method     ChildWeapons[]|ObjectCollection findByType(string $type) Return ChildWeapons objects filtered by the type column
+ * @psalm-method ObjectCollection&\Traversable<ChildWeapons> findByType(string $type) Return ChildWeapons objects filtered by the type column
  * @method     ChildWeapons[]|ObjectCollection findByUrl(string $url) Return ChildWeapons objects filtered by the url column
+ * @psalm-method ObjectCollection&\Traversable<ChildWeapons> findByUrl(string $url) Return ChildWeapons objects filtered by the url column
  * @method     ChildWeapons[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildWeapons> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class WeaponsQuery extends ModelCriteria
@@ -312,9 +319,10 @@ abstract class WeaponsQuery extends ModelCriteria
      * <code>
      * $query->filterByCode('fooValue');   // WHERE code = 'fooValue'
      * $query->filterByCode('%fooValue%', Criteria::LIKE); // WHERE code LIKE '%fooValue%'
+     * $query->filterByCode(['foo', 'bar']); // WHERE code IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $code The value to use as filter.
+     * @param     string|string[] $code The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildWeaponsQuery The current query, for fluid interface
@@ -337,9 +345,10 @@ abstract class WeaponsQuery extends ModelCriteria
      * <code>
      * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
      * $query->filterByName('%fooValue%', Criteria::LIKE); // WHERE name LIKE '%fooValue%'
+     * $query->filterByName(['foo', 'bar']); // WHERE name IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $name The value to use as filter.
+     * @param     string|string[] $name The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildWeaponsQuery The current query, for fluid interface
@@ -362,9 +371,10 @@ abstract class WeaponsQuery extends ModelCriteria
      * <code>
      * $query->filterByType('fooValue');   // WHERE type = 'fooValue'
      * $query->filterByType('%fooValue%', Criteria::LIKE); // WHERE type LIKE '%fooValue%'
+     * $query->filterByType(['foo', 'bar']); // WHERE type IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $type The value to use as filter.
+     * @param     string|string[] $type The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildWeaponsQuery The current query, for fluid interface
@@ -387,9 +397,10 @@ abstract class WeaponsQuery extends ModelCriteria
      * <code>
      * $query->filterByUrl('fooValue');   // WHERE url = 'fooValue'
      * $query->filterByUrl('%fooValue%', Criteria::LIKE); // WHERE url LIKE '%fooValue%'
+     * $query->filterByUrl(['foo', 'bar']); // WHERE url IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $url The value to use as filter.
+     * @param     string|string[] $url The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildWeaponsQuery The current query, for fluid interface
@@ -478,6 +489,61 @@ abstract class WeaponsQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'FragWeapon', '\FragsQuery');
     }
 
+    /**
+     * Use the FragWeapon relation Frags object
+     *
+     * @param callable(\FragsQuery):\FragsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withFragWeaponQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useFragWeaponQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the FragWeapon relation to the Frags table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \FragsQuery The inner query object of the EXISTS statement
+     */
+    public function useFragWeaponExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('FragWeapon', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the FragWeapon relation to the Frags table for a NOT EXISTS query.
+     *
+     * @see useFragWeaponExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \FragsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useFragWeaponNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('FragWeapon', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

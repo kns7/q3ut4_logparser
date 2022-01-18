@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class GamescoresTableMap extends TableMap
 {
@@ -160,6 +159,84 @@ class GamescoresTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Gamescores.Id' => 'ID',
+        'id' => 'ID',
+        'gamescores.id' => 'ID',
+        'GamescoresTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'GameID' => 'GAME_ID',
+        'Gamescores.GameID' => 'GAME_ID',
+        'gameID' => 'GAME_ID',
+        'gamescores.gameID' => 'GAME_ID',
+        'GamescoresTableMap::COL_GAME_ID' => 'GAME_ID',
+        'COL_GAME_ID' => 'GAME_ID',
+        'game_id' => 'GAME_ID',
+        'gamescores.game_id' => 'GAME_ID',
+        'PlayerId' => 'PLAYER_ID',
+        'Gamescores.PlayerId' => 'PLAYER_ID',
+        'playerId' => 'PLAYER_ID',
+        'gamescores.playerId' => 'PLAYER_ID',
+        'GamescoresTableMap::COL_PLAYER_ID' => 'PLAYER_ID',
+        'COL_PLAYER_ID' => 'PLAYER_ID',
+        'player_id' => 'PLAYER_ID',
+        'gamescores.player_id' => 'PLAYER_ID',
+        'Kills' => 'KILLS',
+        'Gamescores.Kills' => 'KILLS',
+        'kills' => 'KILLS',
+        'gamescores.kills' => 'KILLS',
+        'GamescoresTableMap::COL_KILLS' => 'KILLS',
+        'COL_KILLS' => 'KILLS',
+        'Deaths' => 'DEATHS',
+        'Gamescores.Deaths' => 'DEATHS',
+        'deaths' => 'DEATHS',
+        'gamescores.deaths' => 'DEATHS',
+        'GamescoresTableMap::COL_DEATHS' => 'DEATHS',
+        'COL_DEATHS' => 'DEATHS',
+        'Score' => 'SCORE',
+        'Gamescores.Score' => 'SCORE',
+        'score' => 'SCORE',
+        'gamescores.score' => 'SCORE',
+        'GamescoresTableMap::COL_SCORE' => 'SCORE',
+        'COL_SCORE' => 'SCORE',
+        'Ping' => 'PING',
+        'Gamescores.Ping' => 'PING',
+        'ping' => 'PING',
+        'gamescores.ping' => 'PING',
+        'GamescoresTableMap::COL_PING' => 'PING',
+        'COL_PING' => 'PING',
+        'Winner' => 'WINNER',
+        'Gamescores.Winner' => 'WINNER',
+        'winner' => 'WINNER',
+        'gamescores.winner' => 'WINNER',
+        'GamescoresTableMap::COL_WINNER' => 'WINNER',
+        'COL_WINNER' => 'WINNER',
+        'Team' => 'TEAM',
+        'Gamescores.Team' => 'TEAM',
+        'team' => 'TEAM',
+        'gamescores.team' => 'TEAM',
+        'GamescoresTableMap::COL_TEAM' => 'TEAM',
+        'COL_TEAM' => 'TEAM',
+        'Half' => 'HALF',
+        'Gamescores.Half' => 'HALF',
+        'half' => 'HALF',
+        'gamescores.half' => 'HALF',
+        'GamescoresTableMap::COL_HALF' => 'HALF',
+        'COL_HALF' => 'HALF',
+        'Created' => 'CREATED',
+        'Gamescores.Created' => 'CREATED',
+        'created' => 'CREATED',
+        'gamescores.created' => 'CREATED',
+        'GamescoresTableMap::COL_CREATED' => 'CREATED',
+        'COL_CREATED' => 'CREATED',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -191,6 +268,8 @@ class GamescoresTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -262,7 +341,7 @@ class GamescoresTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -378,6 +457,46 @@ class GamescoresTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_ID);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_GAME_ID);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_PLAYER_ID);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_KILLS);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_DEATHS);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_SCORE);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_PING);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_WINNER);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_TEAM);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_HALF);
+            $criteria->removeSelectColumn(GamescoresTableMap::COL_CREATED);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.game_id');
+            $criteria->removeSelectColumn($alias . '.player_id');
+            $criteria->removeSelectColumn($alias . '.kills');
+            $criteria->removeSelectColumn($alias . '.deaths');
+            $criteria->removeSelectColumn($alias . '.score');
+            $criteria->removeSelectColumn($alias . '.ping');
+            $criteria->removeSelectColumn($alias . '.winner');
+            $criteria->removeSelectColumn($alias . '.team');
+            $criteria->removeSelectColumn($alias . '.half');
+            $criteria->removeSelectColumn($alias . '.created');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -387,17 +506,6 @@ class GamescoresTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(GamescoresTableMap::DATABASE_NAME)->getTable(GamescoresTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(GamescoresTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(GamescoresTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new GamescoresTableMap());
-        }
     }
 
     /**
@@ -489,6 +597,3 @@ class GamescoresTableMap extends TableMap
     }
 
 } // GamescoresTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-GamescoresTableMap::buildTableMap();

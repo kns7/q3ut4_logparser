@@ -62,14 +62,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \PlayersQuery|\GameroundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildFlags findOne(ConnectionInterface $con = null) Return the first ChildFlags matching the query
+ * @method     ChildFlags|null findOne(ConnectionInterface $con = null) Return the first ChildFlags matching the query
  * @method     ChildFlags findOneOrCreate(ConnectionInterface $con = null) Return the first ChildFlags matching the query, or a new ChildFlags object populated from the query conditions when no match is found
  *
- * @method     ChildFlags findOneById(int $id) Return the first ChildFlags filtered by the id column
- * @method     ChildFlags findOneByPlayerId(int $player_id) Return the first ChildFlags filtered by the player_id column
- * @method     ChildFlags findOneByEvent(string $event) Return the first ChildFlags filtered by the event column
- * @method     ChildFlags findOneByRoundId(int $round_id) Return the first ChildFlags filtered by the round_id column
- * @method     ChildFlags findOneByCreated(string $created) Return the first ChildFlags filtered by the created column *
+ * @method     ChildFlags|null findOneById(int $id) Return the first ChildFlags filtered by the id column
+ * @method     ChildFlags|null findOneByPlayerId(int $player_id) Return the first ChildFlags filtered by the player_id column
+ * @method     ChildFlags|null findOneByEvent(string $event) Return the first ChildFlags filtered by the event column
+ * @method     ChildFlags|null findOneByRoundId(int $round_id) Return the first ChildFlags filtered by the round_id column
+ * @method     ChildFlags|null findOneByCreated(string $created) Return the first ChildFlags filtered by the created column *
 
  * @method     ChildFlags requirePk($key, ConnectionInterface $con = null) Return the ChildFlags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFlags requireOne(ConnectionInterface $con = null) Return the first ChildFlags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -81,12 +81,19 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFlags requireOneByCreated(string $created) Return the first ChildFlags filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildFlags[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildFlags objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildFlags> find(ConnectionInterface $con = null) Return ChildFlags objects based on current ModelCriteria
  * @method     ChildFlags[]|ObjectCollection findById(int $id) Return ChildFlags objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFlags> findById(int $id) Return ChildFlags objects filtered by the id column
  * @method     ChildFlags[]|ObjectCollection findByPlayerId(int $player_id) Return ChildFlags objects filtered by the player_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFlags> findByPlayerId(int $player_id) Return ChildFlags objects filtered by the player_id column
  * @method     ChildFlags[]|ObjectCollection findByEvent(string $event) Return ChildFlags objects filtered by the event column
+ * @psalm-method ObjectCollection&\Traversable<ChildFlags> findByEvent(string $event) Return ChildFlags objects filtered by the event column
  * @method     ChildFlags[]|ObjectCollection findByRoundId(int $round_id) Return ChildFlags objects filtered by the round_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFlags> findByRoundId(int $round_id) Return ChildFlags objects filtered by the round_id column
  * @method     ChildFlags[]|ObjectCollection findByCreated(string $created) Return ChildFlags objects filtered by the created column
+ * @psalm-method ObjectCollection&\Traversable<ChildFlags> findByCreated(string $created) Return ChildFlags objects filtered by the created column
  * @method     ChildFlags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildFlags> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class FlagsQuery extends ModelCriteria
@@ -365,9 +372,10 @@ abstract class FlagsQuery extends ModelCriteria
      * <code>
      * $query->filterByEvent('fooValue');   // WHERE event = 'fooValue'
      * $query->filterByEvent('%fooValue%', Criteria::LIKE); // WHERE event LIKE '%fooValue%'
+     * $query->filterByEvent(['foo', 'bar']); // WHERE event IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $event The value to use as filter.
+     * @param     string|string[] $event The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildFlagsQuery The current query, for fluid interface
@@ -547,6 +555,61 @@ abstract class FlagsQuery extends ModelCriteria
     }
 
     /**
+     * Use the Players relation Players object
+     *
+     * @param callable(\PlayersQuery):\PlayersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withPlayersQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->usePlayersQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Players table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \PlayersQuery The inner query object of the EXISTS statement
+     */
+    public function usePlayersExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Players', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Players table for a NOT EXISTS query.
+     *
+     * @see usePlayersExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \PlayersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function usePlayersNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Players', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Gamerounds object
      *
      * @param \Gamerounds|ObjectCollection $gamerounds The related object(s) to use as filter
@@ -623,6 +686,61 @@ abstract class FlagsQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Rounds', '\GameroundsQuery');
     }
 
+    /**
+     * Use the Rounds relation Gamerounds object
+     *
+     * @param callable(\GameroundsQuery):\GameroundsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withRoundsQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useRoundsQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Rounds relation to the Gamerounds table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \GameroundsQuery The inner query object of the EXISTS statement
+     */
+    public function useRoundsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Rounds', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Rounds relation to the Gamerounds table for a NOT EXISTS query.
+     *
+     * @see useRoundsExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \GameroundsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useRoundsNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Rounds', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

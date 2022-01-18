@@ -84,15 +84,15 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \PlayersQuery|\WeaponsQuery|\GameroundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildFrags findOne(ConnectionInterface $con = null) Return the first ChildFrags matching the query
+ * @method     ChildFrags|null findOne(ConnectionInterface $con = null) Return the first ChildFrags matching the query
  * @method     ChildFrags findOneOrCreate(ConnectionInterface $con = null) Return the first ChildFrags matching the query, or a new ChildFrags object populated from the query conditions when no match is found
  *
- * @method     ChildFrags findOneById(int $id) Return the first ChildFrags filtered by the id column
- * @method     ChildFrags findOneByFraggerId(int $fragger_id) Return the first ChildFrags filtered by the fragger_id column
- * @method     ChildFrags findOneByFraggedId(int $fragged_id) Return the first ChildFrags filtered by the fragged_id column
- * @method     ChildFrags findOneByWeaponId(int $weapon_id) Return the first ChildFrags filtered by the weapon_id column
- * @method     ChildFrags findOneByRoundId(int $round_id) Return the first ChildFrags filtered by the round_id column
- * @method     ChildFrags findOneByCreated(string $created) Return the first ChildFrags filtered by the created column *
+ * @method     ChildFrags|null findOneById(int $id) Return the first ChildFrags filtered by the id column
+ * @method     ChildFrags|null findOneByFraggerId(int $fragger_id) Return the first ChildFrags filtered by the fragger_id column
+ * @method     ChildFrags|null findOneByFraggedId(int $fragged_id) Return the first ChildFrags filtered by the fragged_id column
+ * @method     ChildFrags|null findOneByWeaponId(int $weapon_id) Return the first ChildFrags filtered by the weapon_id column
+ * @method     ChildFrags|null findOneByRoundId(int $round_id) Return the first ChildFrags filtered by the round_id column
+ * @method     ChildFrags|null findOneByCreated(string $created) Return the first ChildFrags filtered by the created column *
 
  * @method     ChildFrags requirePk($key, ConnectionInterface $con = null) Return the ChildFrags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFrags requireOne(ConnectionInterface $con = null) Return the first ChildFrags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -105,13 +105,21 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFrags requireOneByCreated(string $created) Return the first ChildFrags filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildFrags[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildFrags objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildFrags> find(ConnectionInterface $con = null) Return ChildFrags objects based on current ModelCriteria
  * @method     ChildFrags[]|ObjectCollection findById(int $id) Return ChildFrags objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFrags> findById(int $id) Return ChildFrags objects filtered by the id column
  * @method     ChildFrags[]|ObjectCollection findByFraggerId(int $fragger_id) Return ChildFrags objects filtered by the fragger_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFrags> findByFraggerId(int $fragger_id) Return ChildFrags objects filtered by the fragger_id column
  * @method     ChildFrags[]|ObjectCollection findByFraggedId(int $fragged_id) Return ChildFrags objects filtered by the fragged_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFrags> findByFraggedId(int $fragged_id) Return ChildFrags objects filtered by the fragged_id column
  * @method     ChildFrags[]|ObjectCollection findByWeaponId(int $weapon_id) Return ChildFrags objects filtered by the weapon_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFrags> findByWeaponId(int $weapon_id) Return ChildFrags objects filtered by the weapon_id column
  * @method     ChildFrags[]|ObjectCollection findByRoundId(int $round_id) Return ChildFrags objects filtered by the round_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildFrags> findByRoundId(int $round_id) Return ChildFrags objects filtered by the round_id column
  * @method     ChildFrags[]|ObjectCollection findByCreated(string $created) Return ChildFrags objects filtered by the created column
+ * @psalm-method ObjectCollection&\Traversable<ChildFrags> findByCreated(string $created) Return ChildFrags objects filtered by the created column
  * @method     ChildFrags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildFrags> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class FragsQuery extends ModelCriteria
@@ -633,6 +641,61 @@ abstract class FragsQuery extends ModelCriteria
     }
 
     /**
+     * Use the Fragger relation Players object
+     *
+     * @param callable(\PlayersQuery):\PlayersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withFraggerQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useFraggerQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Fragger relation to the Players table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \PlayersQuery The inner query object of the EXISTS statement
+     */
+    public function useFraggerExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Fragger', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Fragger relation to the Players table for a NOT EXISTS query.
+     *
+     * @see useFraggerExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \PlayersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useFraggerNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Fragger', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Players object
      *
      * @param \Players|ObjectCollection $players The related object(s) to use as filter
@@ -709,6 +772,61 @@ abstract class FragsQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Fragged', '\PlayersQuery');
     }
 
+    /**
+     * Use the Fragged relation Players object
+     *
+     * @param callable(\PlayersQuery):\PlayersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withFraggedQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useFraggedQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Fragged relation to the Players table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \PlayersQuery The inner query object of the EXISTS statement
+     */
+    public function useFraggedExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Fragged', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Fragged relation to the Players table for a NOT EXISTS query.
+     *
+     * @see useFraggedExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \PlayersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useFraggedNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Fragged', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Filter the query by a related \Weapons object
      *
@@ -787,6 +905,61 @@ abstract class FragsQuery extends ModelCriteria
     }
 
     /**
+     * Use the Weapons relation Weapons object
+     *
+     * @param callable(\WeaponsQuery):\WeaponsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withWeaponsQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useWeaponsQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Weapons table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \WeaponsQuery The inner query object of the EXISTS statement
+     */
+    public function useWeaponsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Weapons', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Weapons table for a NOT EXISTS query.
+     *
+     * @see useWeaponsExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \WeaponsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useWeaponsNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Weapons', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Gamerounds object
      *
      * @param \Gamerounds|ObjectCollection $gamerounds The related object(s) to use as filter
@@ -863,6 +1036,61 @@ abstract class FragsQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Rounds', '\GameroundsQuery');
     }
 
+    /**
+     * Use the Rounds relation Gamerounds object
+     *
+     * @param callable(\GameroundsQuery):\GameroundsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withRoundsQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useRoundsQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Rounds relation to the Gamerounds table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \GameroundsQuery The inner query object of the EXISTS statement
+     */
+    public function useRoundsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Rounds', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Rounds relation to the Gamerounds table for a NOT EXISTS query.
+     *
+     * @see useRoundsExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \GameroundsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useRoundsNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Rounds', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

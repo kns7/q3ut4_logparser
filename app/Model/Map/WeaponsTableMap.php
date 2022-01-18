@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class WeaponsTableMap extends TableMap
 {
@@ -130,6 +129,44 @@ class WeaponsTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Weapons.Id' => 'ID',
+        'id' => 'ID',
+        'weapons.id' => 'ID',
+        'WeaponsTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'Code' => 'CODE',
+        'Weapons.Code' => 'CODE',
+        'code' => 'CODE',
+        'weapons.code' => 'CODE',
+        'WeaponsTableMap::COL_CODE' => 'CODE',
+        'COL_CODE' => 'CODE',
+        'Name' => 'NAME',
+        'Weapons.Name' => 'NAME',
+        'name' => 'NAME',
+        'weapons.name' => 'NAME',
+        'WeaponsTableMap::COL_NAME' => 'NAME',
+        'COL_NAME' => 'NAME',
+        'Type' => 'TYPE',
+        'Weapons.Type' => 'TYPE',
+        'type' => 'TYPE',
+        'weapons.type' => 'TYPE',
+        'WeaponsTableMap::COL_TYPE' => 'TYPE',
+        'COL_TYPE' => 'TYPE',
+        'Url' => 'URL',
+        'Weapons.Url' => 'URL',
+        'url' => 'URL',
+        'weapons.url' => 'URL',
+        'WeaponsTableMap::COL_URL' => 'URL',
+        'COL_URL' => 'URL',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -155,6 +192,8 @@ class WeaponsTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -219,7 +258,7 @@ class WeaponsTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -323,6 +362,34 @@ class WeaponsTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(WeaponsTableMap::COL_ID);
+            $criteria->removeSelectColumn(WeaponsTableMap::COL_CODE);
+            $criteria->removeSelectColumn(WeaponsTableMap::COL_NAME);
+            $criteria->removeSelectColumn(WeaponsTableMap::COL_TYPE);
+            $criteria->removeSelectColumn(WeaponsTableMap::COL_URL);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.code');
+            $criteria->removeSelectColumn($alias . '.name');
+            $criteria->removeSelectColumn($alias . '.type');
+            $criteria->removeSelectColumn($alias . '.url');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -332,17 +399,6 @@ class WeaponsTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(WeaponsTableMap::DATABASE_NAME)->getTable(WeaponsTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(WeaponsTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(WeaponsTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new WeaponsTableMap());
-        }
     }
 
     /**
@@ -434,6 +490,3 @@ class WeaponsTableMap extends TableMap
     }
 
 } // WeaponsTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-WeaponsTableMap::buildTableMap();

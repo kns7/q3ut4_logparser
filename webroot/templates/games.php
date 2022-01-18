@@ -13,7 +13,7 @@ include('header.php');
                         }elseif($d->getCreated()->format("Y-m-d") == "2021-01-01"){
                             $text = "Année 2021 (Nouveau Serveur)";
                         }else{
-                            $text = $d->getCreated()->format("Y-m-d");
+                            $text = $d->getCreated()->format("d/m/Y");
                         }
                         ?>
                         <option value="<?=$d->getCreated()->format("Y-m-d");?>"><?= $text;?></option>

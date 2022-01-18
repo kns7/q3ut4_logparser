@@ -88,26 +88,27 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * The value for the imgurl field.
      *
-     * @var        string
+     * @var        string|null
      */
     protected $imgurl;
 
     /**
      * The value for the description field.
      *
-     * @var        string
+     * @var        string|null
      */
     protected $description;
 
     /**
      * The value for the size field.
      *
-     * @var        string
+     * @var        string|null
      */
     protected $size;
 
     /**
      * @var        ObjectCollection|ChildGames[] Collection to store aggregation of ChildGames objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildGames> Collection to store aggregation of ChildGames objects.
      */
     protected $collGames;
     protected $collGamesPartial;
@@ -123,6 +124,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildGames[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildGames>
      */
     protected $gamesScheduledForDeletion = null;
 
@@ -213,9 +215,7 @@ abstract class Maps implements ActiveRecordInterface
     public function resetModified($col = null)
     {
         if (null !== $col) {
-            if (isset($this->modifiedColumns[$col])) {
-                unset($this->modifiedColumns[$col]);
-            }
+            unset($this->modifiedColumns[$col]);
         } else {
             $this->modifiedColumns = array();
         }
@@ -290,7 +290,7 @@ abstract class Maps implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Maps The current object, for fluid interface
+     * @return $this The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -304,11 +304,11 @@ abstract class Maps implements ActiveRecordInterface
      *
      * @param  string  $msg
      * @param  int     $priority One of the Propel::LOG_* logging levels
-     * @return boolean
+     * @return void
      */
     protected function log($msg, $priority = Propel::LOG_INFO)
     {
-        return Propel::log(get_class($this) . ': ' . $msg, $priority);
+        Propel::log(get_class($this) . ': ' . $msg, $priority);
     }
 
     /**
@@ -321,15 +321,16 @@ abstract class Maps implements ActiveRecordInterface
      *
      * @param  mixed   $parser                 A AbstractParser instance, or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param  boolean $includeLazyLoadColumns (optional) Whether to include lazy load(ed) columns. Defaults to TRUE.
+     * @param  string  $keyType                (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME, TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM. Defaults to TableMap::TYPE_PHPNAME.
      * @return string  The exported data
      */
-    public function exportTo($parser, $includeLazyLoadColumns = true)
+    public function exportTo($parser, $includeLazyLoadColumns = true, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        return $parser->fromArray($this->toArray(TableMap::TYPE_PHPNAME, $includeLazyLoadColumns, array(), true));
+        return $parser->fromArray($this->toArray($keyType, $includeLazyLoadColumns, array(), true));
     }
 
     /**
@@ -384,7 +385,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Get the [imgurl] column value.
      *
-     * @return string
+     * @return string|null
      */
     public function getImgurl()
     {
@@ -394,7 +395,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Get the [description] column value.
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {
@@ -404,7 +405,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Get the [size] column value.
      *
-     * @return string
+     * @return string|null
      */
     public function getSize()
     {
@@ -414,7 +415,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param int $v New value
      * @return $this|\Maps The current object (for fluent API support)
      */
     public function setId($v)
@@ -434,7 +435,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Set the value of [file] column.
      *
-     * @param string $v new value
+     * @param string $v New value
      * @return $this|\Maps The current object (for fluent API support)
      */
     public function setFile($v)
@@ -454,7 +455,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Set the value of [name] column.
      *
-     * @param string $v new value
+     * @param string $v New value
      * @return $this|\Maps The current object (for fluent API support)
      */
     public function setName($v)
@@ -474,7 +475,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Set the value of [imgurl] column.
      *
-     * @param string $v new value
+     * @param string|null $v New value
      * @return $this|\Maps The current object (for fluent API support)
      */
     public function setImgurl($v)
@@ -494,7 +495,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Set the value of [description] column.
      *
-     * @param string $v new value
+     * @param string|null $v New value
      * @return $this|\Maps The current object (for fluent API support)
      */
     public function setDescription($v)
@@ -514,7 +515,7 @@ abstract class Maps implements ActiveRecordInterface
     /**
      * Set the value of [size] column.
      *
-     * @param string $v new value
+     * @param string|null $v New value
      * @return $this|\Maps The current object (for fluent API support)
      */
     public function setSize($v)
@@ -1069,7 +1070,7 @@ abstract class Maps implements ActiveRecordInterface
      *
      * @param      array  $arr     An array to populate the object from.
      * @param      string $keyType The type of keys the array uses.
-     * @return void
+     * @return     $this|\Maps
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1093,6 +1094,8 @@ abstract class Maps implements ActiveRecordInterface
         if (array_key_exists($keys[5], $arr)) {
             $this->setSize($arr[$keys[5]]);
         }
+
+        return $this;
     }
 
      /**
@@ -1160,7 +1163,7 @@ abstract class Maps implements ActiveRecordInterface
      * Builds a Criteria object containing the primary key for this object.
      *
      * Unlike buildCriteria() this method includes the primary key values regardless
-     * of whether or not they have been modified.
+     * of whether they have been modified.
      *
      * @throws LogicException if no primary key is defined
      *
@@ -1296,7 +1299,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Game' == $relationName) {
+        if ('Game' === $relationName) {
             $this->initGames();
             return;
         }
@@ -1360,15 +1363,25 @@ abstract class Maps implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildGames[] List of ChildGames objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildGames> List of ChildGames objects
      * @throws PropelException
      */
     public function getGames(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collGamesPartial && !$this->isNew();
-        if (null === $this->collGames || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGames) {
+        if (null === $this->collGames || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initGames();
+                if (null === $this->collGames) {
+                    $this->initGames();
+                } else {
+                    $collectionClassName = GamesTableMap::getTableMap()->getCollectionClassName();
+
+                    $collGames = new $collectionClassName;
+                    $collGames->setModel('\Games');
+
+                    return $collGames;
+                }
             } else {
                 $collGames = ChildGamesQuery::create(null, $criteria)
                     ->filterByMaps($this)
@@ -1543,6 +1556,7 @@ abstract class Maps implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildGames[] List of ChildGames objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildGames}> List of ChildGames objects
      */
     public function getGamesJoinGamestypes(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -1610,10 +1624,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function preSave(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preSave')) {
-            return parent::preSave($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -1622,10 +1633,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function postSave(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postSave')) {
-            parent::postSave($con);
-        }
-    }
+            }
 
     /**
      * Code to be run before inserting to database
@@ -1634,10 +1642,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function preInsert(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preInsert')) {
-            return parent::preInsert($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -1646,10 +1651,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function postInsert(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postInsert')) {
-            parent::postInsert($con);
-        }
-    }
+            }
 
     /**
      * Code to be run before updating the object in database
@@ -1658,10 +1660,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function preUpdate(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preUpdate')) {
-            return parent::preUpdate($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -1670,10 +1669,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function postUpdate(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postUpdate')) {
-            parent::postUpdate($con);
-        }
-    }
+            }
 
     /**
      * Code to be run before deleting the object in database
@@ -1682,10 +1678,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function preDelete(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preDelete')) {
-            return parent::preDelete($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -1694,10 +1687,7 @@ abstract class Maps implements ActiveRecordInterface
      */
     public function postDelete(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postDelete')) {
-            parent::postDelete($con);
-        }
-    }
+            }
 
 
     /**
@@ -1727,15 +1717,18 @@ abstract class Maps implements ActiveRecordInterface
 
         if (0 === strpos($name, 'from')) {
             $format = substr($name, 4);
+            $inputData = $params[0];
+            $keyType = $params[1] ?? TableMap::TYPE_PHPNAME;
 
-            return $this->importFrom($format, reset($params));
+            return $this->importFrom($format, $inputData, $keyType);
         }
 
         if (0 === strpos($name, 'to')) {
             $format = substr($name, 2);
-            $includeLazyLoadColumns = isset($params[0]) ? $params[0] : true;
+            $includeLazyLoadColumns = $params[0] ?? true;
+            $keyType = $params[1] ?? TableMap::TYPE_PHPNAME;
 
-            return $this->exportTo($format, $includeLazyLoadColumns);
+            return $this->exportTo($format, $includeLazyLoadColumns, $keyType);
         }
 
         throw new BadMethodCallException(sprintf('Call to undefined method: %s.', $name));

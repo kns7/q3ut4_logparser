@@ -74,20 +74,20 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \GamesQuery|\PlayersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildGamescores findOne(ConnectionInterface $con = null) Return the first ChildGamescores matching the query
+ * @method     ChildGamescores|null findOne(ConnectionInterface $con = null) Return the first ChildGamescores matching the query
  * @method     ChildGamescores findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGamescores matching the query, or a new ChildGamescores object populated from the query conditions when no match is found
  *
- * @method     ChildGamescores findOneById(int $id) Return the first ChildGamescores filtered by the id column
- * @method     ChildGamescores findOneByGameID(int $game_id) Return the first ChildGamescores filtered by the game_id column
- * @method     ChildGamescores findOneByPlayerId(int $player_id) Return the first ChildGamescores filtered by the player_id column
- * @method     ChildGamescores findOneByKills(int $kills) Return the first ChildGamescores filtered by the kills column
- * @method     ChildGamescores findOneByDeaths(int $deaths) Return the first ChildGamescores filtered by the deaths column
- * @method     ChildGamescores findOneByScore(int $score) Return the first ChildGamescores filtered by the score column
- * @method     ChildGamescores findOneByPing(int $ping) Return the first ChildGamescores filtered by the ping column
- * @method     ChildGamescores findOneByWinner(boolean $winner) Return the first ChildGamescores filtered by the winner column
- * @method     ChildGamescores findOneByTeam(int $team) Return the first ChildGamescores filtered by the team column
- * @method     ChildGamescores findOneByHalf(int $half) Return the first ChildGamescores filtered by the half column
- * @method     ChildGamescores findOneByCreated(string $created) Return the first ChildGamescores filtered by the created column *
+ * @method     ChildGamescores|null findOneById(int $id) Return the first ChildGamescores filtered by the id column
+ * @method     ChildGamescores|null findOneByGameID(int $game_id) Return the first ChildGamescores filtered by the game_id column
+ * @method     ChildGamescores|null findOneByPlayerId(int $player_id) Return the first ChildGamescores filtered by the player_id column
+ * @method     ChildGamescores|null findOneByKills(int $kills) Return the first ChildGamescores filtered by the kills column
+ * @method     ChildGamescores|null findOneByDeaths(int $deaths) Return the first ChildGamescores filtered by the deaths column
+ * @method     ChildGamescores|null findOneByScore(int $score) Return the first ChildGamescores filtered by the score column
+ * @method     ChildGamescores|null findOneByPing(int $ping) Return the first ChildGamescores filtered by the ping column
+ * @method     ChildGamescores|null findOneByWinner(boolean $winner) Return the first ChildGamescores filtered by the winner column
+ * @method     ChildGamescores|null findOneByTeam(int $team) Return the first ChildGamescores filtered by the team column
+ * @method     ChildGamescores|null findOneByHalf(int $half) Return the first ChildGamescores filtered by the half column
+ * @method     ChildGamescores|null findOneByCreated(string $created) Return the first ChildGamescores filtered by the created column *
 
  * @method     ChildGamescores requirePk($key, ConnectionInterface $con = null) Return the ChildGamescores by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGamescores requireOne(ConnectionInterface $con = null) Return the first ChildGamescores matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -105,18 +105,31 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGamescores requireOneByCreated(string $created) Return the first ChildGamescores filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGamescores[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGamescores objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> find(ConnectionInterface $con = null) Return ChildGamescores objects based on current ModelCriteria
  * @method     ChildGamescores[]|ObjectCollection findById(int $id) Return ChildGamescores objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findById(int $id) Return ChildGamescores objects filtered by the id column
  * @method     ChildGamescores[]|ObjectCollection findByGameID(int $game_id) Return ChildGamescores objects filtered by the game_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByGameID(int $game_id) Return ChildGamescores objects filtered by the game_id column
  * @method     ChildGamescores[]|ObjectCollection findByPlayerId(int $player_id) Return ChildGamescores objects filtered by the player_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByPlayerId(int $player_id) Return ChildGamescores objects filtered by the player_id column
  * @method     ChildGamescores[]|ObjectCollection findByKills(int $kills) Return ChildGamescores objects filtered by the kills column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByKills(int $kills) Return ChildGamescores objects filtered by the kills column
  * @method     ChildGamescores[]|ObjectCollection findByDeaths(int $deaths) Return ChildGamescores objects filtered by the deaths column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByDeaths(int $deaths) Return ChildGamescores objects filtered by the deaths column
  * @method     ChildGamescores[]|ObjectCollection findByScore(int $score) Return ChildGamescores objects filtered by the score column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByScore(int $score) Return ChildGamescores objects filtered by the score column
  * @method     ChildGamescores[]|ObjectCollection findByPing(int $ping) Return ChildGamescores objects filtered by the ping column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByPing(int $ping) Return ChildGamescores objects filtered by the ping column
  * @method     ChildGamescores[]|ObjectCollection findByWinner(boolean $winner) Return ChildGamescores objects filtered by the winner column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByWinner(boolean $winner) Return ChildGamescores objects filtered by the winner column
  * @method     ChildGamescores[]|ObjectCollection findByTeam(int $team) Return ChildGamescores objects filtered by the team column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByTeam(int $team) Return ChildGamescores objects filtered by the team column
  * @method     ChildGamescores[]|ObjectCollection findByHalf(int $half) Return ChildGamescores objects filtered by the half column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByHalf(int $half) Return ChildGamescores objects filtered by the half column
  * @method     ChildGamescores[]|ObjectCollection findByCreated(string $created) Return ChildGamescores objects filtered by the created column
+ * @psalm-method ObjectCollection&\Traversable<ChildGamescores> findByCreated(string $created) Return ChildGamescores objects filtered by the created column
  * @method     ChildGamescores[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildGamescores> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class GamescoresQuery extends ModelCriteria
@@ -825,6 +838,61 @@ abstract class GamescoresQuery extends ModelCriteria
     }
 
     /**
+     * Use the Games relation Games object
+     *
+     * @param callable(\GamesQuery):\GamesQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withGamesQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useGamesQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Games table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \GamesQuery The inner query object of the EXISTS statement
+     */
+    public function useGamesExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Games', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Games table for a NOT EXISTS query.
+     *
+     * @see useGamesExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \GamesQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useGamesNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Games', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Players object
      *
      * @param \Players|ObjectCollection $players The related object(s) to use as filter
@@ -901,6 +969,61 @@ abstract class GamescoresQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Players', '\PlayersQuery');
     }
 
+    /**
+     * Use the Players relation Players object
+     *
+     * @param callable(\PlayersQuery):\PlayersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withPlayersQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->usePlayersQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Players table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \PlayersQuery The inner query object of the EXISTS statement
+     */
+    public function usePlayersExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Players', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Players table for a NOT EXISTS query.
+     *
+     * @see usePlayersExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \PlayersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function usePlayersNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Players', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

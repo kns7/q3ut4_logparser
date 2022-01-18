@@ -9,24 +9,33 @@ require("../vendor/autoload.php");
 require("../app/config/config.php");
 
 // MySQL Configuration / Connection
-$serviceContainer = Propel::getServiceContainer();
-$serviceContainer->checkVersion('2.0.0-dev');
+$serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
+$serviceContainer->checkVersion(2);
 $serviceContainer->setAdapterClass('default', 'mysql');
-$manager = new ConnectionManagerSingle();
+$manager = new \Propel\Runtime\Connection\ConnectionManagerSingle();
 $manager->setConfiguration(array (
-    'classname' => 'Propel\\Runtime\\Connection\\DebugPDO',
     'dsn' => 'mysql:host='.$config['MYSQL_HOST'].';port='.$config['MYSQL_PORT'].';dbname='.$config['MYSQL_DB'],
     'user' => $config['MYSQL_USER'],
     'password' => $config['MYSQL_PASSWD'],
-    'attributes' =>
+    'settings' =>
         array (
-            'ATTR_EMULATE_PREPARES' => false,
-            'ATTR_TIMEOUT' => 30,
-        )
+            'charset' => 'utf8',
+            'queries' =>
+                array (
+                ),
+        ),
+    'classname' => '\\Propel\\Runtime\\Connection\\ConnectionWrapper',
+    'model_paths' =>
+        array (
+            0 => 'src',
+            1 => 'vendor',
+        ),
 ));
 $manager->setName('default');
 $serviceContainer->setConnectionManager('default', $manager);
 $serviceContainer->setDefaultDatasource('default');
+require_once __DIR__ . '/../app/config/loadDatabase.php';
+
 
 $app = new Slim([
     'template.path' => 'templates/',

@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class FragsTableMap extends TableMap
 {
@@ -135,6 +134,58 @@ class FragsTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Frags.Id' => 'ID',
+        'id' => 'ID',
+        'frags.id' => 'ID',
+        'FragsTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'FraggerId' => 'FRAGGER_ID',
+        'Frags.FraggerId' => 'FRAGGER_ID',
+        'fraggerId' => 'FRAGGER_ID',
+        'frags.fraggerId' => 'FRAGGER_ID',
+        'FragsTableMap::COL_FRAGGER_ID' => 'FRAGGER_ID',
+        'COL_FRAGGER_ID' => 'FRAGGER_ID',
+        'fragger_id' => 'FRAGGER_ID',
+        'frags.fragger_id' => 'FRAGGER_ID',
+        'FraggedId' => 'FRAGGED_ID',
+        'Frags.FraggedId' => 'FRAGGED_ID',
+        'fraggedId' => 'FRAGGED_ID',
+        'frags.fraggedId' => 'FRAGGED_ID',
+        'FragsTableMap::COL_FRAGGED_ID' => 'FRAGGED_ID',
+        'COL_FRAGGED_ID' => 'FRAGGED_ID',
+        'fragged_id' => 'FRAGGED_ID',
+        'frags.fragged_id' => 'FRAGGED_ID',
+        'WeaponId' => 'WEAPON_ID',
+        'Frags.WeaponId' => 'WEAPON_ID',
+        'weaponId' => 'WEAPON_ID',
+        'frags.weaponId' => 'WEAPON_ID',
+        'FragsTableMap::COL_WEAPON_ID' => 'WEAPON_ID',
+        'COL_WEAPON_ID' => 'WEAPON_ID',
+        'weapon_id' => 'WEAPON_ID',
+        'frags.weapon_id' => 'WEAPON_ID',
+        'RoundId' => 'ROUND_ID',
+        'Frags.RoundId' => 'ROUND_ID',
+        'roundId' => 'ROUND_ID',
+        'frags.roundId' => 'ROUND_ID',
+        'FragsTableMap::COL_ROUND_ID' => 'ROUND_ID',
+        'COL_ROUND_ID' => 'ROUND_ID',
+        'round_id' => 'ROUND_ID',
+        'frags.round_id' => 'ROUND_ID',
+        'Created' => 'CREATED',
+        'Frags.Created' => 'CREATED',
+        'created' => 'CREATED',
+        'frags.created' => 'CREATED',
+        'FragsTableMap::COL_CREATED' => 'CREATED',
+        'COL_CREATED' => 'CREATED',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -161,6 +212,8 @@ class FragsTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -246,7 +299,7 @@ class FragsTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -352,6 +405,36 @@ class FragsTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(FragsTableMap::COL_ID);
+            $criteria->removeSelectColumn(FragsTableMap::COL_FRAGGER_ID);
+            $criteria->removeSelectColumn(FragsTableMap::COL_FRAGGED_ID);
+            $criteria->removeSelectColumn(FragsTableMap::COL_WEAPON_ID);
+            $criteria->removeSelectColumn(FragsTableMap::COL_ROUND_ID);
+            $criteria->removeSelectColumn(FragsTableMap::COL_CREATED);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.fragger_id');
+            $criteria->removeSelectColumn($alias . '.fragged_id');
+            $criteria->removeSelectColumn($alias . '.weapon_id');
+            $criteria->removeSelectColumn($alias . '.round_id');
+            $criteria->removeSelectColumn($alias . '.created');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -361,17 +444,6 @@ class FragsTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(FragsTableMap::DATABASE_NAME)->getTable(FragsTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(FragsTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(FragsTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new FragsTableMap());
-        }
     }
 
     /**
@@ -463,6 +535,3 @@ class FragsTableMap extends TableMap
     }
 
 } // FragsTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-FragsTableMap::buildTableMap();

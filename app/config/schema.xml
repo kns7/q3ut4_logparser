@@ -33,7 +33,7 @@
 
   <table name="config" idMethod="native" phpName="Config">
     <column name="key" phpName="Key" type="VARCHAR" size="255" primaryKey="true" required="true"/>
-    <column name="value" phpName="Value" type="VARCHAR" size="255" required="true"/>
+    <column name="value" phpName="Value" type="LONGVARCHAR" required="true"/>
 
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>

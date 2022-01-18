@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class GamesTableMap extends TableMap
 {
@@ -165,6 +164,100 @@ class GamesTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Games.Id' => 'ID',
+        'id' => 'ID',
+        'games.id' => 'ID',
+        'GamesTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'GameNB' => 'GAMENB',
+        'Games.GameNB' => 'GAMENB',
+        'gameNB' => 'GAMENB',
+        'games.gameNB' => 'GAMENB',
+        'GamesTableMap::COL_GAMENB' => 'GAMENB',
+        'COL_GAMENB' => 'GAMENB',
+        'gamenb' => 'GAMENB',
+        'games.gamenb' => 'GAMENB',
+        'MapId' => 'MAP_ID',
+        'Games.MapId' => 'MAP_ID',
+        'mapId' => 'MAP_ID',
+        'games.mapId' => 'MAP_ID',
+        'GamesTableMap::COL_MAP_ID' => 'MAP_ID',
+        'COL_MAP_ID' => 'MAP_ID',
+        'map_id' => 'MAP_ID',
+        'games.map_id' => 'MAP_ID',
+        'GametypeId' => 'GAMETYPE_ID',
+        'Games.GametypeId' => 'GAMETYPE_ID',
+        'gametypeId' => 'GAMETYPE_ID',
+        'games.gametypeId' => 'GAMETYPE_ID',
+        'GamesTableMap::COL_GAMETYPE_ID' => 'GAMETYPE_ID',
+        'COL_GAMETYPE_ID' => 'GAMETYPE_ID',
+        'gametype_id' => 'GAMETYPE_ID',
+        'games.gametype_id' => 'GAMETYPE_ID',
+        'Timelimit' => 'TIMELIMIT',
+        'Games.Timelimit' => 'TIMELIMIT',
+        'timelimit' => 'TIMELIMIT',
+        'games.timelimit' => 'TIMELIMIT',
+        'GamesTableMap::COL_TIMELIMIT' => 'TIMELIMIT',
+        'COL_TIMELIMIT' => 'TIMELIMIT',
+        'Roundtime' => 'ROUNDTIME',
+        'Games.Roundtime' => 'ROUNDTIME',
+        'roundtime' => 'ROUNDTIME',
+        'games.roundtime' => 'ROUNDTIME',
+        'GamesTableMap::COL_ROUNDTIME' => 'ROUNDTIME',
+        'COL_ROUNDTIME' => 'ROUNDTIME',
+        'Nbplayers' => 'NBPLAYERS',
+        'Games.Nbplayers' => 'NBPLAYERS',
+        'nbplayers' => 'NBPLAYERS',
+        'games.nbplayers' => 'NBPLAYERS',
+        'GamesTableMap::COL_NBPLAYERS' => 'NBPLAYERS',
+        'COL_NBPLAYERS' => 'NBPLAYERS',
+        'RedScore' => 'REDSCORE',
+        'Games.RedScore' => 'REDSCORE',
+        'redScore' => 'REDSCORE',
+        'games.redScore' => 'REDSCORE',
+        'GamesTableMap::COL_REDSCORE' => 'REDSCORE',
+        'COL_REDSCORE' => 'REDSCORE',
+        'redscore' => 'REDSCORE',
+        'games.redscore' => 'REDSCORE',
+        'BlueScore' => 'BLUESCORE',
+        'Games.BlueScore' => 'BLUESCORE',
+        'blueScore' => 'BLUESCORE',
+        'games.blueScore' => 'BLUESCORE',
+        'GamesTableMap::COL_BLUESCORE' => 'BLUESCORE',
+        'COL_BLUESCORE' => 'BLUESCORE',
+        'bluescore' => 'BLUESCORE',
+        'games.bluescore' => 'BLUESCORE',
+        'RedScore2' => 'REDSCORE2',
+        'Games.RedScore2' => 'REDSCORE2',
+        'redScore2' => 'REDSCORE2',
+        'games.redScore2' => 'REDSCORE2',
+        'GamesTableMap::COL_REDSCORE2' => 'REDSCORE2',
+        'COL_REDSCORE2' => 'REDSCORE2',
+        'redscore2' => 'REDSCORE2',
+        'games.redscore2' => 'REDSCORE2',
+        'BlueScore2' => 'BLUESCORE2',
+        'Games.BlueScore2' => 'BLUESCORE2',
+        'blueScore2' => 'BLUESCORE2',
+        'games.blueScore2' => 'BLUESCORE2',
+        'GamesTableMap::COL_BLUESCORE2' => 'BLUESCORE2',
+        'COL_BLUESCORE2' => 'BLUESCORE2',
+        'bluescore2' => 'BLUESCORE2',
+        'games.bluescore2' => 'BLUESCORE2',
+        'Created' => 'CREATED',
+        'Games.Created' => 'CREATED',
+        'created' => 'CREATED',
+        'games.created' => 'CREATED',
+        'GamesTableMap::COL_CREATED' => 'CREATED',
+        'COL_CREATED' => 'CREATED',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -197,6 +290,8 @@ class GamesTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -282,7 +377,7 @@ class GamesTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -400,6 +495,48 @@ class GamesTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(GamesTableMap::COL_ID);
+            $criteria->removeSelectColumn(GamesTableMap::COL_GAMENB);
+            $criteria->removeSelectColumn(GamesTableMap::COL_MAP_ID);
+            $criteria->removeSelectColumn(GamesTableMap::COL_GAMETYPE_ID);
+            $criteria->removeSelectColumn(GamesTableMap::COL_TIMELIMIT);
+            $criteria->removeSelectColumn(GamesTableMap::COL_ROUNDTIME);
+            $criteria->removeSelectColumn(GamesTableMap::COL_NBPLAYERS);
+            $criteria->removeSelectColumn(GamesTableMap::COL_REDSCORE);
+            $criteria->removeSelectColumn(GamesTableMap::COL_BLUESCORE);
+            $criteria->removeSelectColumn(GamesTableMap::COL_REDSCORE2);
+            $criteria->removeSelectColumn(GamesTableMap::COL_BLUESCORE2);
+            $criteria->removeSelectColumn(GamesTableMap::COL_CREATED);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.gamenb');
+            $criteria->removeSelectColumn($alias . '.map_id');
+            $criteria->removeSelectColumn($alias . '.gametype_id');
+            $criteria->removeSelectColumn($alias . '.timelimit');
+            $criteria->removeSelectColumn($alias . '.roundtime');
+            $criteria->removeSelectColumn($alias . '.nbplayers');
+            $criteria->removeSelectColumn($alias . '.redscore');
+            $criteria->removeSelectColumn($alias . '.bluescore');
+            $criteria->removeSelectColumn($alias . '.redscore2');
+            $criteria->removeSelectColumn($alias . '.bluescore2');
+            $criteria->removeSelectColumn($alias . '.created');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -409,17 +546,6 @@ class GamesTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(GamesTableMap::DATABASE_NAME)->getTable(GamesTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(GamesTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(GamesTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new GamesTableMap());
-        }
     }
 
     /**
@@ -511,6 +637,3 @@ class GamesTableMap extends TableMap
     }
 
 } // GamesTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-GamesTableMap::buildTableMap();

@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class HitsTableMap extends TableMap
 {
@@ -135,6 +134,58 @@ class HitsTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Hits.Id' => 'ID',
+        'id' => 'ID',
+        'hits.id' => 'ID',
+        'HitsTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'HitterId' => 'HITTER_ID',
+        'Hits.HitterId' => 'HITTER_ID',
+        'hitterId' => 'HITTER_ID',
+        'hits.hitterId' => 'HITTER_ID',
+        'HitsTableMap::COL_HITTER_ID' => 'HITTER_ID',
+        'COL_HITTER_ID' => 'HITTER_ID',
+        'hitter_id' => 'HITTER_ID',
+        'hits.hitter_id' => 'HITTER_ID',
+        'HittedId' => 'HITTED_ID',
+        'Hits.HittedId' => 'HITTED_ID',
+        'hittedId' => 'HITTED_ID',
+        'hits.hittedId' => 'HITTED_ID',
+        'HitsTableMap::COL_HITTED_ID' => 'HITTED_ID',
+        'COL_HITTED_ID' => 'HITTED_ID',
+        'hitted_id' => 'HITTED_ID',
+        'hits.hitted_id' => 'HITTED_ID',
+        'BodypartId' => 'BODYPART_ID',
+        'Hits.BodypartId' => 'BODYPART_ID',
+        'bodypartId' => 'BODYPART_ID',
+        'hits.bodypartId' => 'BODYPART_ID',
+        'HitsTableMap::COL_BODYPART_ID' => 'BODYPART_ID',
+        'COL_BODYPART_ID' => 'BODYPART_ID',
+        'bodypart_id' => 'BODYPART_ID',
+        'hits.bodypart_id' => 'BODYPART_ID',
+        'RoundId' => 'ROUND_ID',
+        'Hits.RoundId' => 'ROUND_ID',
+        'roundId' => 'ROUND_ID',
+        'hits.roundId' => 'ROUND_ID',
+        'HitsTableMap::COL_ROUND_ID' => 'ROUND_ID',
+        'COL_ROUND_ID' => 'ROUND_ID',
+        'round_id' => 'ROUND_ID',
+        'hits.round_id' => 'ROUND_ID',
+        'Created' => 'CREATED',
+        'Hits.Created' => 'CREATED',
+        'created' => 'CREATED',
+        'hits.created' => 'CREATED',
+        'HitsTableMap::COL_CREATED' => 'CREATED',
+        'COL_CREATED' => 'CREATED',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -161,6 +212,8 @@ class HitsTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -246,7 +299,7 @@ class HitsTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -352,6 +405,36 @@ class HitsTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(HitsTableMap::COL_ID);
+            $criteria->removeSelectColumn(HitsTableMap::COL_HITTER_ID);
+            $criteria->removeSelectColumn(HitsTableMap::COL_HITTED_ID);
+            $criteria->removeSelectColumn(HitsTableMap::COL_BODYPART_ID);
+            $criteria->removeSelectColumn(HitsTableMap::COL_ROUND_ID);
+            $criteria->removeSelectColumn(HitsTableMap::COL_CREATED);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.hitter_id');
+            $criteria->removeSelectColumn($alias . '.hitted_id');
+            $criteria->removeSelectColumn($alias . '.bodypart_id');
+            $criteria->removeSelectColumn($alias . '.round_id');
+            $criteria->removeSelectColumn($alias . '.created');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -361,17 +444,6 @@ class HitsTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(HitsTableMap::DATABASE_NAME)->getTable(HitsTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(HitsTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(HitsTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new HitsTableMap());
-        }
     }
 
     /**
@@ -463,6 +535,3 @@ class HitsTableMap extends TableMap
     }
 
 } // HitsTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-HitsTableMap::buildTableMap();

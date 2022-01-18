@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class GametimesTableMap extends TableMap
 {
@@ -130,6 +129,46 @@ class GametimesTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Gametimes.Id' => 'ID',
+        'id' => 'ID',
+        'gametimes.id' => 'ID',
+        'GametimesTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'PlayerId' => 'PLAYER_ID',
+        'Gametimes.PlayerId' => 'PLAYER_ID',
+        'playerId' => 'PLAYER_ID',
+        'gametimes.playerId' => 'PLAYER_ID',
+        'GametimesTableMap::COL_PLAYER_ID' => 'PLAYER_ID',
+        'COL_PLAYER_ID' => 'PLAYER_ID',
+        'player_id' => 'PLAYER_ID',
+        'gametimes.player_id' => 'PLAYER_ID',
+        'Start' => 'START',
+        'Gametimes.Start' => 'START',
+        'start' => 'START',
+        'gametimes.start' => 'START',
+        'GametimesTableMap::COL_START' => 'START',
+        'COL_START' => 'START',
+        'Stop' => 'STOP',
+        'Gametimes.Stop' => 'STOP',
+        'stop' => 'STOP',
+        'gametimes.stop' => 'STOP',
+        'GametimesTableMap::COL_STOP' => 'STOP',
+        'COL_STOP' => 'STOP',
+        'Created' => 'CREATED',
+        'Gametimes.Created' => 'CREATED',
+        'created' => 'CREATED',
+        'gametimes.created' => 'CREATED',
+        'GametimesTableMap::COL_CREATED' => 'CREATED',
+        'COL_CREATED' => 'CREATED',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -155,6 +194,8 @@ class GametimesTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -219,7 +260,7 @@ class GametimesTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -323,6 +364,34 @@ class GametimesTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(GametimesTableMap::COL_ID);
+            $criteria->removeSelectColumn(GametimesTableMap::COL_PLAYER_ID);
+            $criteria->removeSelectColumn(GametimesTableMap::COL_START);
+            $criteria->removeSelectColumn(GametimesTableMap::COL_STOP);
+            $criteria->removeSelectColumn(GametimesTableMap::COL_CREATED);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.player_id');
+            $criteria->removeSelectColumn($alias . '.start');
+            $criteria->removeSelectColumn($alias . '.stop');
+            $criteria->removeSelectColumn($alias . '.created');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -332,17 +401,6 @@ class GametimesTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(GametimesTableMap::DATABASE_NAME)->getTable(GametimesTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(GametimesTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(GametimesTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new GametimesTableMap());
-        }
     }
 
     /**
@@ -430,6 +488,3 @@ class GametimesTableMap extends TableMap
     }
 
 } // GametimesTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-GametimesTableMap::buildTableMap();
