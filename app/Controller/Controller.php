@@ -14,6 +14,10 @@ class Controller
     public function __construct($app)
     {
         $this->app = $app;
+        $this->config = (object)[];
+        foreach (\ConfigQuery::create()->find() as $c) {
+            $this->config->{$c->getKey()} = $c->getValue();
+        }
     }
 
 
@@ -75,9 +79,9 @@ class Controller
     {
         return \GamesQuery::create()->orderByCreated("DESC")->findOne()->getCreated()->format("Y-m-d");
     }
-    public function getParseDates()
+    public function getParseDates($sort = "DESC")
     {
-        return \GamesQuery::create()->orderByCreated("DESC")->groupByCreated()->find();
+        return \GamesQuery::create()->orderByCreated($sort)->groupByCreated()->find();
     }
 
     public function secondsToTime($seconds) {

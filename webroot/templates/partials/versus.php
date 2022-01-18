@@ -200,3 +200,23 @@ if($p2->getMapsWins()->count() > 0){
         <canvas class="chart" id="vshits2_chart" data-name="vs-hits" data-id="<?=$p2->getId();?>_<?=$p1->getId();?>" data-chart="pie"></canvas>
     </div>
 </div>
+<hr/>
+<div class="row"><div class="col text-center"><h1>Evolution</h1></div></div>
+<div class="row justify-content-around">
+    <div class="col-sm-6">
+        <h2 class="text-center">Frags</h2>
+        <canvas class="chart" id="vstimefrags_chart" data-name="vs-timefrags" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
+    </div>
+    <div class="col-sm-6">
+        <h2 class="text-center">Deaths</h2>
+        <canvas class="chart" id="vstimedeaths_chart" data-name="vs-timedeaths" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
+    </div>
+    <div class="col-sm-6">
+        <h2 class="text-center">Kills / Death Ratio</h2>
+        <canvas class="chart" id="vstimeratio_chart" data-name="vs-timeratio" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
+    </div>
+    <div class="col-sm-6">
+        <h2 class="text-center">Ping</h2>
+        <canvas class="chart" id="vstimeping_chart" data-name="vs-timeping" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
+    </div>
+</div>

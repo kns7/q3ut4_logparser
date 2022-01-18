@@ -337,4 +337,219 @@ class StatsController extends Controller
 
         return $return;
     }
+
+
+    public function getStatsEvolution($playerid,$values)
+    {
+        $datas = [];
+        $labels = [];
+        $dataset = [];
+
+        $player = \PlayersQuery::create()->findPk($playerid);
+        foreach($this->getParseDates("ASC") as $game){
+            $date = $game->getCreated();
+            switch($values){
+                case "ratio":
+                    $deaths = \FragsQuery::create()->filterByFraggedId($playerid)->filterByFraggerId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                    $kills = \FragsQuery::create()->filterByFraggerId($playerid)->filterByFraggedId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                    $count = ($deaths == 0)? 0: $kills / $deaths;
+                    break;
+
+                case "frags":
+                    $count = \FragsQuery::create()->filterByFraggerId($playerid)->filterByFraggedId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                    break;
+
+                case "deaths":
+                    $count = \FragsQuery::create()->filterByFraggedId($playerid)->filterByFraggerId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                    break;
+
+                case "ping":
+                    $pings = \GamescoresQuery::create()->filterByCreated($date->format("Y-m-d"))->find();
+                    $amount = $pings->count();
+                    $count = 0;
+                    foreach($pings as $ping){
+                        $count += $ping->getPing();
+                    }
+                    $count = $count / $amount;
+                    break;
+            }
+            switch($date->format("Y-m-d")){
+                case "2020-01-01":
+                    $displaydate = $date->format("Y");
+                    $total = ($values == "frags" || $values == "deaths")? $count / 10:$count;
+                    break;
+
+                case "2021-01-01":
+                    $displaydate = $date->format("Y");
+                    $total = ($values == "frags" || $values == "deaths")? $count / 36:$count;
+                    break;
+
+                default:
+                    $displaydate = $date->format("d/m/Y");
+                    $total = $count;
+                    break;
+            }
+            array_push($datas, $total);
+            array_push($labels,$displaydate);
+        }
+        array_push($dataset, (object)[
+            "type"=> 'line',
+            "label" => $player->getName(),
+            "data" => $datas
+        ]);
+
+        return ["datasets" => $dataset, "labels" => $labels];
+    }
+
+
+    public function getStatsMultiplayerEvolution($players,$values)
+    {
+        $labels = [];
+        foreach($this->getParseDates("ASC") as $game){
+            $date = $game->getCreated();
+            switch($date->format("Y-m-d")){
+                case "2020-01-01":
+                    $displaydate = $date->format("Y");
+                    break;
+
+                case "2021-01-01":
+                    $displaydate = $date->format("Y");
+                    break;
+
+                default:
+                    $displaydate = $date->format("d/m/Y");
+                    break;
+            }
+            array_push($labels,$displaydate);
+        }
+
+        $dataset = [];
+        $i = 0;
+        $colors = json_decode($this->config->chartcolors);
+        foreach($players as $playerid){
+            $datas = [];
+            $player = \PlayersQuery::create()->findPk($playerid);
+            foreach($this->getParseDates("ASC") as $game){
+                $date = $game->getCreated();
+                switch($values){
+                    case "ratio":
+                        $deaths = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        $kills = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        $count = ($deaths == 0)? 0: $kills / $deaths;
+                        break;
+
+                    case "frags":
+                        $count = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        break;
+
+                    case "deaths":
+                        $count = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        break;
+
+                    case "ping":
+                        $pings = \GamescoresQuery::create()->filterByPlayerId($player->getId())->filterByCreated($date->format("Y-m-d"))->find();
+                        $amount = $pings->count();
+                        $tcount = 0;
+                        foreach($pings as $ping){
+                            $tcount += $ping->getPing();
+                        }
+                        $count = ($amount == 0)? 0: intval($tcount / $amount);
+                        break;
+                }
+                switch($date->format("Y-m-d")){
+                    case "2020-01-01":
+                        $total = ($values == "frags" || $values == "deaths")? intval($count / 10):$count;
+                        break;
+
+                    case "2021-01-01":
+                        $total = ($values == "frags" || $values == "deaths")? intval($count / 36):$count;
+                        break;
+
+                    default:
+                        $total = $count;
+                        break;
+                }
+                array_push($datas, $total);
+            }
+            array_push($dataset, (object)[
+                "type"=> 'line',
+                "label" => $player->getName(),
+                "data" => $datas,
+                "borderColor" => $colors[$i],
+                "backgroundColor" => $colors[$i]
+
+            ]);
+            $i++;
+        }
+
+        return ["datasets" => $dataset, "labels" => $labels];
+    }
+
+
+    public function getStatsGamesEvolution($games,$values)
+    {
+        $labels = [];
+        $label = 1;
+        $players = [];
+        $gamesid = [];
+
+        foreach($games as $game){
+            array_push($labels,"#".$label);
+            array_push($gamesid,$game->getId());
+            $label++;
+            foreach($game->getScores() as $s){
+                if(!in_array($s->getPlayerId(),$players)) {
+                    array_push($players,$s->getPlayerId());
+                }
+            }
+        }
+
+        $dataset = [];
+        $i = 0;
+        $colors = json_decode($this->config->chartcolors);
+        foreach($players as $playerid){
+            $datas = [];
+            $player = \PlayersQuery::create()->findPk($playerid);
+            foreach($gamesid as $game){
+                $rounds = \GameroundsQuery::create()->filterByGameID($game)->find();
+                switch($values){
+                    case "ratio":
+                        $deaths = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        $kills = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        $count = ($deaths == 0)? 0: $kills / $deaths;
+                        break;
+
+                    case "frags":
+                        $count = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        break;
+
+                    case "deaths":
+                        $count = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        break;
+
+                    case "ping":
+                        $pings = \GamescoresQuery::create()->filterByPlayerId($player->getId())->filterByGameID($game)->find();
+                        $amount = $pings->count();
+                        $tcount = 0;
+                        foreach($pings as $ping){
+                            $tcount += $ping->getPing();
+                        }
+                        $count = ($amount == 0)? 0: intval($tcount / $amount);
+                        break;
+                }
+                array_push($datas, $count);
+            }
+            array_push($dataset, (object)[
+                "type"=> 'line',
+                "label" => $player->getName(),
+                "data" => $datas,
+                "borderColor" => $colors[$i],
+                "backgroundColor" => $colors[$i]
+
+            ]);
+            $i++;
+        }
+
+        return ["datasets" => $dataset, "labels" => $labels];
+    }
 }

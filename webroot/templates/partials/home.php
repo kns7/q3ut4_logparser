@@ -386,7 +386,33 @@
     ?>
 </div>
 <hr/>
-
+<div class="row">
+    <div class="col-sm">
+        <h1 class="text-center">Evolution des Stats</h1>
+    </div>
+</div>
+<?php
+$chartname = ($app->request->getResourceUri() == "/views/home")? "time":"games";
+?>
+<div class="row justify-content-around">
+    <div class="col-lg-6">
+        <h2 class="text-center">Frags</h2>
+        <canvas class="chart" id="playersfrags_chart" data-name="players-<?=$chartname;?>frags" data-chart="line" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
+    </div>
+    <div class="col-lg-6">
+        <h2 class="text-center">Deaths</h2>
+        <canvas class="chart" id="playersdeaths_chart" data-name="players-<?=$chartname;?>deaths" data-chart="line" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
+    </div>
+    <div class="col-lg-6">
+        <h2 class="text-center">Kills/Deaths Ratio</h2>
+        <canvas class="chart" id="playersratio_chart" data-name="players-<?=$chartname;?>ratio" data-chart="line" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
+    </div>
+    <div class="col-lg-6">
+        <h2 class="text-center">Ping (ms)</h2>
+        <canvas class="chart" id="playersping_chart" data-name="players-<?=$chartname;?>ping" data-chart="line" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
+    </div>
+</div>
+<hr/>
 <div class="row">
     <div class="col-sm">
         <h1 class="text-center">Statistiques du Serveur</h1>

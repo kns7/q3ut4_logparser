@@ -68,6 +68,26 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
         </div>
     </div>
     <hr/>
+    <div class="row"><div class="col text-center"><h1>Evolution</h1></div></div>
+    <div class="row justify-content-around">
+        <div class="col-sm-6">
+            <h2 class="text-center">Frags</h2>
+            <canvas class="chart" id="playertimefrags_chart" data-name="player-timefrags" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
+        </div>
+        <div class="col-sm-6">
+            <h2 class="text-center">Deaths</h2>
+            <canvas class="chart" id="playertimedeaths_chart" data-name="player-timedeaths" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
+        </div>
+        <div class="col-sm-6">
+            <h2 class="text-center">Kills / Death Ratio</h2>
+            <canvas class="chart" id="playertimeratio_chart" data-name="player-timeratio" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
+        </div>
+        <div class="col-sm-6">
+            <h2 class="text-center">Ping</h2>
+            <canvas class="chart" id="playertimeping_chart" data-name="player-timeping" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
+        </div>
+    </div>
+    <hr/>
     <div class="row"><div class="col text-center"><h1>Utilisation des Armes</h1></div></div>
     <div class="row justify-content-around">
         <div class="col-sm-4">
