@@ -48,12 +48,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \HitsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildBodyparts findOne(ConnectionInterface $con = null) Return the first ChildBodyparts matching the query
+ * @method     ChildBodyparts|null findOne(ConnectionInterface $con = null) Return the first ChildBodyparts matching the query
  * @method     ChildBodyparts findOneOrCreate(ConnectionInterface $con = null) Return the first ChildBodyparts matching the query, or a new ChildBodyparts object populated from the query conditions when no match is found
  *
- * @method     ChildBodyparts findOneById(int $id) Return the first ChildBodyparts filtered by the id column
- * @method     ChildBodyparts findOneByCode(string $code) Return the first ChildBodyparts filtered by the code column
- * @method     ChildBodyparts findOneByName(string $name) Return the first ChildBodyparts filtered by the name column *
+ * @method     ChildBodyparts|null findOneById(int $id) Return the first ChildBodyparts filtered by the id column
+ * @method     ChildBodyparts|null findOneByCode(string $code) Return the first ChildBodyparts filtered by the code column
+ * @method     ChildBodyparts|null findOneByName(string $name) Return the first ChildBodyparts filtered by the name column *
 
  * @method     ChildBodyparts requirePk($key, ConnectionInterface $con = null) Return the ChildBodyparts by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBodyparts requireOne(ConnectionInterface $con = null) Return the first ChildBodyparts matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -63,10 +63,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBodyparts requireOneByName(string $name) Return the first ChildBodyparts filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildBodyparts[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildBodyparts objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildBodyparts> find(ConnectionInterface $con = null) Return ChildBodyparts objects based on current ModelCriteria
  * @method     ChildBodyparts[]|ObjectCollection findById(int $id) Return ChildBodyparts objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildBodyparts> findById(int $id) Return ChildBodyparts objects filtered by the id column
  * @method     ChildBodyparts[]|ObjectCollection findByCode(string $code) Return ChildBodyparts objects filtered by the code column
+ * @psalm-method ObjectCollection&\Traversable<ChildBodyparts> findByCode(string $code) Return ChildBodyparts objects filtered by the code column
  * @method     ChildBodyparts[]|ObjectCollection findByName(string $name) Return ChildBodyparts objects filtered by the name column
+ * @psalm-method ObjectCollection&\Traversable<ChildBodyparts> findByName(string $name) Return ChildBodyparts objects filtered by the name column
  * @method     ChildBodyparts[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildBodyparts> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class BodypartsQuery extends ModelCriteria
@@ -302,9 +307,10 @@ abstract class BodypartsQuery extends ModelCriteria
      * <code>
      * $query->filterByCode('fooValue');   // WHERE code = 'fooValue'
      * $query->filterByCode('%fooValue%', Criteria::LIKE); // WHERE code LIKE '%fooValue%'
+     * $query->filterByCode(['foo', 'bar']); // WHERE code IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $code The value to use as filter.
+     * @param     string|string[] $code The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildBodypartsQuery The current query, for fluid interface
@@ -327,9 +333,10 @@ abstract class BodypartsQuery extends ModelCriteria
      * <code>
      * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
      * $query->filterByName('%fooValue%', Criteria::LIKE); // WHERE name LIKE '%fooValue%'
+     * $query->filterByName(['foo', 'bar']); // WHERE name IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $name The value to use as filter.
+     * @param     string|string[] $name The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildBodypartsQuery The current query, for fluid interface
@@ -418,6 +425,61 @@ abstract class BodypartsQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Hit', '\HitsQuery');
     }
 
+    /**
+     * Use the Hit relation Hits object
+     *
+     * @param callable(\HitsQuery):\HitsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withHitQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useHitQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Hit relation to the Hits table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \HitsQuery The inner query object of the EXISTS statement
+     */
+    public function useHitExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Hit', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Hit relation to the Hits table for a NOT EXISTS query.
+     *
+     * @see useHitExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \HitsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useHitNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Hit', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

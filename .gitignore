@@ -5,6 +5,7 @@ vendor/
 propel.yml
 app/config/config.php
 generated-sql/
+generated-conf/
 webroot/img/users/
 logs/
 games.log

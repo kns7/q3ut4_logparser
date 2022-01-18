@@ -10,7 +10,7 @@ require("../app/config/config.php");
 
 // MySQL Configuration / Connection
 $serviceContainer = Propel::getServiceContainer();
-$serviceContainer->checkVersion('2.0.0-dev');
+$serviceContainer->checkVersion('2');
 $serviceContainer->setAdapterClass('default', 'mysql');
 $manager = new ConnectionManagerSingle();
 $manager->setConfiguration(array (

@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class BombsTableMap extends TableMap
 {
@@ -130,6 +129,48 @@ class BombsTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Bombs.Id' => 'ID',
+        'id' => 'ID',
+        'bombs.id' => 'ID',
+        'BombsTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'PlayerId' => 'PLAYER_ID',
+        'Bombs.PlayerId' => 'PLAYER_ID',
+        'playerId' => 'PLAYER_ID',
+        'bombs.playerId' => 'PLAYER_ID',
+        'BombsTableMap::COL_PLAYER_ID' => 'PLAYER_ID',
+        'COL_PLAYER_ID' => 'PLAYER_ID',
+        'player_id' => 'PLAYER_ID',
+        'bombs.player_id' => 'PLAYER_ID',
+        'Event' => 'EVENT',
+        'Bombs.Event' => 'EVENT',
+        'event' => 'EVENT',
+        'bombs.event' => 'EVENT',
+        'BombsTableMap::COL_EVENT' => 'EVENT',
+        'COL_EVENT' => 'EVENT',
+        'RoundId' => 'ROUND_ID',
+        'Bombs.RoundId' => 'ROUND_ID',
+        'roundId' => 'ROUND_ID',
+        'bombs.roundId' => 'ROUND_ID',
+        'BombsTableMap::COL_ROUND_ID' => 'ROUND_ID',
+        'COL_ROUND_ID' => 'ROUND_ID',
+        'round_id' => 'ROUND_ID',
+        'bombs.round_id' => 'ROUND_ID',
+        'Created' => 'CREATED',
+        'Bombs.Created' => 'CREATED',
+        'created' => 'CREATED',
+        'bombs.created' => 'CREATED',
+        'BombsTableMap::COL_CREATED' => 'CREATED',
+        'COL_CREATED' => 'CREATED',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -155,6 +196,8 @@ class BombsTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -226,7 +269,7 @@ class BombsTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -330,6 +373,34 @@ class BombsTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(BombsTableMap::COL_ID);
+            $criteria->removeSelectColumn(BombsTableMap::COL_PLAYER_ID);
+            $criteria->removeSelectColumn(BombsTableMap::COL_EVENT);
+            $criteria->removeSelectColumn(BombsTableMap::COL_ROUND_ID);
+            $criteria->removeSelectColumn(BombsTableMap::COL_CREATED);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.player_id');
+            $criteria->removeSelectColumn($alias . '.event');
+            $criteria->removeSelectColumn($alias . '.round_id');
+            $criteria->removeSelectColumn($alias . '.created');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -339,17 +410,6 @@ class BombsTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(BombsTableMap::DATABASE_NAME)->getTable(BombsTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(BombsTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(BombsTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new BombsTableMap());
-        }
     }
 
     /**
@@ -441,6 +501,3 @@ class BombsTableMap extends TableMap
     }
 
 } // BombsTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-BombsTableMap::buildTableMap();

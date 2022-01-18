@@ -96,21 +96,21 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \MapsQuery|\GametypesQuery|\GameroundsQuery|\GamescoresQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildGames findOne(ConnectionInterface $con = null) Return the first ChildGames matching the query
+ * @method     ChildGames|null findOne(ConnectionInterface $con = null) Return the first ChildGames matching the query
  * @method     ChildGames findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGames matching the query, or a new ChildGames object populated from the query conditions when no match is found
  *
- * @method     ChildGames findOneById(int $id) Return the first ChildGames filtered by the id column
- * @method     ChildGames findOneByGameNB(int $gamenb) Return the first ChildGames filtered by the gamenb column
- * @method     ChildGames findOneByMapId(int $map_id) Return the first ChildGames filtered by the map_id column
- * @method     ChildGames findOneByGametypeId(int $gametype_id) Return the first ChildGames filtered by the gametype_id column
- * @method     ChildGames findOneByTimelimit(int $timelimit) Return the first ChildGames filtered by the timelimit column
- * @method     ChildGames findOneByRoundtime(int $roundtime) Return the first ChildGames filtered by the roundtime column
- * @method     ChildGames findOneByNbplayers(int $nbplayers) Return the first ChildGames filtered by the nbplayers column
- * @method     ChildGames findOneByRedScore(int $redscore) Return the first ChildGames filtered by the redscore column
- * @method     ChildGames findOneByBlueScore(int $bluescore) Return the first ChildGames filtered by the bluescore column
- * @method     ChildGames findOneByRedScore2(int $redscore2) Return the first ChildGames filtered by the redscore2 column
- * @method     ChildGames findOneByBlueScore2(int $bluescore2) Return the first ChildGames filtered by the bluescore2 column
- * @method     ChildGames findOneByCreated(string $created) Return the first ChildGames filtered by the created column *
+ * @method     ChildGames|null findOneById(int $id) Return the first ChildGames filtered by the id column
+ * @method     ChildGames|null findOneByGameNB(int $gamenb) Return the first ChildGames filtered by the gamenb column
+ * @method     ChildGames|null findOneByMapId(int $map_id) Return the first ChildGames filtered by the map_id column
+ * @method     ChildGames|null findOneByGametypeId(int $gametype_id) Return the first ChildGames filtered by the gametype_id column
+ * @method     ChildGames|null findOneByTimelimit(int $timelimit) Return the first ChildGames filtered by the timelimit column
+ * @method     ChildGames|null findOneByRoundtime(int $roundtime) Return the first ChildGames filtered by the roundtime column
+ * @method     ChildGames|null findOneByNbplayers(int $nbplayers) Return the first ChildGames filtered by the nbplayers column
+ * @method     ChildGames|null findOneByRedScore(int $redscore) Return the first ChildGames filtered by the redscore column
+ * @method     ChildGames|null findOneByBlueScore(int $bluescore) Return the first ChildGames filtered by the bluescore column
+ * @method     ChildGames|null findOneByRedScore2(int $redscore2) Return the first ChildGames filtered by the redscore2 column
+ * @method     ChildGames|null findOneByBlueScore2(int $bluescore2) Return the first ChildGames filtered by the bluescore2 column
+ * @method     ChildGames|null findOneByCreated(string $created) Return the first ChildGames filtered by the created column *
 
  * @method     ChildGames requirePk($key, ConnectionInterface $con = null) Return the ChildGames by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGames requireOne(ConnectionInterface $con = null) Return the first ChildGames matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -129,19 +129,33 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGames requireOneByCreated(string $created) Return the first ChildGames filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGames[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGames objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> find(ConnectionInterface $con = null) Return ChildGames objects based on current ModelCriteria
  * @method     ChildGames[]|ObjectCollection findById(int $id) Return ChildGames objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findById(int $id) Return ChildGames objects filtered by the id column
  * @method     ChildGames[]|ObjectCollection findByGameNB(int $gamenb) Return ChildGames objects filtered by the gamenb column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByGameNB(int $gamenb) Return ChildGames objects filtered by the gamenb column
  * @method     ChildGames[]|ObjectCollection findByMapId(int $map_id) Return ChildGames objects filtered by the map_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByMapId(int $map_id) Return ChildGames objects filtered by the map_id column
  * @method     ChildGames[]|ObjectCollection findByGametypeId(int $gametype_id) Return ChildGames objects filtered by the gametype_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByGametypeId(int $gametype_id) Return ChildGames objects filtered by the gametype_id column
  * @method     ChildGames[]|ObjectCollection findByTimelimit(int $timelimit) Return ChildGames objects filtered by the timelimit column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByTimelimit(int $timelimit) Return ChildGames objects filtered by the timelimit column
  * @method     ChildGames[]|ObjectCollection findByRoundtime(int $roundtime) Return ChildGames objects filtered by the roundtime column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByRoundtime(int $roundtime) Return ChildGames objects filtered by the roundtime column
  * @method     ChildGames[]|ObjectCollection findByNbplayers(int $nbplayers) Return ChildGames objects filtered by the nbplayers column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByNbplayers(int $nbplayers) Return ChildGames objects filtered by the nbplayers column
  * @method     ChildGames[]|ObjectCollection findByRedScore(int $redscore) Return ChildGames objects filtered by the redscore column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByRedScore(int $redscore) Return ChildGames objects filtered by the redscore column
  * @method     ChildGames[]|ObjectCollection findByBlueScore(int $bluescore) Return ChildGames objects filtered by the bluescore column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByBlueScore(int $bluescore) Return ChildGames objects filtered by the bluescore column
  * @method     ChildGames[]|ObjectCollection findByRedScore2(int $redscore2) Return ChildGames objects filtered by the redscore2 column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByRedScore2(int $redscore2) Return ChildGames objects filtered by the redscore2 column
  * @method     ChildGames[]|ObjectCollection findByBlueScore2(int $bluescore2) Return ChildGames objects filtered by the bluescore2 column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByBlueScore2(int $bluescore2) Return ChildGames objects filtered by the bluescore2 column
  * @method     ChildGames[]|ObjectCollection findByCreated(string $created) Return ChildGames objects filtered by the created column
+ * @psalm-method ObjectCollection&\Traversable<ChildGames> findByCreated(string $created) Return ChildGames objects filtered by the created column
  * @method     ChildGames[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildGames> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class GamesQuery extends ModelCriteria
@@ -905,6 +919,61 @@ abstract class GamesQuery extends ModelCriteria
     }
 
     /**
+     * Use the Maps relation Maps object
+     *
+     * @param callable(\MapsQuery):\MapsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withMapsQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useMapsQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Maps table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \MapsQuery The inner query object of the EXISTS statement
+     */
+    public function useMapsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Maps', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Maps table for a NOT EXISTS query.
+     *
+     * @see useMapsExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \MapsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useMapsNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Maps', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Gametypes object
      *
      * @param \Gametypes|ObjectCollection $gametypes The related object(s) to use as filter
@@ -982,6 +1051,61 @@ abstract class GamesQuery extends ModelCriteria
     }
 
     /**
+     * Use the Gamestypes relation Gametypes object
+     *
+     * @param callable(\GametypesQuery):\GametypesQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withGamestypesQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useGamestypesQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Gamestypes relation to the Gametypes table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \GametypesQuery The inner query object of the EXISTS statement
+     */
+    public function useGamestypesExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Gamestypes', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Gamestypes relation to the Gametypes table for a NOT EXISTS query.
+     *
+     * @see useGamestypesExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \GametypesQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useGamestypesNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Gamestypes', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Gamerounds object
      *
      * @param \Gamerounds|ObjectCollection $gamerounds the related object to use as filter
@@ -1055,6 +1179,61 @@ abstract class GamesQuery extends ModelCriteria
     }
 
     /**
+     * Use the Round relation Gamerounds object
+     *
+     * @param callable(\GameroundsQuery):\GameroundsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withRoundQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useRoundQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Round relation to the Gamerounds table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \GameroundsQuery The inner query object of the EXISTS statement
+     */
+    public function useRoundExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Round', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Round relation to the Gamerounds table for a NOT EXISTS query.
+     *
+     * @see useRoundExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \GameroundsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useRoundNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Round', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Gamescores object
      *
      * @param \Gamescores|ObjectCollection $gamescores the related object to use as filter
@@ -1127,6 +1306,61 @@ abstract class GamesQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Score', '\GamescoresQuery');
     }
 
+    /**
+     * Use the Score relation Gamescores object
+     *
+     * @param callable(\GamescoresQuery):\GamescoresQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withScoreQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useScoreQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Score relation to the Gamescores table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \GamescoresQuery The inner query object of the EXISTS statement
+     */
+    public function useScoreExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Score', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Score relation to the Gamescores table for a NOT EXISTS query.
+     *
+     * @see useScoreExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \GamescoresQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useScoreNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Score', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

@@ -84,15 +84,15 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \PlayersQuery|\BodypartsQuery|\GameroundsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildHits findOne(ConnectionInterface $con = null) Return the first ChildHits matching the query
+ * @method     ChildHits|null findOne(ConnectionInterface $con = null) Return the first ChildHits matching the query
  * @method     ChildHits findOneOrCreate(ConnectionInterface $con = null) Return the first ChildHits matching the query, or a new ChildHits object populated from the query conditions when no match is found
  *
- * @method     ChildHits findOneById(int $id) Return the first ChildHits filtered by the id column
- * @method     ChildHits findOneByHitterId(int $hitter_id) Return the first ChildHits filtered by the hitter_id column
- * @method     ChildHits findOneByHittedId(int $hitted_id) Return the first ChildHits filtered by the hitted_id column
- * @method     ChildHits findOneByBodypartId(int $bodypart_id) Return the first ChildHits filtered by the bodypart_id column
- * @method     ChildHits findOneByRoundId(int $round_id) Return the first ChildHits filtered by the round_id column
- * @method     ChildHits findOneByCreated(string $created) Return the first ChildHits filtered by the created column *
+ * @method     ChildHits|null findOneById(int $id) Return the first ChildHits filtered by the id column
+ * @method     ChildHits|null findOneByHitterId(int $hitter_id) Return the first ChildHits filtered by the hitter_id column
+ * @method     ChildHits|null findOneByHittedId(int $hitted_id) Return the first ChildHits filtered by the hitted_id column
+ * @method     ChildHits|null findOneByBodypartId(int $bodypart_id) Return the first ChildHits filtered by the bodypart_id column
+ * @method     ChildHits|null findOneByRoundId(int $round_id) Return the first ChildHits filtered by the round_id column
+ * @method     ChildHits|null findOneByCreated(string $created) Return the first ChildHits filtered by the created column *
 
  * @method     ChildHits requirePk($key, ConnectionInterface $con = null) Return the ChildHits by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHits requireOne(ConnectionInterface $con = null) Return the first ChildHits matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -105,13 +105,21 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHits requireOneByCreated(string $created) Return the first ChildHits filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildHits[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildHits objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildHits> find(ConnectionInterface $con = null) Return ChildHits objects based on current ModelCriteria
  * @method     ChildHits[]|ObjectCollection findById(int $id) Return ChildHits objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildHits> findById(int $id) Return ChildHits objects filtered by the id column
  * @method     ChildHits[]|ObjectCollection findByHitterId(int $hitter_id) Return ChildHits objects filtered by the hitter_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildHits> findByHitterId(int $hitter_id) Return ChildHits objects filtered by the hitter_id column
  * @method     ChildHits[]|ObjectCollection findByHittedId(int $hitted_id) Return ChildHits objects filtered by the hitted_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildHits> findByHittedId(int $hitted_id) Return ChildHits objects filtered by the hitted_id column
  * @method     ChildHits[]|ObjectCollection findByBodypartId(int $bodypart_id) Return ChildHits objects filtered by the bodypart_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildHits> findByBodypartId(int $bodypart_id) Return ChildHits objects filtered by the bodypart_id column
  * @method     ChildHits[]|ObjectCollection findByRoundId(int $round_id) Return ChildHits objects filtered by the round_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildHits> findByRoundId(int $round_id) Return ChildHits objects filtered by the round_id column
  * @method     ChildHits[]|ObjectCollection findByCreated(string $created) Return ChildHits objects filtered by the created column
+ * @psalm-method ObjectCollection&\Traversable<ChildHits> findByCreated(string $created) Return ChildHits objects filtered by the created column
  * @method     ChildHits[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildHits> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class HitsQuery extends ModelCriteria
@@ -633,6 +641,61 @@ abstract class HitsQuery extends ModelCriteria
     }
 
     /**
+     * Use the Hitter relation Players object
+     *
+     * @param callable(\PlayersQuery):\PlayersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withHitterQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useHitterQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Hitter relation to the Players table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \PlayersQuery The inner query object of the EXISTS statement
+     */
+    public function useHitterExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Hitter', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Hitter relation to the Players table for a NOT EXISTS query.
+     *
+     * @see useHitterExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \PlayersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useHitterNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Hitter', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Players object
      *
      * @param \Players|ObjectCollection $players The related object(s) to use as filter
@@ -709,6 +772,61 @@ abstract class HitsQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Hitted', '\PlayersQuery');
     }
 
+    /**
+     * Use the Hitted relation Players object
+     *
+     * @param callable(\PlayersQuery):\PlayersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withHittedQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useHittedQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Hitted relation to the Players table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \PlayersQuery The inner query object of the EXISTS statement
+     */
+    public function useHittedExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Hitted', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Hitted relation to the Players table for a NOT EXISTS query.
+     *
+     * @see useHittedExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \PlayersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useHittedNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Hitted', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Filter the query by a related \Bodyparts object
      *
@@ -787,6 +905,61 @@ abstract class HitsQuery extends ModelCriteria
     }
 
     /**
+     * Use the Bodyparts relation Bodyparts object
+     *
+     * @param callable(\BodypartsQuery):\BodypartsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withBodypartsQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useBodypartsQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Bodyparts table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \BodypartsQuery The inner query object of the EXISTS statement
+     */
+    public function useBodypartsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Bodyparts', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Bodyparts table for a NOT EXISTS query.
+     *
+     * @see useBodypartsExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \BodypartsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useBodypartsNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Bodyparts', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \Gamerounds object
      *
      * @param \Gamerounds|ObjectCollection $gamerounds The related object(s) to use as filter
@@ -863,6 +1036,61 @@ abstract class HitsQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Rounds', '\GameroundsQuery');
     }
 
+    /**
+     * Use the Rounds relation Gamerounds object
+     *
+     * @param callable(\GameroundsQuery):\GameroundsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withRoundsQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useRoundsQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the Rounds relation to the Gamerounds table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \GameroundsQuery The inner query object of the EXISTS statement
+     */
+    public function useRoundsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Rounds', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the Rounds relation to the Gamerounds table for a NOT EXISTS query.
+     *
+     * @see useRoundsExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \GameroundsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useRoundsNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Rounds', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

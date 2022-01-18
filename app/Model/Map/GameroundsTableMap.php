@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class GameroundsTableMap extends TableMap
 {
@@ -130,6 +129,48 @@ class GameroundsTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Gamerounds.Id' => 'ID',
+        'id' => 'ID',
+        'gamerounds.id' => 'ID',
+        'GameroundsTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'RoundNB' => 'ROUNDNB',
+        'Gamerounds.RoundNB' => 'ROUNDNB',
+        'roundNB' => 'ROUNDNB',
+        'gamerounds.roundNB' => 'ROUNDNB',
+        'GameroundsTableMap::COL_ROUNDNB' => 'ROUNDNB',
+        'COL_ROUNDNB' => 'ROUNDNB',
+        'roundnb' => 'ROUNDNB',
+        'gamerounds.roundnb' => 'ROUNDNB',
+        'GameID' => 'GAME_ID',
+        'Gamerounds.GameID' => 'GAME_ID',
+        'gameID' => 'GAME_ID',
+        'gamerounds.gameID' => 'GAME_ID',
+        'GameroundsTableMap::COL_GAME_ID' => 'GAME_ID',
+        'COL_GAME_ID' => 'GAME_ID',
+        'game_id' => 'GAME_ID',
+        'gamerounds.game_id' => 'GAME_ID',
+        'Half' => 'HALF',
+        'Gamerounds.Half' => 'HALF',
+        'half' => 'HALF',
+        'gamerounds.half' => 'HALF',
+        'GameroundsTableMap::COL_HALF' => 'HALF',
+        'COL_HALF' => 'HALF',
+        'Created' => 'CREATED',
+        'Gamerounds.Created' => 'CREATED',
+        'created' => 'CREATED',
+        'gamerounds.created' => 'CREATED',
+        'GameroundsTableMap::COL_CREATED' => 'CREATED',
+        'COL_CREATED' => 'CREATED',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -155,6 +196,8 @@ class GameroundsTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -247,7 +290,7 @@ class GameroundsTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -351,6 +394,34 @@ class GameroundsTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(GameroundsTableMap::COL_ID);
+            $criteria->removeSelectColumn(GameroundsTableMap::COL_ROUNDNB);
+            $criteria->removeSelectColumn(GameroundsTableMap::COL_GAME_ID);
+            $criteria->removeSelectColumn(GameroundsTableMap::COL_HALF);
+            $criteria->removeSelectColumn(GameroundsTableMap::COL_CREATED);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.roundnb');
+            $criteria->removeSelectColumn($alias . '.game_id');
+            $criteria->removeSelectColumn($alias . '.half');
+            $criteria->removeSelectColumn($alias . '.created');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -360,17 +431,6 @@ class GameroundsTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(GameroundsTableMap::DATABASE_NAME)->getTable(GameroundsTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(GameroundsTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(GameroundsTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new GameroundsTableMap());
-        }
     }
 
     /**
@@ -462,6 +522,3 @@ class GameroundsTableMap extends TableMap
     }
 
 } // GameroundsTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-GameroundsTableMap::buildTableMap();

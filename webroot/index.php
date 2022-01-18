@@ -9,24 +9,51 @@ require("../vendor/autoload.php");
 require("../app/config/config.php");
 
 // MySQL Configuration / Connection
-$serviceContainer = Propel::getServiceContainer();
-$serviceContainer->checkVersion('2.0.0-dev');
+$serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
+$serviceContainer->checkVersion(2);
 $serviceContainer->setAdapterClass('default', 'mysql');
-$manager = new ConnectionManagerSingle();
+$manager = new \Propel\Runtime\Connection\ConnectionManagerSingle();
 $manager->setConfiguration(array (
-    'classname' => 'Propel\\Runtime\\Connection\\DebugPDO',
     'dsn' => 'mysql:host='.$_SERVER['MYSQL_HOST'].';port='.$_SERVER['MYSQL_PORT'].';dbname='.$_SERVER['MYSQL_DB'],
     'user' => $_SERVER['MYSQL_USER'],
     'password' => $_SERVER['MYSQL_PASSWORD'],
-    'attributes' =>
+    'settings' =>
         array (
-            'ATTR_EMULATE_PREPARES' => false,
-            'ATTR_TIMEOUT' => 30,
-        )
+            'charset' => 'utf8',
+            'queries' =>
+                array (
+                ),
+        ),
+    'classname' => '\\Propel\\Runtime\\Connection\\ConnectionWrapper',
+    'model_paths' =>
+        array (
+            0 => 'src',
+            1 => 'vendor',
+        ),
 ));
 $manager->setName('default');
 $serviceContainer->setConnectionManager('default', $manager);
 $serviceContainer->setDefaultDatasource('default');
+$serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
+$serviceContainer->initDatabaseMaps(array (
+    'default' =>
+        array (
+            0 => '\\Map\\BodypartsTableMap',
+            1 => '\\Map\\BombsTableMap',
+            2 => '\\Map\\ConfigTableMap',
+            3 => '\\Map\\FlagsTableMap',
+            4 => '\\Map\\FragsTableMap',
+            5 => '\\Map\\GameroundsTableMap',
+            6 => '\\Map\\GamesTableMap',
+            7 => '\\Map\\GamescoresTableMap',
+            8 => '\\Map\\GametimesTableMap',
+            9 => '\\Map\\GametypesTableMap',
+            10 => '\\Map\\HitsTableMap',
+            11 => '\\Map\\MapsTableMap',
+            12 => '\\Map\\PlayersTableMap',
+            13 => '\\Map\\WeaponsTableMap',
+        ),
+));
 
 $app = new Slim([
     'template.path' => 'templates/',

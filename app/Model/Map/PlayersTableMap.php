@@ -24,7 +24,6 @@ use Propel\Runtime\Map\TableMapTrait;
  * For example, the createSelectSql() method checks the type of a given column used in an
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
- *
  */
 class PlayersTableMap extends TableMap
 {
@@ -120,6 +119,32 @@ class PlayersTableMap extends TableMap
     );
 
     /**
+     * Holds a list of column names and their normalized version.
+     *
+     * @var string[]
+     */
+    protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'Players.Id' => 'ID',
+        'id' => 'ID',
+        'players.id' => 'ID',
+        'PlayersTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'Name' => 'NAME',
+        'Players.Name' => 'NAME',
+        'name' => 'NAME',
+        'players.name' => 'NAME',
+        'PlayersTableMap::COL_NAME' => 'NAME',
+        'COL_NAME' => 'NAME',
+        'Altname' => 'ALTNAME',
+        'Players.Altname' => 'ALTNAME',
+        'altname' => 'ALTNAME',
+        'players.altname' => 'ALTNAME',
+        'PlayersTableMap::COL_ALTNAME' => 'ALTNAME',
+        'COL_ALTNAME' => 'ALTNAME',
+    ];
+
+    /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
      *
@@ -143,6 +168,8 @@ class PlayersTableMap extends TableMap
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
     public function buildRelations()
     {
@@ -256,7 +283,7 @@ class PlayersTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param boolean $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
@@ -356,6 +383,30 @@ class PlayersTableMap extends TableMap
     }
 
     /**
+     * Remove all the columns needed to create a new object.
+     *
+     * Note: any columns that were marked with lazyLoad="true" in the
+     * XML schema will not be removed as they are only loaded on demand.
+     *
+     * @param Criteria $criteria object containing the columns to remove.
+     * @param string   $alias    optional table alias
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     */
+    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    {
+        if (null === $alias) {
+            $criteria->removeSelectColumn(PlayersTableMap::COL_ID);
+            $criteria->removeSelectColumn(PlayersTableMap::COL_NAME);
+            $criteria->removeSelectColumn(PlayersTableMap::COL_ALTNAME);
+        } else {
+            $criteria->removeSelectColumn($alias . '.id');
+            $criteria->removeSelectColumn($alias . '.name');
+            $criteria->removeSelectColumn($alias . '.altname');
+        }
+    }
+
+    /**
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
@@ -365,17 +416,6 @@ class PlayersTableMap extends TableMap
     public static function getTableMap()
     {
         return Propel::getServiceContainer()->getDatabaseMap(PlayersTableMap::DATABASE_NAME)->getTable(PlayersTableMap::TABLE_NAME);
-    }
-
-    /**
-     * Add a TableMap instance to the database for this tableMap class.
-     */
-    public static function buildTableMap()
-    {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(PlayersTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(PlayersTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new PlayersTableMap());
-        }
     }
 
     /**
@@ -467,6 +507,3 @@ class PlayersTableMap extends TableMap
     }
 
 } // PlayersTableMap
-// This is the static code needed to register the TableMap for this table with the main Propel class.
-//
-PlayersTableMap::buildTableMap();

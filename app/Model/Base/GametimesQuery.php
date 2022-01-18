@@ -52,14 +52,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \PlayersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildGametimes findOne(ConnectionInterface $con = null) Return the first ChildGametimes matching the query
+ * @method     ChildGametimes|null findOne(ConnectionInterface $con = null) Return the first ChildGametimes matching the query
  * @method     ChildGametimes findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGametimes matching the query, or a new ChildGametimes object populated from the query conditions when no match is found
  *
- * @method     ChildGametimes findOneById(int $id) Return the first ChildGametimes filtered by the id column
- * @method     ChildGametimes findOneByPlayerId(int $player_id) Return the first ChildGametimes filtered by the player_id column
- * @method     ChildGametimes findOneByStart(int $start) Return the first ChildGametimes filtered by the start column
- * @method     ChildGametimes findOneByStop(int $stop) Return the first ChildGametimes filtered by the stop column
- * @method     ChildGametimes findOneByCreated(string $created) Return the first ChildGametimes filtered by the created column *
+ * @method     ChildGametimes|null findOneById(int $id) Return the first ChildGametimes filtered by the id column
+ * @method     ChildGametimes|null findOneByPlayerId(int $player_id) Return the first ChildGametimes filtered by the player_id column
+ * @method     ChildGametimes|null findOneByStart(int $start) Return the first ChildGametimes filtered by the start column
+ * @method     ChildGametimes|null findOneByStop(int $stop) Return the first ChildGametimes filtered by the stop column
+ * @method     ChildGametimes|null findOneByCreated(string $created) Return the first ChildGametimes filtered by the created column *
 
  * @method     ChildGametimes requirePk($key, ConnectionInterface $con = null) Return the ChildGametimes by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGametimes requireOne(ConnectionInterface $con = null) Return the first ChildGametimes matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -71,12 +71,19 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGametimes requireOneByCreated(string $created) Return the first ChildGametimes filtered by the created column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGametimes[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGametimes objects based on current ModelCriteria
+ * @psalm-method ObjectCollection&\Traversable<ChildGametimes> find(ConnectionInterface $con = null) Return ChildGametimes objects based on current ModelCriteria
  * @method     ChildGametimes[]|ObjectCollection findById(int $id) Return ChildGametimes objects filtered by the id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGametimes> findById(int $id) Return ChildGametimes objects filtered by the id column
  * @method     ChildGametimes[]|ObjectCollection findByPlayerId(int $player_id) Return ChildGametimes objects filtered by the player_id column
+ * @psalm-method ObjectCollection&\Traversable<ChildGametimes> findByPlayerId(int $player_id) Return ChildGametimes objects filtered by the player_id column
  * @method     ChildGametimes[]|ObjectCollection findByStart(int $start) Return ChildGametimes objects filtered by the start column
+ * @psalm-method ObjectCollection&\Traversable<ChildGametimes> findByStart(int $start) Return ChildGametimes objects filtered by the start column
  * @method     ChildGametimes[]|ObjectCollection findByStop(int $stop) Return ChildGametimes objects filtered by the stop column
+ * @psalm-method ObjectCollection&\Traversable<ChildGametimes> findByStop(int $stop) Return ChildGametimes objects filtered by the stop column
  * @method     ChildGametimes[]|ObjectCollection findByCreated(string $created) Return ChildGametimes objects filtered by the created column
+ * @psalm-method ObjectCollection&\Traversable<ChildGametimes> findByCreated(string $created) Return ChildGametimes objects filtered by the created column
  * @method     ChildGametimes[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildGametimes> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class GametimesQuery extends ModelCriteria
@@ -550,6 +557,61 @@ abstract class GametimesQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'Players', '\PlayersQuery');
     }
 
+    /**
+     * Use the Players relation Players object
+     *
+     * @param callable(\PlayersQuery):\PlayersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withPlayersQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->usePlayersQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Players table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \PlayersQuery The inner query object of the EXISTS statement
+     */
+    public function usePlayersExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Players', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Players table for a NOT EXISTS query.
+     *
+     * @see usePlayersExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \PlayersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function usePlayersNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Players', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

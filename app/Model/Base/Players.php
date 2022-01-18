@@ -96,54 +96,62 @@ abstract class Players implements ActiveRecordInterface
     /**
      * The value for the altname field.
      *
-     * @var        string
+     * @var        string|null
      */
     protected $altname;
 
     /**
      * @var        ObjectCollection|ChildBombs[] Collection to store aggregation of ChildBombs objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildBombs> Collection to store aggregation of ChildBombs objects.
      */
     protected $collBombs;
     protected $collBombsPartial;
 
     /**
      * @var        ObjectCollection|ChildFlags[] Collection to store aggregation of ChildFlags objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildFlags> Collection to store aggregation of ChildFlags objects.
      */
     protected $collFlags;
     protected $collFlagsPartial;
 
     /**
      * @var        ObjectCollection|ChildFrags[] Collection to store aggregation of ChildFrags objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildFrags> Collection to store aggregation of ChildFrags objects.
      */
     protected $collFraggerPlayers;
     protected $collFraggerPlayersPartial;
 
     /**
      * @var        ObjectCollection|ChildFrags[] Collection to store aggregation of ChildFrags objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildFrags> Collection to store aggregation of ChildFrags objects.
      */
     protected $collFraggedPlayers;
     protected $collFraggedPlayersPartial;
 
     /**
      * @var        ObjectCollection|ChildGamescores[] Collection to store aggregation of ChildGamescores objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildGamescores> Collection to store aggregation of ChildGamescores objects.
      */
     protected $collScoress;
     protected $collScoressPartial;
 
     /**
      * @var        ObjectCollection|ChildGametimes[] Collection to store aggregation of ChildGametimes objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildGametimes> Collection to store aggregation of ChildGametimes objects.
      */
     protected $collGametimes;
     protected $collGametimesPartial;
 
     /**
      * @var        ObjectCollection|ChildHits[] Collection to store aggregation of ChildHits objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildHits> Collection to store aggregation of ChildHits objects.
      */
     protected $collHitterPlayers;
     protected $collHitterPlayersPartial;
 
     /**
      * @var        ObjectCollection|ChildHits[] Collection to store aggregation of ChildHits objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildHits> Collection to store aggregation of ChildHits objects.
      */
     protected $collHittedPlayers;
     protected $collHittedPlayersPartial;
@@ -159,48 +167,56 @@ abstract class Players implements ActiveRecordInterface
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildBombs[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildBombs>
      */
     protected $bombsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildFlags[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildFlags>
      */
     protected $flagsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildFrags[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildFrags>
      */
     protected $fraggerPlayersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildFrags[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildFrags>
      */
     protected $fraggedPlayersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildGamescores[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildGamescores>
      */
     protected $scoressScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildGametimes[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildGametimes>
      */
     protected $gametimesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildHits[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildHits>
      */
     protected $hitterPlayersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildHits[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildHits>
      */
     protected $hittedPlayersScheduledForDeletion = null;
 
@@ -291,9 +307,7 @@ abstract class Players implements ActiveRecordInterface
     public function resetModified($col = null)
     {
         if (null !== $col) {
-            if (isset($this->modifiedColumns[$col])) {
-                unset($this->modifiedColumns[$col]);
-            }
+            unset($this->modifiedColumns[$col]);
         } else {
             $this->modifiedColumns = array();
         }
@@ -368,7 +382,7 @@ abstract class Players implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Players The current object, for fluid interface
+     * @return $this The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -382,11 +396,11 @@ abstract class Players implements ActiveRecordInterface
      *
      * @param  string  $msg
      * @param  int     $priority One of the Propel::LOG_* logging levels
-     * @return boolean
+     * @return void
      */
     protected function log($msg, $priority = Propel::LOG_INFO)
     {
-        return Propel::log(get_class($this) . ': ' . $msg, $priority);
+        Propel::log(get_class($this) . ': ' . $msg, $priority);
     }
 
     /**
@@ -399,15 +413,16 @@ abstract class Players implements ActiveRecordInterface
      *
      * @param  mixed   $parser                 A AbstractParser instance, or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param  boolean $includeLazyLoadColumns (optional) Whether to include lazy load(ed) columns. Defaults to TRUE.
+     * @param  string  $keyType                (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME, TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM. Defaults to TableMap::TYPE_PHPNAME.
      * @return string  The exported data
      */
-    public function exportTo($parser, $includeLazyLoadColumns = true)
+    public function exportTo($parser, $includeLazyLoadColumns = true, $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
         }
 
-        return $parser->fromArray($this->toArray(TableMap::TYPE_PHPNAME, $includeLazyLoadColumns, array(), true));
+        return $parser->fromArray($this->toArray($keyType, $includeLazyLoadColumns, array(), true));
     }
 
     /**
@@ -452,7 +467,7 @@ abstract class Players implements ActiveRecordInterface
     /**
      * Get the [altname] column value.
      *
-     * @return string
+     * @return string|null
      */
     public function getAltname()
     {
@@ -462,7 +477,7 @@ abstract class Players implements ActiveRecordInterface
     /**
      * Set the value of [id] column.
      *
-     * @param int $v new value
+     * @param int $v New value
      * @return $this|\Players The current object (for fluent API support)
      */
     public function setId($v)
@@ -482,7 +497,7 @@ abstract class Players implements ActiveRecordInterface
     /**
      * Set the value of [name] column.
      *
-     * @param string $v new value
+     * @param string $v New value
      * @return $this|\Players The current object (for fluent API support)
      */
     public function setName($v)
@@ -502,7 +517,7 @@ abstract class Players implements ActiveRecordInterface
     /**
      * Set the value of [altname] column.
      *
-     * @param string $v new value
+     * @param string|null $v New value
      * @return $this|\Players The current object (for fluent API support)
      */
     public function setAltname($v)
@@ -1247,7 +1262,7 @@ abstract class Players implements ActiveRecordInterface
      *
      * @param      array  $arr     An array to populate the object from.
      * @param      string $keyType The type of keys the array uses.
-     * @return void
+     * @return     $this|\Players
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1262,6 +1277,8 @@ abstract class Players implements ActiveRecordInterface
         if (array_key_exists($keys[2], $arr)) {
             $this->setAltname($arr[$keys[2]]);
         }
+
+        return $this;
     }
 
      /**
@@ -1320,7 +1337,7 @@ abstract class Players implements ActiveRecordInterface
      * Builds a Criteria object containing the primary key for this object.
      *
      * Unlike buildCriteria() this method includes the primary key values regardless
-     * of whether or not they have been modified.
+     * of whether they have been modified.
      *
      * @throws LogicException if no primary key is defined
      *
@@ -1495,35 +1512,35 @@ abstract class Players implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Bomb' == $relationName) {
+        if ('Bomb' === $relationName) {
             $this->initBombs();
             return;
         }
-        if ('Flag' == $relationName) {
+        if ('Flag' === $relationName) {
             $this->initFlags();
             return;
         }
-        if ('FraggerPlayer' == $relationName) {
+        if ('FraggerPlayer' === $relationName) {
             $this->initFraggerPlayers();
             return;
         }
-        if ('FraggedPlayer' == $relationName) {
+        if ('FraggedPlayer' === $relationName) {
             $this->initFraggedPlayers();
             return;
         }
-        if ('Scores' == $relationName) {
+        if ('Scores' === $relationName) {
             $this->initScoress();
             return;
         }
-        if ('Gametime' == $relationName) {
+        if ('Gametime' === $relationName) {
             $this->initGametimes();
             return;
         }
-        if ('HitterPlayer' == $relationName) {
+        if ('HitterPlayer' === $relationName) {
             $this->initHitterPlayers();
             return;
         }
-        if ('HittedPlayer' == $relationName) {
+        if ('HittedPlayer' === $relationName) {
             $this->initHittedPlayers();
             return;
         }
@@ -1587,15 +1604,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildBombs[] List of ChildBombs objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildBombs> List of ChildBombs objects
      * @throws PropelException
      */
     public function getBombs(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collBombsPartial && !$this->isNew();
-        if (null === $this->collBombs || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collBombs) {
+        if (null === $this->collBombs || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initBombs();
+                if (null === $this->collBombs) {
+                    $this->initBombs();
+                } else {
+                    $collectionClassName = BombsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collBombs = new $collectionClassName;
+                    $collBombs->setModel('\Bombs');
+
+                    return $collBombs;
+                }
             } else {
                 $collBombs = ChildBombsQuery::create(null, $criteria)
                     ->filterByPlayers($this)
@@ -1770,6 +1797,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildBombs[] List of ChildBombs objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildBombs}> List of ChildBombs objects
      */
     public function getBombsJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -1837,15 +1865,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildFlags[] List of ChildFlags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFlags> List of ChildFlags objects
      * @throws PropelException
      */
     public function getFlags(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collFlagsPartial && !$this->isNew();
-        if (null === $this->collFlags || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collFlags) {
+        if (null === $this->collFlags || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initFlags();
+                if (null === $this->collFlags) {
+                    $this->initFlags();
+                } else {
+                    $collectionClassName = FlagsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collFlags = new $collectionClassName;
+                    $collFlags->setModel('\Flags');
+
+                    return $collFlags;
+                }
             } else {
                 $collFlags = ChildFlagsQuery::create(null, $criteria)
                     ->filterByPlayers($this)
@@ -2020,6 +2058,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildFlags[] List of ChildFlags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFlags}> List of ChildFlags objects
      */
     public function getFlagsJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -2087,15 +2126,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFrags> List of ChildFrags objects
      * @throws PropelException
      */
     public function getFraggerPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collFraggerPlayersPartial && !$this->isNew();
-        if (null === $this->collFraggerPlayers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collFraggerPlayers) {
+        if (null === $this->collFraggerPlayers || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initFraggerPlayers();
+                if (null === $this->collFraggerPlayers) {
+                    $this->initFraggerPlayers();
+                } else {
+                    $collectionClassName = FragsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collFraggerPlayers = new $collectionClassName;
+                    $collFraggerPlayers->setModel('\Frags');
+
+                    return $collFraggerPlayers;
+                }
             } else {
                 $collFraggerPlayers = ChildFragsQuery::create(null, $criteria)
                     ->filterByFragger($this)
@@ -2270,6 +2319,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFrags}> List of ChildFrags objects
      */
     public function getFraggerPlayersJoinWeapons(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -2295,6 +2345,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFrags}> List of ChildFrags objects
      */
     public function getFraggerPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -2362,15 +2413,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFrags> List of ChildFrags objects
      * @throws PropelException
      */
     public function getFraggedPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collFraggedPlayersPartial && !$this->isNew();
-        if (null === $this->collFraggedPlayers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collFraggedPlayers) {
+        if (null === $this->collFraggedPlayers || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initFraggedPlayers();
+                if (null === $this->collFraggedPlayers) {
+                    $this->initFraggedPlayers();
+                } else {
+                    $collectionClassName = FragsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collFraggedPlayers = new $collectionClassName;
+                    $collFraggedPlayers->setModel('\Frags');
+
+                    return $collFraggedPlayers;
+                }
             } else {
                 $collFraggedPlayers = ChildFragsQuery::create(null, $criteria)
                     ->filterByFragged($this)
@@ -2545,6 +2606,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFrags}> List of ChildFrags objects
      */
     public function getFraggedPlayersJoinWeapons(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -2570,6 +2632,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildFrags[] List of ChildFrags objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildFrags}> List of ChildFrags objects
      */
     public function getFraggedPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -2637,15 +2700,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildGamescores[] List of ChildGamescores objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildGamescores> List of ChildGamescores objects
      * @throws PropelException
      */
     public function getScoress(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collScoressPartial && !$this->isNew();
-        if (null === $this->collScoress || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collScoress) {
+        if (null === $this->collScoress || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initScoress();
+                if (null === $this->collScoress) {
+                    $this->initScoress();
+                } else {
+                    $collectionClassName = GamescoresTableMap::getTableMap()->getCollectionClassName();
+
+                    $collScoress = new $collectionClassName;
+                    $collScoress->setModel('\Gamescores');
+
+                    return $collScoress;
+                }
             } else {
                 $collScoress = ChildGamescoresQuery::create(null, $criteria)
                     ->filterByPlayers($this)
@@ -2820,6 +2893,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildGamescores[] List of ChildGamescores objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildGamescores}> List of ChildGamescores objects
      */
     public function getScoressJoinGames(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -2887,15 +2961,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildGametimes[] List of ChildGametimes objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildGametimes> List of ChildGametimes objects
      * @throws PropelException
      */
     public function getGametimes(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collGametimesPartial && !$this->isNew();
-        if (null === $this->collGametimes || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGametimes) {
+        if (null === $this->collGametimes || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initGametimes();
+                if (null === $this->collGametimes) {
+                    $this->initGametimes();
+                } else {
+                    $collectionClassName = GametimesTableMap::getTableMap()->getCollectionClassName();
+
+                    $collGametimes = new $collectionClassName;
+                    $collGametimes->setModel('\Gametimes');
+
+                    return $collGametimes;
+                }
             } else {
                 $collGametimes = ChildGametimesQuery::create(null, $criteria)
                     ->filterByPlayers($this)
@@ -3112,15 +3196,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHits> List of ChildHits objects
      * @throws PropelException
      */
     public function getHitterPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collHitterPlayersPartial && !$this->isNew();
-        if (null === $this->collHitterPlayers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collHitterPlayers) {
+        if (null === $this->collHitterPlayers || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initHitterPlayers();
+                if (null === $this->collHitterPlayers) {
+                    $this->initHitterPlayers();
+                } else {
+                    $collectionClassName = HitsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collHitterPlayers = new $collectionClassName;
+                    $collHitterPlayers->setModel('\Hits');
+
+                    return $collHitterPlayers;
+                }
             } else {
                 $collHitterPlayers = ChildHitsQuery::create(null, $criteria)
                     ->filterByHitter($this)
@@ -3295,6 +3389,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHits}> List of ChildHits objects
      */
     public function getHitterPlayersJoinBodyparts(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -3320,6 +3415,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHits}> List of ChildHits objects
      */
     public function getHitterPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -3387,15 +3483,25 @@ abstract class Players implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHits> List of ChildHits objects
      * @throws PropelException
      */
     public function getHittedPlayers(Criteria $criteria = null, ConnectionInterface $con = null)
     {
         $partial = $this->collHittedPlayersPartial && !$this->isNew();
-        if (null === $this->collHittedPlayers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collHittedPlayers) {
+        if (null === $this->collHittedPlayers || null !== $criteria || $partial) {
+            if ($this->isNew()) {
                 // return empty collection
-                $this->initHittedPlayers();
+                if (null === $this->collHittedPlayers) {
+                    $this->initHittedPlayers();
+                } else {
+                    $collectionClassName = HitsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collHittedPlayers = new $collectionClassName;
+                    $collHittedPlayers->setModel('\Hits');
+
+                    return $collHittedPlayers;
+                }
             } else {
                 $collHittedPlayers = ChildHitsQuery::create(null, $criteria)
                     ->filterByHitted($this)
@@ -3570,6 +3676,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHits}> List of ChildHits objects
      */
     public function getHittedPlayersJoinBodyparts(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -3595,6 +3702,7 @@ abstract class Players implements ActiveRecordInterface
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildHits[] List of ChildHits objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHits}> List of ChildHits objects
      */
     public function getHittedPlayersJoinRounds(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
@@ -3701,10 +3809,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function preSave(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preSave')) {
-            return parent::preSave($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -3713,10 +3818,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function postSave(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postSave')) {
-            parent::postSave($con);
-        }
-    }
+            }
 
     /**
      * Code to be run before inserting to database
@@ -3725,10 +3827,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function preInsert(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preInsert')) {
-            return parent::preInsert($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -3737,10 +3836,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function postInsert(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postInsert')) {
-            parent::postInsert($con);
-        }
-    }
+            }
 
     /**
      * Code to be run before updating the object in database
@@ -3749,10 +3845,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function preUpdate(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preUpdate')) {
-            return parent::preUpdate($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -3761,10 +3854,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function postUpdate(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postUpdate')) {
-            parent::postUpdate($con);
-        }
-    }
+            }
 
     /**
      * Code to be run before deleting the object in database
@@ -3773,10 +3863,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function preDelete(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::preDelete')) {
-            return parent::preDelete($con);
-        }
-        return true;
+                return true;
     }
 
     /**
@@ -3785,10 +3872,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function postDelete(ConnectionInterface $con = null)
     {
-        if (is_callable('parent::postDelete')) {
-            parent::postDelete($con);
-        }
-    }
+            }
 
 
     /**
@@ -3818,15 +3902,18 @@ abstract class Players implements ActiveRecordInterface
 
         if (0 === strpos($name, 'from')) {
             $format = substr($name, 4);
+            $inputData = $params[0];
+            $keyType = $params[1] ?? TableMap::TYPE_PHPNAME;
 
-            return $this->importFrom($format, reset($params));
+            return $this->importFrom($format, $inputData, $keyType);
         }
 
         if (0 === strpos($name, 'to')) {
             $format = substr($name, 2);
-            $includeLazyLoadColumns = isset($params[0]) ? $params[0] : true;
+            $includeLazyLoadColumns = $params[0] ?? true;
+            $keyType = $params[1] ?? TableMap::TYPE_PHPNAME;
 
-            return $this->exportTo($format, $includeLazyLoadColumns);
+            return $this->exportTo($format, $includeLazyLoadColumns, $keyType);
         }
 
         throw new BadMethodCallException(sprintf('Call to undefined method: %s.', $name));
