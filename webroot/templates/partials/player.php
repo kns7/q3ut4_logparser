@@ -83,6 +83,14 @@ $picture = (file_exists('img/users/'.$player->getId().".png"))? "/img/users/".$p
             <canvas class="chart" id="playertimeratio_chart" data-name="player-timeratio" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
         </div>
         <div class="col-sm-6">
+            <h2 class="text-center">Headshots (%)</h2>
+            <canvas class="chart" id="playertimeheadshots_chart" data-name="player-timeheadshots" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
+        </div>
+        <div class="col-sm-6">
+            <h2 class="text-center">Chestshots (%)</h2>
+            <canvas class="chart" id="playertimechestshots_chart" data-name="player-timechestshots" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
+        </div>
+        <div class="col-sm-6">
             <h2 class="text-center">Ping</h2>
             <canvas class="chart" id="playertimeping_chart" data-name="player-timeping" data-id="<?=$player->getId();?>" data-chart="line"></canvas>
         </div>

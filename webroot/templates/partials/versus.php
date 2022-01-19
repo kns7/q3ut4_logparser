@@ -216,6 +216,14 @@ if($p2->getMapsWins()->count() > 0){
         <canvas class="chart" id="vstimeratio_chart" data-name="vs-timeratio" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
     </div>
     <div class="col-sm-6">
+        <h2 class="text-center">Headshots (%)</h2>
+        <canvas class="chart" id="vstimeheadshots_chart" data-name="vs-timeheadshots" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
+    </div>
+    <div class="col-sm-6">
+        <h2 class="text-center">Chestshots (%)</h2>
+        <canvas class="chart" id="vstimechestshots_chart" data-name="vs-timechestshots" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
+    </div>
+    <div class="col-sm-6">
         <h2 class="text-center">Ping</h2>
         <canvas class="chart" id="vstimeping_chart" data-name="vs-timeping" data-id="<?=$p1->getId();?>_<?=$p2->getId();?>" data-chart="line"></canvas>
     </div>
