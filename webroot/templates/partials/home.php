@@ -411,6 +411,14 @@ $chartname = ($app->request->getResourceUri() == "/views/home")? "time":"games";
         <h2 class="text-center">Ping (ms)</h2>
         <canvas class="chart" id="playersping_chart" data-name="players-<?=$chartname;?>ping" data-chart="line" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
     </div>
+    <div class="col-lg-6">
+        <h2 class="text-center">Headshots (%)</h2>
+        <canvas class="chart" id="playersheadshots_chart" data-name="players-<?=$chartname;?>headshots" data-chart="line" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
+    </div>
+    <div class="col-lg-6">
+        <h2 class="text-center">Chestshots (%)</h2>
+        <canvas class="chart" id="playerschestshots_chart" data-name="players-<?=$chartname;?>chestshots" data-chart="line" <?= (!is_null($date))?"data-date='$date'":"";?>></canvas>
+    </div>
 </div>
 <hr/>
 <div class="row">

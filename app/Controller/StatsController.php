@@ -353,14 +353,17 @@ class StatsController extends Controller
                     $deaths = \FragsQuery::create()->filterByFraggedId($playerid)->filterByFraggerId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
                     $kills = \FragsQuery::create()->filterByFraggerId($playerid)->filterByFraggedId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
                     $count = ($deaths == 0)? 0: $kills / $deaths;
+                    $options = "x:0";
                     break;
 
                 case "frags":
                     $count = \FragsQuery::create()->filterByFraggerId($playerid)->filterByFraggedId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                    $options = "x:0";
                     break;
 
                 case "deaths":
                     $count = \FragsQuery::create()->filterByFraggedId($playerid)->filterByFraggerId($playerid,Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                    $options = "x:0";
                     break;
 
                 case "ping":
@@ -371,6 +374,7 @@ class StatsController extends Controller
                         $count += $ping->getPing();
                     }
                     $count = $count / $amount;
+                    $options = "x:0";
                     break;
             }
             switch($date->format("Y-m-d")){
@@ -398,7 +402,7 @@ class StatsController extends Controller
             "data" => $datas
         ]);
 
-        return ["datasets" => $dataset, "labels" => $labels];
+        return ["datasets" => $dataset, "labels" => $labels, "options" => $options];
     }
 
 
@@ -436,14 +440,17 @@ class StatsController extends Controller
                         $deaths = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
                         $kills = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
                         $count = ($deaths == 0)? 0: $kills / $deaths;
+                        $options = "x:0";
                         break;
 
                     case "frags":
                         $count = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        $options = "x:0";
                         break;
 
                     case "deaths":
                         $count = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        $options = "x:0";
                         break;
 
                     case "ping":
@@ -454,6 +461,21 @@ class StatsController extends Controller
                             $tcount += $ping->getPing();
                         }
                         $count = ($amount == 0)? 0: intval($tcount / $amount);
+                        $options = "x:0";
+                        break;
+
+                    case "headshots":
+                        $gcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        $hcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByBodypartId([2,11])->filterByCreated($date->format("Y-m-d"))->count();
+                        $count = ($gcount == 0)? 0: $hcount * 100 / $gcount;
+                        $options = "x:0";
+                        break;
+
+                    case "chestshots":
+                        $gcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByCreated($date->format("Y-m-d"))->count();
+                        $hcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByBodypartId([1,9])->filterByCreated($date->format("Y-m-d"))->count();
+                        $count = ($gcount == 0)? 0: $hcount * 100 / $gcount;
+                        $options = "x:0";
                         break;
                 }
                 switch($date->format("Y-m-d")){
@@ -482,7 +504,7 @@ class StatsController extends Controller
             $i++;
         }
 
-        return ["datasets" => $dataset, "labels" => $labels];
+        return ["datasets" => $dataset, "labels" => $labels, "options" => $options];
     }
 
 
@@ -517,14 +539,17 @@ class StatsController extends Controller
                         $deaths = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
                         $kills = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
                         $count = ($deaths == 0)? 0: $kills / $deaths;
+                        $options = "x:0";
                         break;
 
                     case "frags":
                         $count = \FragsQuery::create()->filterByFraggerId($player->getId())->filterByFraggedId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        $options = "x:0";
                         break;
 
                     case "deaths":
                         $count = \FragsQuery::create()->filterByFraggedId($player->getId())->filterByFraggerId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        $options = "x:0";
                         break;
 
                     case "ping":
@@ -535,6 +560,21 @@ class StatsController extends Controller
                             $tcount += $ping->getPing();
                         }
                         $count = ($amount == 0)? 0: intval($tcount / $amount);
+                        $options = "x:0";
+                        break;
+
+                    case "headshots":
+                        $gcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        $hcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByBodypartId([2,11])->filterByRounds($rounds)->count();
+                        $count = ($gcount == 0)? 0: $hcount * 100 / $gcount;
+                        $options = "x:0";
+                        break;
+
+                    case "chestshots":
+                        $gcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByRounds($rounds)->count();
+                        $hcount = \HitsQuery::create()->filterByHitterId($player->getId())->filterByHittedId($player->getId(),Criteria::NOT_EQUAL)->filterByBodypartId([1,9])->filterByRounds($rounds)->count();
+                        $count = ($gcount == 0)? 0: $hcount * 100 / $gcount;
+                        $options = "x:0";
                         break;
                 }
                 array_push($datas, $count);
@@ -550,6 +590,6 @@ class StatsController extends Controller
             $i++;
         }
 
-        return ["datasets" => $dataset, "labels" => $labels];
+        return ["datasets" => $dataset, "labels" => $labels, "options" => $options];
     }
 }

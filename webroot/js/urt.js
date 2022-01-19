@@ -62,11 +62,35 @@ function makeChart(el) {
                                 tension: 0.1
                             }]
                         };
-                        options = {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
+                        if(datas.options === undefined){
+                            options = {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
                                 }
+                            }
+                        }else{
+                            switch(datas.options){
+                                default:
+                                    options = {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true
+                                            }
+                                        }
+                                    }
+                                    break;
+
+                                case "x:0/y:100":
+                                    options = {
+                                        scales: {
+                                            y: {
+                                                suggestedMin: 0,
+                                                suggestedMax: 100
+                                            }
+                                        }
+                                    }
                             }
                         }
                         break;
@@ -103,6 +127,37 @@ function makeChart(el) {
                     }
                 )
             }else{
+                if(datas.options === undefined){
+                    options = {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                }else{
+                    switch(datas.options){
+                        default:
+                            options = {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                            break;
+
+                        case "x:0/y:100":
+                            options = {
+                                scales: {
+                                    y: {
+                                        suggestedMin: 0,
+                                        suggestedMax: 100
+                                    }
+                                }
+                            }
+                    }
+                }
                 chart = new Chart(
                     document.getElementById(id),
                     {
@@ -110,13 +165,7 @@ function makeChart(el) {
                             datasets: datas.datasets,
                             labels: datas.labels
                         },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
+                        options: options
                     }
                 )
             }

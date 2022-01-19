@@ -427,10 +427,28 @@ $app->group("/ajax",function() use($app){
             echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"frags"));
         });
 
+        $app->get('/player-timedeaths/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"deaths"));
+        });
+
         $app->get('/player-timeratio/:id', function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
             echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"ratio"));
+        });
+
+        $app->get('/player-timeheadshots/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"headshots"));
+        });
+
+        $app->get('/player-timechestshots/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution([$id],"chestshots"));
         });
 
         $app->get('/player-timeping/:id', function($id) use($app){
@@ -508,6 +526,20 @@ $app->group("/ajax",function() use($app){
             echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"ratio"));
         });
 
+        $app->get('/vs-timeheadshots/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"headshots"));
+        });
+
+        $app->get('/vs-timechestshots/:id', function($id) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = explode("_",$id);
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"chestshots"));
+        });
+
         $app->get('/vs-timeping/:id', function($id) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -545,6 +577,26 @@ $app->group("/ajax",function() use($app){
             echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"ratio"));
         });
 
+        $app->get('/players-timeheadshots', function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = [];
+            foreach($app->Ctrl->Players->getList() as $p){
+                array_push($ids,$p->getId());
+            }
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"headshots"));
+        });
+
+        $app->get('/players-timechestshots', function() use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $ids = [];
+            foreach($app->Ctrl->Players->getList() as $p){
+                array_push($ids,$p->getId());
+            }
+            echo json_encode($app->Ctrl->Stats->getStatsMultiplayerEvolution($ids,"chestshots"));
+        });
+
         $app->get('/players-timeping', function() use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
@@ -576,11 +628,33 @@ $app->group("/ajax",function() use($app){
             echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"ratio"));
         });
 
+        $app->get('/players-gamesheadshots/:date', function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $games = \GamesQuery::create()->findByCreated($date);
+            echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"headshots"));
+        });
+
+        $app->get('/players-gameschestshots/:date', function($date) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+            $games = \GamesQuery::create()->findByCreated($date);
+            echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"chestshots"));
+        });
+
         $app->get('/players-gamesping/:date', function($date) use($app){
             $app->response->setStatus(200);
             $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
             $games = \GamesQuery::create()->findByCreated($date);
             echo json_encode($app->Ctrl->Stats->getStatsGamesEvolution($games,"ping"));
+        });
+
+
+
+        $app->get('/line/:options+',function($options) use($app){
+            $app->response->setStatus(200);
+            $app->response()->headers->set('Content-Type', 'application/json; charset=utf-8');
+
         });
     });
 });
